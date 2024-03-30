@@ -1,3 +1,4 @@
+
 import { SearchIcon } from "@chakra-ui/icons";
 import { Button } from "@radix-ui/themes";
 import React, { useContext, useState } from "react";
@@ -5,7 +6,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { SearchContext } from "../contexts/SearchContext";
 
 const SearchComponent = () => {
-  const { isDark } = useContext(ThemeContext);
+  const {isDark} = useContext(ThemeContext)
   const [isClicked1, setIsClicked1] = useState(false);
   const [isClicked2, setIsClicked2] = useState(false);
   const [isClicked3, setIsClicked3] = useState(false);
@@ -13,14 +14,16 @@ const SearchComponent = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
 
-  const { searchValue, setSearchValue } = useContext(SearchContext);
+  const  {searchValue, setSearchValue} = useContext(SearchContext)
+
+  
 
   return (
     <div
-      className={` ${
+      className={` ${'h-[60px] w-[100%]'} ${
         isClicked1 || isClicked2 || isClicked3 ? "bg-base-200 " : "bg-base-100"
       } items-center
-          h-[90px] mt-8 rounded-[500px] flex m-auto w-[80%] border-base-300
+           rounded-[500px] flex m-auto w-[80%] border-base-300
           shadow-base-300 shadow-xl border-[0.5px] `}
       onBlur={() => setIsClicked1(false)}
     >
@@ -47,14 +50,14 @@ const SearchComponent = () => {
         <input
           placeholder="search keyword"
           value={searchValue}
-          onChange={(e) => {
-            setSearchValue(e.currentTarget.value);
-          }}
+          onChange={ (e)=> {setSearchValue(e.currentTarget.value)}}
           type="text"
           className={`w-[100%] text-base-content ps-10 me-2 bg-transparent  ${
             isHovered && !isClicked1 && "bg-base-300"
           }  rounded-s-[500px] outline-none rounded-[500px] mt-[0px] h-[87.5px] w-[100%]
-          ${isDark && isClicked1 && "bg-[#211649] shadow-md rounded-[500px]"}
+          ${
+            isDark && isClicked1 && "bg-[#211649] shadow-md rounded-[500px]"
+          }
            hover:rounded-[500px]`}
           onClick={() => {
             setIsClicked1(true), setIsClicked2(false);
@@ -112,7 +115,7 @@ const SearchComponent = () => {
             setIsHovered1(false);
           }}
         >
-          <option disabled defaultValue={"Price"} value="">
+          <option disabled defaultValue={'Price'} value="">
             Price
           </option>
         </select>
@@ -137,8 +140,8 @@ const SearchComponent = () => {
           setIsHovered2(false);
         }}
       >
-        <Button className=" h-[70px] rounded-[500px] w-[94%] flex justify-start p-6 text-xl  bg-gradient-to-r to-pink.300 from-purple-600  ">
-          <SearchIcon className="" /> {" Search"}
+        <Button className={` 'h-[35px] rounded-[500px] w-[94%] flex justify-start p-6 text-xl  bg-gradient-to-r to-pink.300 from-purple-600`}>
+          <SearchIcon className="" /> 
         </Button>
       </div>
     </div>

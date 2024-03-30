@@ -1,9 +1,14 @@
-import React from "react";
+'use-client'
+
+import React, { useContext } from "react";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const ColorModeSwitch = () => {
+
+  const {isDark, setIsDark} = useContext(ThemeContext)
   return (
     <label className="swap swap-rotate pe-3 ">
-      <input type="checkbox" className="theme-controller" value="synthwave" />
+      <input type="checkbox" className="theme-controller" value="synthwave"  onClick={()=> setIsDark(!isDark)}/>
 
       <svg
         className="swap-off fill-current w-10 h-10 text-purple-700"
