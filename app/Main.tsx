@@ -1,19 +1,27 @@
 "use client";
 
 import { Inter } from "next/font/google";
-import { Theme } from "@radix-ui/themes";
+import { Button, Theme } from "@radix-ui/themes";
 import { ThemeContext } from "./contexts/ThemeContext";
-import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
+import './beepingButton.css'
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import Navbar from "./Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
 import { useSpring } from "react-spring";
 import { createContext } from "vm";
 import { SearchContext } from "./contexts/SearchContext";
+import { ShowMapContext } from "./contexts/ShowMapContext";
+import theme from "./configs/theme";
 
 interface Props {
   childrenNode: ReactNode;
 }
-
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +32,8 @@ const Main = ({ childrenNode }: Props) => {
   const scrollThreshold = 5;
 
   const [searchValue, setSearchValue] = useState("");
- 
+  const [selectValue, setSelectValue] = useState("");
+  const [showMap, setShowMap] = useState(false)
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,13 +51,26 @@ const Main = ({ childrenNode }: Props) => {
         className="min-h-full bg-base-100  "
         onScroll={() => console.log("augah")}
       >
+        <link
+          href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
+          rel="stylesheet"
+        />
         <ThemeContext.Provider value={{ isDark, setIsDark }}>
-          <SearchContext.Provider value={{searchValue, setSearchValue}}>
-            <Theme>
-              <button className="bg-blue-400">augah</button>
-              <Navbar hasScrolled={hasScrolled} />
-              {childrenNode}
-            </Theme>
+          <SearchContext.Provider value={{ searchValue, setSearchValue, selectValue, setSelectValue }}>
+            <ShowMapContext.Provider value = {{showMap, setShowMap}}>
+              <ChakraProvider theme= {theme}>
+                <Theme>
+                
+                  <Button className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] left-[50%] transform translate(-50%, -50%)"
+                   onClick={()=> setShowMap(!showMap)}
+                  >
+                   {showMap? 'show list': 'show map'}
+                  </Button>
+                  <Navbar hasScrolled={hasScrolled} />
+                  {childrenNode}
+                </Theme>
+              </ChakraProvider>
+            </ShowMapContext.Provider>
           </SearchContext.Provider>
         </ThemeContext.Provider>
       </body>

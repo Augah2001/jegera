@@ -13,7 +13,8 @@ const SearchComponent = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
 
-  const { searchValue, setSearchValue } = useContext(SearchContext);
+  const { searchValue, setSearchValue, selectValue, setSelectValue } =
+    useContext(SearchContext);
 
   return (
     <div
@@ -92,6 +93,8 @@ const SearchComponent = () => {
       >
         <select
           name=""
+          value={selectValue}
+          onChange={(e) => setSelectValue(e.currentTarget.value)}
           id=""
           className={`w-[100%] text-base-content px-9 bg-transparent min-h-[100%] ${
             isHovered1 && !isClicked2 && "bg-base-300"
@@ -112,14 +115,14 @@ const SearchComponent = () => {
             setIsHovered1(false);
           }}
         >
-          <option disabled defaultValue={"Price"} value="">
-            Price
-          </option>
+          <option value="">Price1</option>
+          <option value="">Price2</option>
+          <option value="">Price3</option>
         </select>
       </div>
       <div className="w-[1.5px] h-[40%] bg-purple-700  "></div>
       <div
-        className={`w-[20%] ms-2 flex min-h-[100%] justify-end pe-3 items-center ${
+        className={`cursor-pointer  w-[20%] ms-2 flex min-h-[100%] justify-end pe-3 items-center ${
           isHovered2 && !isClicked3 && "bg-base-300"
         }  rounded-s-[500px]
           ${
@@ -137,7 +140,7 @@ const SearchComponent = () => {
           setIsHovered2(false);
         }}
       >
-        <Button className=" h-[70px] rounded-[500px] w-[94%] flex justify-start p-6 text-xl  bg-gradient-to-r to-pink.300 from-purple-600  ">
+        <Button className=" cursor-pointer h-[70px] rounded-[500px] w-[94%] flex justify-start p-6 text-xl  bg-gradient-to-r to-pink.300 from-purple-600  ">
           <SearchIcon className="" /> {" Search"}
         </Button>
       </div>

@@ -12,11 +12,7 @@ interface ThemeContextType {
 }
 
 
-interface Props {
-    children : ReactNode
-    
 
-}
 
 export const ThemeContext = createContext<ThemeContextType>(
   {} as ThemeContextType

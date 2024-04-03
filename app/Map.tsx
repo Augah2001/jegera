@@ -1,105 +1,102 @@
-import React, { useRef, useEffect } from 'react';
-import mapboxgl from 'mapbox-gl';
+import React, { useRef, useEffect, useState, Dispatch, SetStateAction } from "react";
+import mapboxgl from "mapbox-gl";
+import HighlightButton from "./HighlightButton"; 
+import './beepingButton.css'
+import HouseCard from "./HouseCard";
+import ReactDOM from "react-dom";
+import HouseMapPopup from "./HouseMapPopup";
 
-const MapComponent = () => {
-  const mapContainerRef = useRef(null);
+interface house {
+  id: number,
+  price: number,
+  coordinates: [number, number]
+}
 
-  // Similar to the previous code, define your GeoJSON data
-  const geojson = {
-    'type': 'FeatureCollection',
-    'features': [
-        {
-            'type': 'Feature',
-            'properties': {
-                'message': 'Foo',
-                'imageId': 1011,
-                'iconSize': [60, 60]
-            },
-            'geometry': {
-                'type': 'Point',
-                'coordinates': [ 31.057944274364743, -17.784130655572376]
-            }
-        },
-        {
-            'type': 'Feature',
-            'properties': {
-                'message': 'Bar',
-                'imageId': 870,
-                'iconSize': [50, 50]
-            },
-            'geometry': {
-                'type': 'Point',
-                'coordinates': [-61.21582, -15.971891]
-            }
-        },
-        {
-            'type': 'Feature',
-            'properties': {
-                'message': 'Baz',
-                'imageId': 837,
-                'iconSize': [40, 40]
-            },
-            'geometry': {
-                'type': 'Point',
-                'coordinates': [-63.292236, -18.281518]
-            }
-        }
-    ]
-};
-
+const MapComponent = ({setHasScrolled}: {setHasScrolled: Dispatch<SetStateAction<boolean>>}) => {
+  const mapContainerRef = useRef<HTMLDivElement | any>(undefined);
 
   useEffect(() => {
-    const map = new mapboxgl.Map({
-      accessToken: 'pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q',
-      container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v12', // Choose your Mapbox style
-      center: [ 31.056066728099662, -17.78114751541243],
-      zoom: 15
-
-    });
-
-    // Add source for markers (similar to previous code)
-    map.on('load', () => {
-      // Add source for markers after the map loads
-      map.addSource('markers', {
-        type: 'geojson',
-        data: geojson
+    if (!mapContainerRef.current) return
+      const map = new mapboxgl.Map({
+        accessToken:
+          "pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q",
+        container: mapContainerRef.current,
+        style: "mapbox://styles/mapbox/streets-v12", // Choose your style
+        center: [31.05139, -17.78421], // Initial center
+        zoom: 13,
       })
     
-      map.addLayer({
-        id: 'markers',
-        type: 'symbol',
-        source: 'markers',
-        layout: {
-          'icon-image': '{imageId}', // Use property from GeoJSON
-          'icon-size': ['get', 'iconSize'] // Use property from GeoJSON
-        },
-        paint: {
-          'icon-color': '#ffffff' // Optional: set marker color
-        }
-      });
-    });
+    ;
 
-    // Add symbol layer for markers
     
 
-    // Function to handle marker clicks (similar to previous code)
-    const handleMarkerClick = (e:any) => {
-      const clickedFeature = e.features[0];
-      if (clickedFeature) {
-        window.alert(clickedFeature.properties.message);
-      }
-    };
+    const houses: house[] = [
+      
+      {
+        id: 2,
+        coordinates: [31.059017158684345, -17.782812767612665],
+        price: 100,
+      },
+      {
+        price: 150,
+        id: 4,
+        coordinates: [31.058826105504835, -17.768739785090247],
+      },
+      {
+        price: 180,
+        id: 4,
+        coordinates: [31.037826105504835, -17.778739785090247],
+      },
+      {
+        price: 130,
+        id: 4,
+        coordinates: [31.068126105504835, -17.78739785090247],
+      },
+    ];
+    houses.forEach((house) => {
+      const btn = document.createElement("button");
+      
+      btn.innerHTML = `${'$'+house?.price}`;
+      btn.style.width = "65px";
+      btn.style.height = "30px";
+      btn.style.backgroundColor = "purple";
+      btn.style.color = "white";
+      btn.style.borderRadius = "15px";
+      btn.style.borderWidth = '2px'
+      btn.style.borderColor = 'purple'
+      btn.style.fontWeight = 'bold'
 
-    // Add click event listener for markers
-    map.on('click', 'markers', handleMarkerClick);
+      const div = document.createElement('div')
+      ReactDOM.render(<HouseMapPopup  />, div)
+      // btn.style.fontSize = '12px'
+      const popup = new mapboxgl.Popup({closeButton: false});
+      popup.setLngLat([31.058826105504835, -17.768739785090247]).setDOMContent(div)
+      const marker = new mapboxgl.Marker({ element: btn });
+      marker.setLngLat(house.coordinates);
+      marker.setPopup(popup)
+      marker.addTo(map);
+      
 
-    // Clean up map on component unmount
+      
+    });
+
+    map.addControl(new mapboxgl.NavigationControl({showCompass:true, showZoom:true,visualizePitch:true}));
+
+    map.on('click', (e)=>{
+      console.log(e)
+      setHasScrolled(true)})
     return () => map.remove();
-  }, []);
+  }, []); // Update map if locations or marker state changes
 
   return (
-    <div ref={mapContainerRef} className='h-screen'/>
+    <div>
+      <div ref={mapContainerRef} className="w-full min-h-screen" onClick={
+        (e)=>{
+          console.log(e)
+          setHasScrolled(true)}} />
+          
+          
+    </div>
   );
 };
 

@@ -13,11 +13,14 @@ import HouseCard from "./HouseCard";
 import HouseCardGrid from "./HouseCardGrid";
 import { useSpring, animated } from "react-spring";
 import MyMap from "./Map";
+import { ShowMapContext } from "./contexts/ShowMapContext";
 
 export default function Home({}) {
+
+  const {showMap} = useContext(ShowMapContext)
   const { isDark } = useContext(ThemeContext);
   const [hasScrolled, setHasScrolled] = useState(false);
-  const scrollThreshold = 5;
+  const scrollThreshold = 2;
 
   const springProps = useSpring({
     opacity: hasScrolled ? 0 : 1, // Adjust opacity values for desired fade effect
@@ -39,7 +42,7 @@ export default function Home({}) {
   return (
     <div className="bg-base-100 ">
       <div className="mt-[90px] fixed top-0 left-0 w-full z-10 bg-base-100">
-        <GradientDiv />
+        <GradientDiv/>
         {!hasScrolled && (
           <animated.div style={springProps}>
             {!hasScrolled && <SearchComponent />}
@@ -52,12 +55,12 @@ export default function Home({}) {
         )}
 
         {!isDark && (
-          <div className={`bg-base-300  h-[1px] min-w-[100%] mt-9`}></div>
+          <div className={` bg-base-300  h-[1px] min-w-[100%] mt-9`}></div>
         )}
         <Slider />
       </div>
-      <div className="mt-[280px]">
-        <MyMap/>
+      <div className="mt-[208px]">
+        {showMap?<MyMap setHasScrolled={setHasScrolled} />: <HouseCardGrid/>}
       </div>
     </div>
   );

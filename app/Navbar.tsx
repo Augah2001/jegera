@@ -9,7 +9,7 @@ import NavSearchComponent from "./components/NavSearchComponent";
 import { animated, useSpring } from "react-spring";
 
 const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
-  const { isDark, setIsDark } = useContext(ThemeContext);
+  
 
   const springProps = useSpring({
     opacity: !hasScrolled ? 0 : 1, // Adjust opacity values for desired fade effect
@@ -22,7 +22,7 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
       <div className="bg-base-100 min-h-20 flex justify-between navbar fixed top-0 left-0 w-screen z-10">
         <div className="bg-base-100 min-h-20 flex">
           <Image className="h-9 w-9  mt-2 ms-5" src={logo} alt="no photo" />
-          <p className="text-2xl mt-2 ms-3 text-pink-700 font-bold text-center ">
+          <p className="pointer-cursor text-2xl mt-2 ms-3 text-pink-700 font-bold text-center ">
             jegera
           </p>
         </div>
@@ -37,7 +37,7 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
           <ColorModeSwitch />
 
           <Button
-            className="bg-gradient-to-r to-pink.300 from-purple-600 me-5"
+            className="bg-gradient-to-r  to-pink.300 from-purple-600 h-[36px] me-5 cursor-pointer"
             style={{ marginTop: "4px" }}
           >
             sign up
@@ -45,7 +45,7 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
         </div>
       </div>
 
-      <div className="mt-100px">
+      <div className="mt-[95px]">
         <GradientDiv />
       </div>
     </div>

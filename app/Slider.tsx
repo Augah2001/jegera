@@ -59,33 +59,27 @@ export default function CaptionCarousel() {
         {/* CSS files for react-slick */}
 
         {/* Left Icon */}
-        <IconButton
-          className="hover:text-slate-600 text-slate-400
-          "
+        <div
+          className="
+          text-slate-400 hover:text-slate-600
+           top-[28%] left-[2%] z-[2]
+           absolute transform translate(0%, -50%)"
           aria-label="left-arrow"
-          variant="ghost"
-          position="absolute"
-          left={"2%"}
-          top={"37%"}
-          transform={"translate(0%, -50%)"}
-          zIndex={2}
           onClick={() => slider?.slickPrev()}
         >
           <BiLeftArrowAlt size="40px" />
-        </IconButton>
+        </div>
         {/* Right Icon */}
-        <IconButton
-          className="text-slate-400 hover:text-slate-600"
+        <div
+          className="
+          text-slate-400 hover:text-slate-600
+           top-[28%] right-[2%] z-[2]
+           absolute transform translate(0%, -50%)"
           aria-label="right-arrow"
-          position="absolute"
-          right={"2%"}
-          top={"37%"}
-          transform={"translate(0%, -50%)"}
-          zIndex={2}
           onClick={() => slider?.slickNext()}
         >
           <BiRightArrowAlt size="40px" />
-        </IconButton>
+        </div>
         {/* Slider */}
         <Slider
           className={`  flex items-center px-3`}
@@ -113,7 +107,7 @@ export default function CaptionCarousel() {
                    isHovered == index &&
                    isClicked !== index &&
                    "bg-base-200 rounded-[500px]"
-                 }
+                 } cursor-pointer
                 `}
               >
                 <div className=" px-3 items-center relative top-[40%] transform -translate-y-1/2 left-[50%] -translate-x-1/2">
@@ -135,7 +129,7 @@ export default function CaptionCarousel() {
                                isClicked !== index && isHovered === index
                                  ? "w-5"
                                  : ""
-                             }
+                             } 
                              `}
                     ></div>
                   </div>
@@ -156,9 +150,9 @@ export default function CaptionCarousel() {
             </div>
           ))}
         </Slider>
-      </Box >
+      </Box>
       {isDark ? (
-        <div>
+        <div className="shadow-xl ">
           <GradientDiv />
         </div>
       ) : (
