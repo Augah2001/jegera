@@ -48,8 +48,8 @@ const Main = ({ childrenNode }: Props) => {
   return (
     <html lang="en" data-theme="pastel" onScroll={() => console.log("augah")}>
       <body
-        className="min-h-full bg-base-100  "
-        onScroll={() => console.log("augah")}
+        className= {` ${inter.className} min-h-full bg-base-100`}
+        
       >
         <link
           href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
@@ -61,11 +61,7 @@ const Main = ({ childrenNode }: Props) => {
               <ChakraProvider theme= {theme}>
                 <Theme>
                 
-                  <Button className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] left-[50%] transform translate(-50%, -50%)"
-                   onClick={()=> setShowMap(!showMap)}
-                  >
-                   {showMap? 'show list': 'show map'}
-                  </Button>
+                  
                   <Navbar hasScrolled={hasScrolled} />
                   {childrenNode}
                 </Theme>

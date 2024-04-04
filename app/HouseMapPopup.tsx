@@ -1,13 +1,20 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image'
 import dheni from "./assets/dheni.jpg";
+import { useRouter } from 'next/navigation';
 
 
 const HouseMapPopup = () => {
 
-
+  
   return (
-    <div className=" card rounded-none w-[100%] mb-4 max-h-[10px]] mx-0  ">
+    <div className=" card rounded-none w-[100%] mb-4 max-h-[10px]] mx-0  "
+    onClick={() => {
+     
+    }}
+    >
       <figure className=" bg-bse-200  max-h-[180px] ">
         <Image
           

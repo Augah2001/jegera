@@ -12,8 +12,8 @@ interface Props {
 
 const PictureView = ({  onOpen,}: Props) => {
   return (
-    <div className=" mt-[10px] h-screen flex " onClick={onOpen}>
-      <div className="bg-blue-700 shadow-2xl h-[600px] w-[60%] mx-auto mt-8 flex">
+    <div className=" mt-[10px] h-[86.5vh] flex " onClick={onOpen}>
+      <div className="bg-blue-700 shadow-2xl h-[600px] w-[60%] mx-auto mt-8 flex" onClick={onOpen}>
         <div className=" w-[50%] border-e-2 h-full relative">
         <IconButton
          
@@ -83,6 +83,7 @@ const PictureView = ({  onOpen,}: Props) => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };
