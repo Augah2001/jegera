@@ -105,7 +105,7 @@ const MapComponent = ({
       setHasScrolled(true);
     });
     return () => map.remove();
-  }, []); // Update map if locations or marker state changes
+  }, []); 
 
   return (
     <div>

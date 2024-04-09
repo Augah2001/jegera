@@ -12,3 +12,89 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id                  Int           @id @default(autoincrement())
+  email               String        @unique
+  firstName           String
+  lastName            String
+  password            String
+  authoizationKey     String?       @unique
+  type                type
+  isOnline            Boolean
+  sentTransaction     Transaction[] @relation("TransactionToSender")
+  receivedTransaction Transaction[] @relation("TransactionToReceiver")
+
+}
+
+model Location {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  minutes     Int
+  coordinates Float[]   @unique
+  houses      House[]
+}
+
+model Message {
+  id       Int      @id @default(autoincrement())
+  sender   String
+  receiver String
+  body     String
+  time     DateTime @default(now())
+  status   status
+}
+
+model Transaction {
+  id         Int      @id @default(autoincrement())
+  sender     User     @relation("TransactionToSender", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User     @relation("TransactionToReceiver", fields: [receiverId], references: [id])
+  receiverId Int
+  amount     Int
+  time       DateTime @default(now())
+}
+
+enum status {
+  read
+  sent
+}
+
+enum type {
+  tenant
+  landlord
+}
+
+model House {
+  id              Int       @id @default(autoincrement())
+  location        Location  @relation(fields: [locationId], references: [id])
+  locationId      Int
+  houseNumber     Int
+  street          String
+  description     String
+  price           Float
+  minutes         Int
+  capacity        Int
+  occupied        Boolean
+  perRoom         Int
+  gender          Gender
+  images          String[]
+  backGroundImage String
+  curfew          Int
+  ownerId         Int
+
+  services        Service[]
+}
+
+model Service {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  houses House[]
+}
+
+
+
+enum Gender {
+  male
+  female
+  both
+}
