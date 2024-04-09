@@ -16,8 +16,8 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
   
   const springProps = useSpring({
     opacity: !hasScrolled ? 0 : 1, // Adjust opacity values for desired fade effect
-    from: { opacity: 0 }, // Set initial opacity for smooth transition
-    config: { duration: 150 }, // Adjust duration for transition speed (in milliseconds)
+    from: { opacity: 0 }, // Set initial opacity for smooth transitionl
+    config: { duration: 150 }, // Adjust duration for transitikkkkon speed (in milliseconds)
   });
 
   return (
