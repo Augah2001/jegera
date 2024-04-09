@@ -3,11 +3,7 @@
 import React, { useContext, useState } from "react";
 import {
   Box,
-  IconButton,
-  useBreakpointValue,
-  Stack,
-  Container,
-  Heading,
+ 
 } from "@chakra-ui/react";
 // Here we have used react-icons package for the icons
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
