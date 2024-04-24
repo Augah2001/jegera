@@ -14,34 +14,47 @@ datasource db {
 }
 
 model User {
-  id                  Int           @id @default(autoincrement())
-  email               String        @unique
-  firstName           String
-  lastName            String
-  password            String
-  authoizationKey     String?       @unique
-  type                type
-  isOnline            Boolean
-  sentTransaction     Transaction[] @relation("TransactionToSender")
-  receivedTransaction Transaction[] @relation("TransactionToReceiver")
+  id                   Int           @id @default(autoincrement())
+  email                String        @unique
+  firstName            String
+  lastName             String
+  password             String
+  authoizationKey      String?       @unique
+  type                 type
+  isOnline             Boolean
+  sentTransactions     Transaction[] @relation("TransactionToSender")
+  receivedTransactions Transaction[] @relation("TransactionToReceiver")
+  sentMessages         Message[]     @relation("MessageTo")
+  receivedMessages     Message[]     @relation("MessageFrom")
+  Chats                Chat[]
+}
 
+model Chat {
+  ChatId String @id
+  users  User[]
+  messages Message[]
 }
 
 model Location {
   id          Int     @id @default(autoincrement())
   name        String  @unique
   minutes     Int
-  coordinates Float[]   @unique
+  coordinates Float[] @unique
   houses      House[]
 }
 
 model Message {
-  id       Int      @id @default(autoincrement())
-  sender   String
-  receiver String
-  body     String
-  time     DateTime @default(now())
-  status   status
+  id         Int      @id @default(autoincrement())
+  chatId  String
+  sender     User     @relation("MessageFrom", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User     @relation("MessageTo", fields: [receiverId], references: [id])
+  receiverId Int
+  body       String
+  time       DateTime @default(now())
+  sentByMe  Boolean
+  chat Chat @relation(fields: [chatId], references: [ChatId])
+
 }
 
 model Transaction {
@@ -65,8 +78,8 @@ enum type {
 }
 
 model House {
-  id              Int       @id @default(autoincrement())
-  location        Location  @relation(fields: [locationId], references: [id])
+  id              Int      @id @default(autoincrement())
+  location        Location @relation(fields: [locationId], references: [id])
   locationId      Int
   houseNumber     Int
   street          String
@@ -82,7 +95,7 @@ model House {
   curfew          Int
   ownerId         Int
 
-  services        Service[]
+  services Service[]
 }
 
 model Service {
@@ -90,8 +103,6 @@ model Service {
   name   String  @unique
   houses House[]
 }
-
-
 
 enum Gender {
   male

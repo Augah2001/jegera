@@ -17,6 +17,7 @@ async function hash(password: string) {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   return hashedPassword;
+  console.log(hashedPassword)
 }
 
 export async function GET(request: NextRequest) {
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
       email: true,
       firstName: true,
       lastName: true,
-      authorizationKey: true,
+      // authorizationKey: true,
       type: true,
       isOnline: true,
     },
@@ -57,8 +58,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  console.log(hash(body.password))
   const newUser = await prisma.user.create<User>({
-    data: { ...body, password: hash(body.password) },
+    data: { ...body, password: body.password },
   });
 
   const userWithoutPassword = omitPassword(newUser);
