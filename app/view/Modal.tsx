@@ -13,11 +13,9 @@ interface Props {
   onClose: () => void;
   onOpen: () => void;
 }
-function ImageModal({ onOpen, onClose, isOpen }: Props) {
+function ImageModal({ onClose, isOpen }: Props) {
   return (
     <>
-      
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent className="bg-base-100 shadow-none">
