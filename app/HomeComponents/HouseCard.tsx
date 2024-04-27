@@ -1,13 +1,11 @@
 import Image from "next/image";
-import dheni from "./assets/dheni.jpg";
+import dheni from "../assets/dheni.jpg";
 import { Badge } from "@radix-ui/themes";
-import { ThemeContext } from "./contexts/ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
 
-
 const HouseCard = () => {
-
-  const {isDark} = useContext(ThemeContext)
+  const { isDark } = useContext(ThemeContext);
   return (
     <div className=" card rounded-none w-[100%] mb-4">
       <figure className=" shadow-md bg-bse-200  max-h-[415px] h-auto">
@@ -28,10 +26,15 @@ const HouseCard = () => {
             <h2 className="font-semibold text-gray-500">3 minutes</h2>
           </div>
           <div className=" flex justify-end">
-            <Badge className={`${!isDark? ' text-white  bg-indigo-700': 'text-indigo-700 bg-white'} ps-[10px] font-semibold h-8 w-16 text-lg rounded-0` }
-              
-              
-            >$100</Badge>
+            <Badge
+              className={`${
+                !isDark
+                  ? " text-white  bg-indigo-700"
+                  : "text-indigo-700 bg-white"
+              } ps-[10px] font-semibold h-8 w-16 text-lg rounded-0`}
+            >
+              $100
+            </Badge>
           </div>
         </div>
       </figure>

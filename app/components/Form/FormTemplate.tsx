@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
-import Button1 from "../../ui/Button1";
-import Input1 from "../../ui/Input1";
+import Button1 from "./Button1";
+import Input1 from "./Input1";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Select1 from "../../ui/Select";
+import Select1 from "./Select";
 
 interface InputProps {
   id: string;
@@ -75,7 +75,7 @@ const Form = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="rounded-xl" onSubmit={handleSubmit(onSubmit)}>
       {children(renderInput, renderSelect, renderButton)}
     </form>
   );

@@ -1,18 +1,15 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import {
-  Box,
- 
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 // Here we have used react-icons package for the icons
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 // And react-slick as our Carousel Lib
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { ThemeContext } from "./contexts/ThemeContext";
-import GradientDiv from "./components/GradientDiv";
+import { ThemeContext } from "../contexts/ThemeContext";
+import GradientDiv from "../components/GradientDiv";
 
 // Settings for the slider
 const settings = {

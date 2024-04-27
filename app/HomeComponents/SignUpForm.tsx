@@ -1,20 +1,12 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import React, { ReactNode, useState } from "react";
-import { useForm, UseFormRegister } from "react-hook-form";
+
 import { z } from "zod";
-import Input1 from "../../ui/Input1";
-import Button1 from "../../ui/Button1";
-import Link from "next/link";
-import Form from "./Form";
 
-type RenderInput = (
-  id: string,
+import Form from "../components/Form/FormTemplate";
 
-  type: string,
-  label: string
-) => ReactNode;
+type RenderInput = (id: string, type: string, label: string) => ReactNode;
 
 type RenderButton = (label: string) => ReactNode;
 
@@ -44,6 +36,8 @@ const SignUpForm = () => {
     });
 
   const initialValues = useState<z.infer<typeof FormSchema>>();
+
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {};
 
   return (
     <Form

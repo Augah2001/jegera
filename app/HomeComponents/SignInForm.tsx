@@ -2,12 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { ReactNode, useState } from "react";
-import { useForm, UseFormRegister } from "react-hook-form";
+import { useForm} from "react-hook-form";
 import { z } from "zod";
-import Input1 from "../../ui/Input1";
-import Button1 from "../../ui/Button1";
 import Link from "next/link";
-import Form from "./Form";
+import Form from "../components/Form/FormTemplate";
 
 type RenderInput = (
   id: string,
@@ -47,6 +45,7 @@ const SignUpForm = () => {
 
   return (
     <Form
+      
       FormSchema={FormSchema}
       onSubmit={(data) => {
         console.log(data);

@@ -1,6 +1,6 @@
 "use client";
 
-import Form from "@/app/components/Form/SignInForm";
+import Form from "@/app/HomeComponents/SignInForm";
 import { FormModalContext } from "@/app/contexts/FormModalContext";
 import {
   Button,
@@ -22,24 +22,21 @@ interface Props {
   footerContent?: ReactNode;
   modalBody: ReactNode;
 }
-function ImageModal(
-  // { onClose, isOpen }: Props
-  { headerContent, footerContent, modalBody }: Props
-) {
-  const {isOpen, onClose} = useContext(FormModalContext)
+function ImageModal({ headerContent, footerContent, modalBody }: Props) {
+  const { isOpen, onClose } = useContext(FormModalContext);
   return (
-    <>
+    
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent className="bg-base-100 shadow-none">
-          <ModalHeader className=" flex justify-center">
+        <ModalContent className="bg-base-100 shadow-3xl  ">
+          <ModalHeader className=" flex justify-center rounded-md bg-base-100">
             <h1 className="text-pink-700 text-2xl">{headerContent}</h1>
           </ModalHeader>
           <ModalBody className="bg-base-100 shadow-none">{modalBody}</ModalBody>
-          <ModalFooter>{footerContent}</ModalFooter>
+          <ModalFooter className="bg-base-100 rounded-md">{footerContent}</ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    
   );
 }
 

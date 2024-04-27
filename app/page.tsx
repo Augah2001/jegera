@@ -1,24 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import Navbar from "./Navbar";
+import Navbar from "./NavBar/Navbar";
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "./contexts/ThemeContext";
 import { Button } from "@radix-ui/themes";
 import { SearchIcon } from "@chakra-ui/icons";
-import SearchComponent from "./components/SearchComponent";
+import SearchComponent from "./HomeComponents/SearchComponent";
 import GradientDiv from "./components/GradientDiv";
-import Slider from "./Slider";
-import HouseCard from "./HouseCard";
-import HouseCardGrid from "./HouseCardGrid";
+import Slider from "./HomeComponents/Slider";
+import HouseCard from "./HomeComponents/HouseCard";
+import HouseCardGrid from "./HomeComponents/HouseCardGrid";
 import { useSpring, animated } from "react-spring";
-import MyMap from "./Map";
+import MyMap from "./HomeComponents/Map";
 import { ShowMapContext } from "./contexts/ShowMapContext";
 import { FormModalContext } from "./contexts/FormModalContext";
-import Modal from "./ui/Form/Modal";
-import SignInForm from "./components/Form/SignInForm";
+import Modal from "./components/Modal";
+import SignInForm from "./HomeComponents/SignInForm";
 import Link from "next/link";
-import SignUpForm from "./components/Form/SignUpForm";
+import SignUpForm from "./HomeComponents/SignUpForm";
 
 export default function Home({}) {
   const { showMap, setShowMap } = useContext(ShowMapContext);
@@ -46,7 +46,7 @@ export default function Home({}) {
   }, [scrollThreshold]);
 
   return (
-    <>
+    <div >
       {
         <Modal
           modalBody={isSignIn ? <SignInForm /> : <SignUpForm />}
@@ -104,6 +104,6 @@ export default function Home({}) {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

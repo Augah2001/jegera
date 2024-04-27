@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 
 import PictureCarousel from "./PictureCarousel";
-import Form from "../components/Form/SignInForm";
+import Form from "../HomeComponents/SignInForm";
 
 interface Props {
   isOpen: boolean;
