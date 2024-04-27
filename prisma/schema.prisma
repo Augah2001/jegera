@@ -20,13 +20,14 @@ model User {
   lastName             String
   password             String
   authoizationKey      String?       @unique
-  type                 type
-  isOnline             Boolean
+  AccountType          type
+  isOnline             Boolean @default(false)
   sentTransactions     Transaction[] @relation("TransactionToSender")
   receivedTransactions Transaction[] @relation("TransactionToReceiver")
   sentMessages         Message[]     @relation("MessageTo")
   receivedMessages     Message[]     @relation("MessageFrom")
   Chats                Chat[]
+  isAuthorizer         Boolean @default(false)
 }
 
 model Chat {

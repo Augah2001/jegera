@@ -12,12 +12,13 @@ import {
   useState,
 } from "react";
 import Navbar from "./Navbar";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import { useSpring } from "react-spring";
 import { createContext } from "vm";
 import { SearchContext } from "./contexts/SearchContext";
 import { ShowMapContext } from "./contexts/ShowMapContext";
 import theme from "./configs/theme";
+import { FormModalContext } from "./contexts/FormModalContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -45,6 +46,8 @@ const Main = ({ childrenNode }: Props) => {
 
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollThreshold]);
+
+  const {isOpen, onClose, onOpen} = useDisclosure()
   return (
     <html lang="en" data-theme="pastel" onScroll={() => console.log("augah")}>
       <body
@@ -62,8 +65,10 @@ const Main = ({ childrenNode }: Props) => {
                 <Theme>
                 
                   
-                  <Navbar hasScrolled={hasScrolled} />
-                  {childrenNode}
+                  <FormModalContext.Provider value={{onOpen, onClose, isOpen}}>
+                    <Navbar hasScrolled={hasScrolled} />
+                    {childrenNode}
+                  </FormModalContext.Provider>
                 </Theme>
               </ChakraProvider>
             </ShowMapContext.Provider>

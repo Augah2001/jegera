@@ -9,10 +9,12 @@ import NavSearchComponent from "./components/NavSearchComponent";
 import { animated, useSpring } from "react-spring";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FormModalContext } from "./contexts/FormModalContext";
 
 const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
   
   const path = usePathname();
+  const {onOpen} = useContext(FormModalContext)
   
   const springProps = useSpring({
     opacity: !hasScrolled ? 0 : 1, // Adjust opacity values for desired fade effect
@@ -44,6 +46,7 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
           <Button
             className="bg-gradient-to-r  to-pink.300 from-purple-600 h-[36px] me-5 cursor-pointer"
             style={{ marginTop: "4px" }}
+            onClick={onOpen}
           >
             sign up
           </Button>

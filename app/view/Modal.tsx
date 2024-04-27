@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/react";
 
 import PictureCarousel from "./PictureCarousel";
+import Form from "../components/Form/SignInForm";
 
 interface Props {
   isOpen: boolean;
@@ -20,7 +21,7 @@ function ImageModal({ onClose, isOpen }: Props) {
         <ModalOverlay />
         <ModalContent className="bg-base-100 shadow-none">
           <ModalBody className="bg-base-100 shadow-none">
-            <PictureCarousel />
+            <Form />
           </ModalBody>
         </ModalContent>
       </Modal>
