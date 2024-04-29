@@ -12,6 +12,8 @@ interface Props {
 }
 
 const Select1 = ({ id, label, options, register }: Props) => {
+
+  console.log(id)
   const { isDark } = useContext(ThemeContext);
   return (
     <Box className="h-full mb-6 mx-4">
@@ -41,6 +43,7 @@ const Select1 = ({ id, label, options, register }: Props) => {
           className="text-base-content"
           {...register(id)}
         >
+          <option  value=''>{''}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

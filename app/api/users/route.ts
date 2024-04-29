@@ -13,11 +13,13 @@ function omitPassword(user: User) {
 
 async function hash(password: string) {
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const salt =  await bcrypt.genSalt(10);
+  const hashedPassword = await  bcrypt.hash(password, salt);
 
-  return hashedPassword;
-  console.log(hashedPassword)
+  
+
+  return  hashedPassword
+ 
 }
 
 export async function GET(request: NextRequest) {
@@ -57,10 +59,13 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(body.password, salt)
+  
 
-  console.log(hash(body.password))
+ 
   const newUser = await prisma.user.create<User>({
-    data: { ...body, password: body.password },
+    data: { ...body, password: hashedPassword},
   });
 
   const userWithoutPassword = omitPassword(newUser);
@@ -116,7 +121,9 @@ export async function PUT(request: NextRequest) {
 
   let updatedData = body;
   if (body.password) {
-    updatedData = { ...body, password: hash(body.password) };
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(body.password, salt)
+    updatedData = { ...body, password: hashedPassword };
   }
 
   const updatedUser = await prisma.user.update({

@@ -7,7 +7,7 @@ export const schemaUser = z.object({
   lastName: z.string().optional(), // Optional last name
   password: z.string().min(8).max(72), // Enforce password length
   authorizationKey: z.string().optional(), // Allow optional authorizationKey
-  type: z.enum(["tenant", "landlord"]), // Enforce valid user type
+  accountType: z.enum(["tenant", "landlord"]), // Enforce valid user type
   isOnline: z.boolean().optional(), // Allow optional isOnline
 });
 

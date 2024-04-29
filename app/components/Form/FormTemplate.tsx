@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
-import Button1 from "./Button1";
-import Input1 from "./Input1";
+import Button1 from "./Button";
+import Input1 from "./Input";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";

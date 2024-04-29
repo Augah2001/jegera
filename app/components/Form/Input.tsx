@@ -48,8 +48,6 @@ const Input1 = ({ id, type, register, placeholder, label, errors }: Props) => {
           borderWidth={"2px"}
           borderColor="purple.500"
           className="text-base-content"
-          // bg={`${isDark ? "#302E5E" : "#ECECEC"}`}
-
           {...register(id)}
         />
       </FormControl>

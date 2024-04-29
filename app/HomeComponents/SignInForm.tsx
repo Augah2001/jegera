@@ -2,10 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { ReactNode, useState } from "react";
-import { useForm} from "react-hook-form";
+import { SubmitHandler, useForm} from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import Form from "../components/Form/FormTemplate";
+import axios from 'axios'
 
 type RenderInput = (
   id: string,
@@ -30,26 +31,22 @@ const SignUpForm = () => {
       .min(1, "password is required")
       .min(4, "password must have more than 4 characters"),
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-  });
 
   const initialValues = useState<z.infer<typeof FormSchema>>({
     email: "",
     password: "",
   });
 
+  const onSubmit = (data: SubmitHandler<any>) => {
+      axios.post<z.infer<typeof FormSchema>>('http://localhost:3000/api/users')
+      .then(res=> console.log(res.data))
+  }
+
   return (
     <Form
       
       FormSchema={FormSchema}
-      onSubmit={(data) => {
-        console.log(data);
-      }}
+      onSubmit={onSubmit}
       initialValues={initialValues}
     >
       {(
