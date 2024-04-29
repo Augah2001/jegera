@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Auth" ADD COLUMN     "id" SERIAL NOT NULL,
+ADD CONSTRAINT "Auth_pkey" PRIMARY KEY ("id");

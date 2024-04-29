@@ -9,11 +9,12 @@ interface Props {
   label: string;
   options: Array<{ value: string; label: string }>;
   register: (...args: any) => any; // Update to match your React Hook Form setup
+  handleInputChange?: (event: { target: { value: any; }; }) => void
 }
 
-const Select1 = ({ id, label, options, register }: Props) => {
+const Select1 = ({ id, label, options, register, handleInputChange }: Props) => {
 
-  console.log(id)
+ 
   const { isDark } = useContext(ThemeContext);
   return (
     <Box className="h-full mb-6 mx-4">
@@ -25,6 +26,7 @@ const Select1 = ({ id, label, options, register }: Props) => {
           {label}
         </FormLabel>
         <Select
+          
           height={12}
           id={id}
           focusBorderColor="purple.500"
@@ -40,12 +42,12 @@ const Select1 = ({ id, label, options, register }: Props) => {
           borderStyle={"solid"}
           borderWidth={"2px"}
           borderColor="purple.500"
-          className="text-base-content"
-          {...register(id)}
+          className="text-slate-400"
+          {...register(id, {onChange: handleInputChange})}
         >
-          <option  value=''>{''}</option>
+          <option className="text-base-content"  value=''>{`select ${label}`}</option>
           {options.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option  key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}

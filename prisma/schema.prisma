@@ -19,7 +19,7 @@ model User {
   firstName            String
   lastName             String
   password             String
-  authoizationKey      String?       @unique
+  authorizationKey      String?       @unique
   accountType          type
   isOnline             Boolean       @default(false)
   sentTransactions     Transaction[] @relation("TransactionToSender")
@@ -36,6 +36,11 @@ model Chat {
   ChatId   String    @id
   users    User[]
   messages Message[]
+}
+
+model Auth {
+  
+  authorizationKey String @unique
 }
 
 model Location {

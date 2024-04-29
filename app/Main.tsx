@@ -13,12 +13,11 @@ import {
 } from "react";
 import Navbar from "./NavBar/Navbar";
 import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
-import { useSpring } from "react-spring";
-import { createContext } from "vm";
 import { SearchContext } from "./contexts/SearchContext";
 import { ShowMapContext } from "./contexts/ShowMapContext";
 import theme from "./configs/theme";
 import { FormModalContext } from "./contexts/FormModalContext";
+import { UserContext } from "./contexts/UserContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -62,12 +61,14 @@ const Main = ({ childrenNode }: Props) => {
             <ShowMapContext.Provider value={{ showMap, setShowMap }}>
               <ChakraProvider theme={theme}>
                 <Theme>
-                  <FormModalContext.Provider
-                    value={{ onOpen, onClose, isOpen }}
-                  >
-                    <Navbar hasScrolled={hasScrolled} />
-                    {childrenNode}
-                  </FormModalContext.Provider>
+                  <UserContext.Provider value={null}>
+                    <FormModalContext.Provider
+                      value={{ onOpen, onClose, isOpen }}
+                    >
+                      <Navbar hasScrolled={hasScrolled} />
+                      {childrenNode}
+                    </FormModalContext.Provider>
+                  </UserContext.Provider>
                 </Theme>
               </ChakraProvider>
             </ShowMapContext.Provider>

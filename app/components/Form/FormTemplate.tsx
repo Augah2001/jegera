@@ -1,17 +1,10 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import Button1 from "./Button";
 import Input1 from "./Input";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Select1 from "./Select";
-
-interface InputProps {
-  id: string;
-  register: UseFormRegister<{ [key: string]: string }>;
-  type: string;
-  label: string;
-}
 
 type RenderInput = (
   id: string,
@@ -28,7 +21,12 @@ interface FormProps<T> {
   children: (
     renderInput: RenderInput,
     renderSelect: RenderSelect,
-    renderButton: RenderButton
+    renderButton: RenderButton,
+    handleInputChange?: (event: {
+      target: {
+        value: any;
+      };
+    }) => void
   ) => ReactNode;
   FormSchema: z.ZodObject<any>;
 }
@@ -36,7 +34,12 @@ interface FormProps<T> {
 type RenderSelect = (
   id: string,
   label: string,
-  options: Array<{ value: string; label: string }>
+  options: Array<{ value: string; label: string }>,
+  handleInputChange?: (event: {
+    target: {
+      value: any;
+    };
+  }) => void
 ) => ReactNode;
 
 const Form = ({
@@ -53,6 +56,7 @@ const Form = ({
     defaultValues: initialValues,
     resolver: zodResolver(FormSchema),
   });
+
   const renderButton: RenderButton = (label) => {
     return <Button1 label="sign in" />;
   };
@@ -68,9 +72,20 @@ const Form = ({
     );
   };
 
-  const renderSelect: RenderSelect = (id, label, options) => {
+  const renderSelect: RenderSelect = (
+    id,
+    label,
+    options,
+    handleInputChange
+  ) => {
     return (
-      <Select1 id={id} label={label} options={options} register={register} />
+      <Select1
+        id={id}
+        label={label}
+        options={options}
+        register={register}
+        handleInputChange={handleInputChange}
+      />
     );
   };
 
