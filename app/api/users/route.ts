@@ -21,7 +21,7 @@ async function hash(password: string) {
 }
 
 export async function GET(request: NextRequest) {
-  const users = await prisma.user.findMany({
+  const users = await prisma.user.findMany<User>({
     select: {
       id: true,
       email: true,
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const existingUser = await prisma.user.findUnique({
+  const existingUser = await prisma.user.findUnique<User>({
     where: { email: body.email },
   });
 
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 
   const userWithoutPassword = omitCrucial(newUser);
 
-  const token = jwt.sign(newUser, "augah");
+  const token = jwt.sign(newUser, "authKey");
 
   const response = NextResponse.json(userWithoutPassword);
   response.headers.set("x-auth-token", token);

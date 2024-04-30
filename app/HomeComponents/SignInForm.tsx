@@ -1,12 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 import { SubmitHandler, useForm} from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import Form from "../components/Form/FormTemplate";
 import axios from 'axios'
+import { UserContext } from "../contexts/UserContext";
+import { User } from "@prisma/client";
+import { jwtDecode } from "jwt-decode";
+import { useToast } from "@chakra-ui/react";
 
 type RenderInput = (
   id: string,
@@ -24,6 +28,20 @@ type RenderSelect = (
 ) => ReactNode;
 
 const SignUpForm = () => {
+
+  const toast = useToast({
+    position: "top",
+    title: "signup successful",
+    containerStyle: {
+      width: "800px",
+      maxWidth: "500px",
+      color: "green",
+      backgroundColor: "pink.green",
+    },
+  });
+
+  const userInfo = useContext(UserContext);
+  const [user, setUser] = useState(userInfo);
   const FormSchema = z.object({
     email: z.string().min(1, "email is required").email("invalid email"),
     password: z
@@ -38,8 +56,14 @@ const SignUpForm = () => {
   });
 
   const onSubmit = (data: SubmitHandler<any>) => {
-      axios.post<z.infer<typeof FormSchema>>('http://localhost:3000/api/users')
-      .then(res=> console.log(res.data))
+      axios.post<z.infer<typeof FormSchema>>('http://localhost:3000/api/login', data)
+      .then(res=> {
+      const jwt = res.headers["x-auth-token"]
+      localStorage.setItem('token', jwt)
+      const user: User = jwtDecode(jwt)
+      setUser(user);
+      toast({ title: "signup successful", colorScheme: "green" });
+      })
   }
 
   return (
@@ -58,10 +82,7 @@ const SignUpForm = () => {
           <>
             {renderInput("email", "text", "Email")}
             {renderInput("password", "password", "Password")}
-            {renderSelect("gender", "Gender", [
-              { value: "male", label: "male" },
-              { value: "female", label: "female" },
-            ])}
+            
             <Link href="/signup" className="mx-4 text-pink-700">
               forgot password
             </Link>
