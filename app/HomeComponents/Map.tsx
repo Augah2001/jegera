@@ -6,12 +6,16 @@ import React, {
   SetStateAction,
 } from "react";
 import mapboxgl from "mapbox-gl";
-
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import MapboxDirections from "@mapbox/mapbox-gl-directions";
 import "./beepingButton.css";
 
 import HouseMapPopup from "./HouseMapPopup";
 import { createRoot } from "react-dom/client";
 import { useRouter } from "next/navigation";
+import { position } from "@chakra-ui/react";
+// import { direction } from "../hooks/useDirections";
+
 
 interface house {
   id: number;
@@ -27,16 +31,23 @@ const MapComponent = ({
   const mapContainerRef = useRef<HTMLDivElement | any>(undefined);
   const router = useRouter();
 
+  const map = new mapboxgl.Map({
+    accessToken:
+      "pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q",
+    container: mapContainerRef.current,
+    style: "mapbox://styles/mapbox/streets-v12", // Choose your style
+    center: [31.05139, -17.78421], // Initial center
+    zoom: 13,
+  });
+
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      () => {},
+      () => {}
+    );
+
     if (!mapContainerRef.current) return;
-    const map = new mapboxgl.Map({
-      accessToken:
-        "pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q",
-      container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v12", // Choose your style
-      center: [31.05139, -17.78421], // Initial center
-      zoom: 13,
-    });
+    
 
     const houses: house[] = [
       {
@@ -101,11 +112,38 @@ const MapComponent = ({
       })
     );
 
+    
+
+    // map.addControl(direction)
+
+    const coordinatesString = "31.058826105504835, -17.768739785090247";
+    const coordinatesArray = coordinatesString.split(",").map(Number);
+    const search = new MapboxGeocoder({
+      autocomplete: true,
+
+      marker: true,
+
+      flyTo: true,
+      proximity: {
+        latitude: 31.058826105504835,
+        longitude: -17.768739785090247,
+      },
+      accessToken:
+        "pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q",
+    });
+
+    map.addControl(search);
+
     map.on("click", (e) => {
       setHasScrolled(true);
     });
     return () => map.remove();
-  }, []); 
+  }, []);
+
+
+
+
+  
 
   return (
     <div>
@@ -115,7 +153,7 @@ const MapComponent = ({
         onClick={() => {
           setHasScrolled(true);
         }}
-      />
+      ></div>
     </div>
   );
 };

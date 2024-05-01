@@ -9,7 +9,8 @@ import apiClient from "../configs/apiClient";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
 
-import { UserContext, UserType } from "../contexts/UserContext";
+import { UserContext, User} from "../contexts/UserContext";
+import { FormModalContext } from "../contexts/FormModalContext";
 
 const FormSchema: any = z
   .object({
@@ -65,9 +66,11 @@ const SignUpForm = () => {
     },
   });
 
-  const userInfo = useContext(UserContext);
+  const { setUser} = useContext(UserContext);
 
-  const [user, setUser] = useState(userInfo);
+ 
+  // const {onClose} = useContext(FormModalContext)
+  
 
   const [isTenant, setIsTenant] = useState(false);
 
@@ -84,9 +87,10 @@ const SignUpForm = () => {
         console.log(response.data);
         console.log(response.headers);
         toast({ title: "signup successful", colorScheme: "green" });
+        
 
         localStorage.setItem("token", response.headers["x-auth-token"]);
-        const userLogged: UserType = jwtDecode(
+        const userLogged: User = jwtDecode(
           response.headers["x-auth-token"]
         );
         setUser(userLogged);
@@ -109,7 +113,7 @@ const SignUpForm = () => {
         toast({ title: "signup successful", colorScheme: "green" });
 
         localStorage.setItem("token", response.headers["x-auth-token"]);
-        const userLogged: UserType = jwtDecode(
+        const userLogged: User = jwtDecode(
           response.headers["x-auth-token"]
         );
         setUser(userLogged);

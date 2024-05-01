@@ -1,7 +1,7 @@
-import { createContext } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 
 
-export type  UserType = {
+export type  User = {
   email: string;
   lastName: string;
   firstName: string;
@@ -16,9 +16,19 @@ export type  UserType = {
   isAuthorizer: boolean
   logins: any[]         
   
+
+
+}
+
+
+export interface UserContextType {
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>
 }
 
 
 
+export const UserContext = createContext<UserContextType>({} as UserContextType)
 
-export const UserContext = createContext<UserType | null>(null)
+
+

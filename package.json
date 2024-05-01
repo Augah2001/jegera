@@ -14,6 +14,8 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.3.4",
+    "@mapbox/mapbox-gl-directions": "^4.3.1",
+    "@mapbox/mapbox-gl-geocoder": "^5.0.2",
     "@prisma/client": "^5.9.0",
     "@radix-ui/themes": "^2.0.3",
     "axios": "^1.6.8",
@@ -24,6 +26,7 @@
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.363.0",
     "mapbox-gl": "^3.2.0",
+    "mapbox-gl-geocoder": "^2.0.1",
     "next": "14.1.4",
     "next-connect": "^1.0.0",
     "prisma": "^5.9.0",
@@ -41,6 +44,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/mapbox__mapbox-gl-geocoder": "^5.0.0",
     "@types/mapbox-gl": "^3.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -52,5 +56,10 @@
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }

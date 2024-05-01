@@ -10,8 +10,14 @@ import { animated, useSpring } from "react-spring";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FormModalContext } from "../contexts/FormModalContext";
+import { UserContext } from "../contexts/UserContext";
+import user_placeholder from '../assets/user_placeholder.jpeg'
+
 
 const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
+
+  const {user, setUser} = useContext(UserContext)
+  console.log(user)
   const path = usePathname();
   const { onOpen } = useContext(FormModalContext);
 
@@ -44,13 +50,14 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
         <div className="pe-5 pt-2 ">
           <ColorModeSwitch />
 
-          <Button
+          {!user &&<Button
             className="bg-gradient-to-r  to-pink.300 from-purple-600 h-[36px] me-5 cursor-pointer"
             style={{ marginTop: "4px" }}
             onClick={onOpen}
           >
             sign up
-          </Button>
+          </Button>}
+          {user && <Image className="w-[40px]" src={user_placeholder} alt="user_image"/>}
         </div>
       </div>
 

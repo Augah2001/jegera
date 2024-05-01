@@ -7,10 +7,13 @@ import { z } from "zod";
 import Link from "next/link";
 import Form from "../components/Form/FormTemplate";
 import axios from 'axios'
-import { UserContext } from "../contexts/UserContext";
+
 import { User } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
+import useUser from "../hooks/useUsers";
+import { UserContext } from "../contexts/UserContext";
+import { FormModalContext } from "../contexts/FormModalContext";
 
 type RenderInput = (
   id: string,
@@ -40,8 +43,9 @@ const SignUpForm = () => {
     },
   });
 
-  const userInfo = useContext(UserContext);
-  const [user, setUser] = useState(userInfo);
+  const {onClose} = useContext(FormModalContext)
+
+  const {setUser} = useContext(UserContext)
   const FormSchema = z.object({
     email: z.string().min(1, "email is required").email("invalid email"),
     password: z
@@ -62,9 +66,13 @@ const SignUpForm = () => {
       localStorage.setItem('token', jwt)
       const user: User = jwtDecode(jwt)
       setUser(user);
+      console.log(user)
+      onClose()
       toast({ title: "signup successful", colorScheme: "green" });
       })
   }
+
+  
 
   return (
     <Form

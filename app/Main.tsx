@@ -17,7 +17,9 @@ import { SearchContext } from "./contexts/SearchContext";
 import { ShowMapContext } from "./contexts/ShowMapContext";
 import theme from "./configs/theme";
 import { FormModalContext } from "./contexts/FormModalContext";
-import { UserContext } from "./contexts/UserContext";
+import { User, UserContext, UserContextType } from "./contexts/UserContext";
+import { jwtDecode } from "jwt-decode";
+import Script from "next/script";
 
 interface Props {
   childrenNode: ReactNode;
@@ -27,6 +29,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const Main = ({ childrenNode }: Props) => {
   const [isDark, setIsDark] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const [hasScrolled, setHasScrolled] = useState(false);
   const scrollThreshold = 5;
@@ -42,18 +45,38 @@ const Main = ({ childrenNode }: Props) => {
     };
 
     window.addEventListener("scroll", onScroll);
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const loggedUser: User = jwtDecode(token);
+        setUser(loggedUser);
+      }
+    } catch (ex) {}
 
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollThreshold]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
+
   return (
     <html lang="en" data-theme="pastel" onScroll={() => console.log("augah")}>
       <body className={` ${inter.className} min-h-full bg-base-100`}>
+        <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></Script>
+        <link
+          rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+          type="text/css"
+        />
         <link
           href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
           rel="stylesheet"
         />
+        <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.js"></Script>
+        <link
+          rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.css"
+          type="text/css"
+        ></link>
         <ThemeContext.Provider value={{ isDark, setIsDark }}>
           <SearchContext.Provider
             value={{ searchValue, setSearchValue, selectValue, setSelectValue }}
@@ -61,7 +84,7 @@ const Main = ({ childrenNode }: Props) => {
             <ShowMapContext.Provider value={{ showMap, setShowMap }}>
               <ChakraProvider theme={theme}>
                 <Theme>
-                  <UserContext.Provider value={null}>
+                  <UserContext.Provider value={{ user, setUser }}>
                     <FormModalContext.Provider
                       value={{ onOpen, onClose, isOpen }}
                     >

@@ -30,6 +30,7 @@ model User {
   isAuthorizer         Boolean       @default(false)
   gender               genderType
   logins               Login[]
+  houses               House[]
 }
 
 model Chat {
@@ -111,6 +112,7 @@ model House {
   images          String[]
   backGroundImage String
   curfew          Int
+  owner           User  @relation(fields: [ownerId], references: [id])
   ownerId         Int
 
   services Service[]
