@@ -2,6 +2,7 @@ import { createContext, Dispatch, SetStateAction, useContext, useState } from "r
 
 
 export type  User = {
+  id: number,
   email: string;
   lastName: string;
   firstName: string;

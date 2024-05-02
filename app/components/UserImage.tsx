@@ -31,7 +31,7 @@ const UserImage = ({ menuItems, heading}: Props) => {
   return (
     <Menu >
       <MenuButton  as={CustomButton}  w="fit-content">
-       <Image src={userImage} alt="user_Image"/>
+       <Image src={userImage} alt="user_Image" className="w-[50px] rounded-full"/>
       </MenuButton>
       <MenuList>
       <Heading as= "h6" fontSize= "20px" textAlign= "center" color= "pink.500">{heading}</Heading>

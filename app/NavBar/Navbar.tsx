@@ -12,6 +12,7 @@ import { usePathname } from "next/navigation";
 import { FormModalContext } from "../contexts/FormModalContext";
 import { UserContext } from "../contexts/UserContext";
 import user_placeholder from '../assets/user_placeholder.jpeg'
+import UserImage from "../components/UserImage";
 
 
 const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
@@ -26,6 +27,19 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
     from: { opacity: 0 }, // Set initial opacity for smooth transitionl
     config: { duration: 150 }, // Adjust duration for transitikkkkon speed (in milliseconds)
   });
+
+  let imageMenuItems = [
+    // user?.accountType === "landlord" && {label: "My assets", value: "/my-assets"},
+    {label: "signout", value: "/signout"},
+    
+  ]
+
+  if (user?.accountType === 'landlord') {
+    imageMenuItems = [{label: "my properties", value: `/dashboard/${user.id}`},...imageMenuItems]
+  }
+
+
+  
 
   return (
     <div className="bg-transparent z-10 ">
@@ -57,7 +71,7 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
           >
             sign up
           </Button>}
-          {user && <Image className="w-[40px]" src={user_placeholder} alt="user_image"/>}
+          {user && <UserImage menuItems={imageMenuItems} heading= {user.firstName}/>}
         </div>
       </div>
 

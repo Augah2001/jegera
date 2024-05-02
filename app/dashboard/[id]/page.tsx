@@ -7,6 +7,7 @@ import Slider from "@/app/HomeComponents/Slider";
 import useLocations from "@/app/hooks/useLocations";
 import useMainView from "@/app/hooks/useMainView";
 import { Button } from "@radix-ui/themes";
+import { BiPlusCircle } from "react-icons/bi";
 
 import React, { useContext } from "react";
 
@@ -23,7 +24,7 @@ const Dashboard = () => {
         {showMap ? "show list" : "show map"}
       </Button>
       <p className="font-medium mb-10  mx-6 text-slate-400 text-4xl">
-        Dashboard
+        Dashboard {<BiPlusCircle/>}
       </p>
 
       <div

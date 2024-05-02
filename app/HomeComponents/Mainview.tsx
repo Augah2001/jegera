@@ -46,7 +46,7 @@ const Mainview = () => {
         )}
         {<Slider />}
       </div>
-      <div className="mt-[208px]">
+      <div className={`${!hasScrolled? 'mt-[235px]': "mt-[100px]" }`}>
         {showMap ? (
           <MyMap setHasScrolled={setHasScrolled} />
         ) : (
