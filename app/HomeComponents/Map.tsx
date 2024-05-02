@@ -8,7 +8,7 @@ interface house {
   coordinates: [number, number];
 }
 
-const MapComponent = ({
+const MyMap = ({
   setHasScrolled,
 }: {
   setHasScrolled: Dispatch<SetStateAction<boolean>>;
@@ -19,7 +19,7 @@ const MapComponent = ({
     <div>
       <div
         ref={mapContainerRef}
-        className="w-full min-h-screen"
+        className="w-full min-h-[800px]"
         onClick={() => {
           setHasScrolled(true);
         }}
@@ -28,4 +28,4 @@ const MapComponent = ({
   );
 };
 
-export default MapComponent;
+export default MyMap;

@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ThemeContext } from "../contexts/ThemeContext";
 import GradientDiv from "../components/GradientDiv";
+import useLocations from "../hooks/useLocations";
 // import { Location } from "@prisma/client";
 
 // Settings for the slider
@@ -31,14 +32,14 @@ interface Location {
 
 
 
-export default function CaptionCarousel({locations}: {locations: Location[]}) {
+export default function CaptionCarousel() {
   const { isDark } = useContext(ThemeContext);
 
   const [isClicked, setIsClicked] = useState(0);
   const [isHovered, setIsHovered] = useState(0);
   const [slider, setSlider] = React.useState<Slider | null>(null);
 
-  const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const {data: locations, error, isLoading} = useLocations()
 
   
 
@@ -76,7 +77,7 @@ export default function CaptionCarousel({locations}: {locations: Location[]}) {
         </div>
         {/* Slider */}
         <Slider
-          className={`  flex items-center px-3`}
+          className={`  flex items-center`}
           {...settings}
           ref={(slider) => setSlider(slider)}
         >
