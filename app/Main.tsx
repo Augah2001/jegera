@@ -62,21 +62,28 @@ const Main = ({ childrenNode }: Props) => {
     <html lang="en" data-theme="pastel" onScroll={() => console.log("augah")}>
       <body className={` ${inter.className} min-h-full bg-base-100`}>
         <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></Script>
+        
+        <link
+          rel="stylesheet"
+          href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.css"
+          type="text/css"
+        />
         <link
           rel="stylesheet"
           href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
           type="text/css"
         />
+
         <link
           href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
           rel="stylesheet"
         />
         <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.js"></Script>
-        <link
+        {/* <link
           rel="stylesheet"
           href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.css"
           type="text/css"
-        ></link>
+        /> */}
         <ThemeContext.Provider value={{ isDark, setIsDark }}>
           <SearchContext.Provider
             value={{ searchValue, setSearchValue, selectValue, setSelectValue }}

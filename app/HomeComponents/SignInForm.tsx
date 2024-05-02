@@ -11,7 +11,7 @@ import axios from 'axios'
 import { User } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
-import useUser from "../hooks/useUsers";
+import useUser from "../hooks/useUser";
 import { UserContext } from "../contexts/UserContext";
 import { FormModalContext } from "../contexts/FormModalContext";
 

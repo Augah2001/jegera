@@ -3,8 +3,13 @@ import dheni from "../assets/dheni.jpg";
 import { Badge } from "@radix-ui/themes";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
+import { House } from "../hooks/useHouses";
 
-const HouseCard = () => {
+interface Props {
+  house: House
+}
+
+const HouseCard = ({house}: Props) => {
   const { isDark } = useContext(ThemeContext);
   return (
     <div className=" card rounded-none w-[100%] mb-4">
@@ -20,10 +25,10 @@ const HouseCard = () => {
         />
         <div className="card-body  ">
           <div className="flex justify-end">
-            <h2 className="card-title text-base-content">Mount Pleasant</h2>
+            <h2 className="card-title text-base-content">{house.location.name}</h2>
           </div>
           <div className="flex justify-end">
-            <h2 className="font-semibold text-gray-500">3 minutes</h2>
+            <h2 className="font-semibold text-gray-500">{house.minutes}</h2>
           </div>
           <div className=" flex justify-end">
             <Badge
@@ -33,7 +38,7 @@ const HouseCard = () => {
                   : "text-indigo-700 bg-white"
               } ps-[10px] font-semibold h-8 w-16 text-lg rounded-0`}
             >
-              $100
+              {house.price}
             </Badge>
           </div>
         </div>

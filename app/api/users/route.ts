@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       firstName: true,
       lastName: true,
       // authorizationKey: true,
-      type: true,
+      accountType: true,
       isOnline: true,
     },
   });

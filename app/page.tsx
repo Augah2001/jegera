@@ -19,6 +19,7 @@ import Modal from "./components/Modal";
 import SignInForm from "./HomeComponents/SignInForm";
 import Link from "next/link";
 import SignUpForm from "./HomeComponents/SignUpForm";
+import useLocations from "./hooks/useLocations";
 
 export default function Home({}) {
   const { showMap, setShowMap } = useContext(ShowMapContext);
@@ -27,7 +28,7 @@ export default function Home({}) {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isSignIn, setIsSignIn] = useState(true);
   const scrollThreshold = 2;
-
+  console.log(__dirname)
   const springProps = useSpring({
     opacity: hasScrolled ? 0 : 1, // Adjust opacity values for desired fade effect
     from: { opacity: 1 }, // Set initial opacity for smooth transition
@@ -44,6 +45,8 @@ export default function Home({}) {
 
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollThreshold]);
+
+  const {data:locations, error, isLoading} = useLocations()
 
   return (
     <div >
@@ -94,7 +97,7 @@ export default function Home({}) {
           {!isDark && (
             <div className={` bg-base-300  h-[1px] min-w-[100%] mt-9`}></div>
           )}
-          {<Slider />}
+          {<Slider locations={locations}/>}
         </div>
         <div className="mt-[208px]">
           {showMap ? (

@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ThemeContext } from "../contexts/ThemeContext";
 import GradientDiv from "../components/GradientDiv";
+// import { Location } from "@prisma/client";
 
 // Settings for the slider
 const settings = {
@@ -20,7 +21,17 @@ const settings = {
   slidesToShow: 6,
 };
 
-export default function CaptionCarousel() {
+interface Location {
+  id: number;
+  name: string;
+  coordinates: number[]
+  minutes: number
+}
+
+
+
+
+export default function CaptionCarousel({locations}: {locations: Location[]}) {
   const { isDark } = useContext(ThemeContext);
 
   const [isClicked, setIsClicked] = useState(0);
@@ -29,17 +40,7 @@ export default function CaptionCarousel() {
 
   const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-  const locations = [
-    "mount",
-    "tynywald",
-    "epping",
-    "heights",
-    "willovale",
-    "norton",
-    "masasa",
-    "chitown",
-    "hatfield",
-  ];
+  
 
   return (
     <div className="shadow-2xl">
@@ -79,26 +80,26 @@ export default function CaptionCarousel() {
           {...settings}
           ref={(slider) => setSlider(slider)}
         >
-          {locations.map((card, index) => (
+          {locations.map((location) => (
             <div
               className={` ${
-                (isClicked !== index || isClicked === index) && "bg-base-100"
+                (isClicked !== location.id || isClicked === location.id) && "bg-base-100"
               } h-[80px] flex items-center  relative bg-center bg-repeat bg-cover  `}
-              key={index}
-              onClick={() => setIsClicked(index)}
-              onMouseEnter={() => setIsHovered(index)}
+              key={location.id}
+              onClick={() => setIsClicked(location.id)}
+              onMouseEnter={() => setIsHovered(location.id)}
               onMouseLeave={() => setIsHovered(100000000000000)}
             >
               {/* This is the block you need to change, to customize the caption */}
               <div
                 className={`h-[65px] px-3 mt-[8px] flex items-center container ${
-                  isClicked == index && " rounded-[500px] shadow-md"
+                  isClicked == location.id && " rounded-[500px] shadow-md"
                 }
-                  ${isDark && isClicked == index && "bg-[#2a1d57]"}
-                  ${!isDark && isClicked == index && "bg-[#3c3193]"}
+                  ${isDark && isClicked == location.id && "bg-[#2a1d57]"}
+                  ${!isDark && isClicked == location.id && "bg-[#3c3193]"}
                  ${
-                   isHovered == index &&
-                   isClicked !== index &&
+                   isHovered == location.id &&
+                   isClicked !== location.id &&
                    "bg-base-200 rounded-[500px]"
                  } cursor-pointer
                 `}
@@ -109,17 +110,17 @@ export default function CaptionCarousel() {
                       className={` *
                             transition duration-900 ease-in-out                            
                             ${
-                              isClicked == index
+                              isClicked == location.id
                                 ? "bg-[#00a96e]"
                                 : " bg-purple-700"
                             } h-2 w-2 rounded-[40px]
                             ${
-                              isHovered == index && isClicked === index
+                              isHovered == location.id && isClicked === location.id
                                 ? " w-5"
                                 : "  bg-[#00a96e]"
                             }
                              ${
-                               isClicked !== index && isHovered === index
+                               isClicked !== location.id && isHovered === location.id
                                  ? "w-5"
                                  : ""
                              } 
@@ -131,11 +132,11 @@ export default function CaptionCarousel() {
                     {" "}
                     <h1
                       className={` ${isDark && "text-gray-100"}
-                      ${isClicked !== index && !isDark && "text-gray-700"}
-                      ${isClicked === index && !isDark && "text-gray-100"}
-                      ${isClicked === index && "text-xl "} `}
+                      ${isClicked !== location.id && !isDark && "text-gray-700"}
+                      ${isClicked === location.id && !isDark && "text-gray-100"}
+                      ${isClicked === location.id && "text-xl "} `}
                     >
-                      {card}
+                      {location.name}
                     </h1>
                   </div>
                 </div>
