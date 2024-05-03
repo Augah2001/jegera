@@ -9,7 +9,7 @@ import apiClient from "../configs/apiClient";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
 
-import { UserContext, User} from "../contexts/UserContext";
+import { UserContext, User } from "../contexts/UserContext";
 import { FormModalContext } from "../contexts/FormModalContext";
 
 const FormSchema: any = z
@@ -42,6 +42,7 @@ const FormSchema: any = z
 type RenderInput = (id: string, type: string, label: string) => ReactNode;
 
 type RenderButton = (label: string) => ReactNode;
+type RenderUpload = (label: string) => ReactNode;
 
 type RenderSelect = (
   id: string,
@@ -66,11 +67,9 @@ const SignUpForm = () => {
     },
   });
 
-  const { setUser} = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
- 
   // const {onClose} = useContext(FormModalContext)
-  
 
   const [isTenant, setIsTenant] = useState(false);
 
@@ -87,12 +86,9 @@ const SignUpForm = () => {
         console.log(response.data);
         console.log(response.headers);
         toast({ title: "signup successful", colorScheme: "green" });
-        
 
         localStorage.setItem("token", response.headers["x-auth-token"]);
-        const userLogged: User = jwtDecode(
-          response.headers["x-auth-token"]
-        );
+        const userLogged: User = jwtDecode(response.headers["x-auth-token"]);
         setUser(userLogged);
       } else {
         console.log(data);
@@ -113,9 +109,7 @@ const SignUpForm = () => {
         toast({ title: "signup successful", colorScheme: "green" });
 
         localStorage.setItem("token", response.headers["x-auth-token"]);
-        const userLogged: User = jwtDecode(
-          response.headers["x-auth-token"]
-        );
+        const userLogged: User = jwtDecode(response.headers["x-auth-token"]);
         setUser(userLogged);
       }
     } catch (error: any) {
@@ -137,14 +131,12 @@ const SignUpForm = () => {
   };
 
   return (
-    <Form
-      initialValues={initialValues}
-      onSubmit={handleSignup}
-      FormSchema={FormSchema}
-    >
+    <Form onSubmit={handleSignup} FormSchema={FormSchema}>
       {(
         renderInput: RenderInput,
         renderSelect: RenderSelect,
+        _,
+        renderUpload: RenderUpload,
         renderButton: RenderButton
       ) => {
         return (
@@ -161,6 +153,7 @@ const SignUpForm = () => {
               { value: "male", label: "male" },
               { value: "female", label: "female" },
             ])}
+            {renderUpload("background image")}
             {renderSelect(
               "accountType",
               "Account Type",

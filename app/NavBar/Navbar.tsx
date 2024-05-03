@@ -42,8 +42,8 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
   
 
   return (
-    <div className="bg-transparent z-10 ">
-      <div className="bg-base-100 min-h-20 flex justify-between navbar fixed top-0 left-0 w-screen z-10">
+    <div className="bg-transparent z-20 ">
+      <div className="bg-base-100 min-h-20 flex justify-between navbar fixed top-0 left-0 w-screen z-20">
         <Link href="./">
           <div className="bg-base-100 min-h-20 pt-5 flex">
             <Image className="h-9 w-9  mt-2 ms-5" src={logo} alt="no photo" />

@@ -17,19 +17,19 @@ const Mainview = () => {
   const { showMap, setShowMap } = useContext(ShowMapContext);
 
   const { isDark } = useContext(ThemeContext);
-  const {hasScrolled, setHasScrolled, springProps} = useMainView()
+  const { hasScrolled, setHasScrolled, springProps } = useMainView();
 
-  const {data:locations, error, isLoading} = useLocations()
+  const { data: locations, error, isLoading } = useLocations();
   return (
     <div>
-        <Button
-          className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] left-[50%] transform translate(-50%, -50%)"
-          onClick={() => setShowMap(!showMap)}
-        >
-          {showMap ? "show list" : "show map"}
-        </Button>
-      <div className="mt-[90px] fixed top-0 left-0 w-full z-10 bg-base-100">
-        <GradientDiv />
+      <Button
+        className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] left-[50%] transform translate(-50%, -50%)"
+        onClick={() => setShowMap(!showMap)}
+      >
+        {showMap ? "show list" : "show map"}
+      </Button>
+      <GradientDiv />
+      <div className="mt-[90px] fixed top-2 left-0 w-full z-10 bg-base-100">
         {path === "/" && !hasScrolled && (
           <animated.div style={springProps}>
             {!hasScrolled && <SearchComponent />}
@@ -40,13 +40,13 @@ const Mainview = () => {
             <GradientDiv />
           </div>
         )}
-        
+
         {!isDark && (
           <div className={` bg-base-300  h-[1px] min-w-[100%] mt-9`}></div>
         )}
         {<Slider />}
       </div>
-      <div className={`${!hasScrolled? 'mt-[235px]': "mt-[100px]" }`}>
+      <div className={`${!hasScrolled ? "mt-[235px]" : "mt-[100px]"}`}>
         {showMap ? (
           <MyMap setHasScrolled={setHasScrolled} />
         ) : (

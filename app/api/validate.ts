@@ -39,12 +39,12 @@ export const schemaTransaction = z.object({
 export const schemaHouse = z.object({
   locationId: z.number().positive(), // Ensure positive location ID
   houseNumber: z.number().positive(), // Enforce positive house number
-  street: z.string(), // Enforce non-empty street
+  street: z.string().optional(), // Enforce non-empty street
   description: z.string().optional(), // Allow optional description
-  price: z.number().nonnegative().optional(), // Allow optional price
-  minutes: z.string().optional(), // Allow optional minutes (may need adjustment based on usage)
+  price: z.number().nonnegative(), // Allow optional price
+  minutes: z.string(), // Allow optional minutes (may need adjustment based on usage)
   capacity: z.number().positive().optional(), // Allow optional capacity
-  occupied: z.boolean().optional(), // Allow optional occupied status
+  occupied: z.number(), // Allow optional occupied status
   perRoom: z.number().positive().optional(), // Allow optional perRoom value
   gender: z.enum(["male", "female", "both"]).optional(), // Allow optional gender
   images: z.array(z.string()).optional(), // Allow optional array of image URLs

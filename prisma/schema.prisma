@@ -101,21 +101,22 @@ model House {
   location        Location @relation(fields: [locationId], references: [id])
   locationId      Int
   houseNumber     Int
-  street          String
-  description     String
+  street          String?
+  description     String?
   price           Float
   minutes         Int
   capacity        Int
-  occupied        Boolean
+  occupants       Int   @default(0)
   perRoom         Int
   gender          Gender
   images          String[]
-  backGroundImage String
+  backGroundImage String?
   curfew          Int
   owner           User  @relation(fields: [ownerId], references: [id])
   ownerId         Int
-
+  coordinates     Int[]
   services Service[]
+
 }
 
 model Service {

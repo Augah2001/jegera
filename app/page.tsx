@@ -30,7 +30,7 @@ export default function Home({}) {
                   setIsSignIn(!isSignIn);
                 }}
               >
-                {isSignIn ? " sign up" : " sign in"}
+                {isSignIn ? "sign up" : "sign in"}
               </Link>
             </div>
           }

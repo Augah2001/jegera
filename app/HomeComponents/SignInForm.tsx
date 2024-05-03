@@ -5,30 +5,15 @@ import React, { ReactNode, useContext, useState } from "react";
 import { SubmitHandler, useForm} from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
-import Form from "../components/Form/FormTemplate";
+import Form, { RenderButton, RenderInput } from "../components/Form/FormTemplate";
 import axios from 'axios'
 
 import { User } from "@prisma/client";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
-import useUser from "../hooks/useUser";
 import { UserContext } from "../contexts/UserContext";
 import { FormModalContext } from "../contexts/FormModalContext";
 
-type RenderInput = (
-  id: string,
-
-  type: string,
-  label: string
-) => ReactNode;
-
-type RenderButton = (label: string) => ReactNode;
-
-type RenderSelect = (
-  id: string,
-  label: string,
-  options: Array<{ value: string; label: string }>
-) => ReactNode;
 
 const SignUpForm = () => {
 
@@ -54,10 +39,7 @@ const SignUpForm = () => {
       .min(4, "password must have more than 4 characters"),
   });
 
-  const initialValues = useState<z.infer<typeof FormSchema>>({
-    email: "",
-    password: "",
-  });
+  ;
 
   const onSubmit = (data: SubmitHandler<any>) => {
       axios.post<z.infer<typeof FormSchema>>('http://localhost:3000/api/login', data)
@@ -79,11 +61,13 @@ const SignUpForm = () => {
       
       FormSchema={FormSchema}
       onSubmit={onSubmit}
-      initialValues={initialValues}
+     
     >
       {(
         renderInput: RenderInput,
-        renderSelect: RenderSelect,
+        _,
+        __,
+        ___,
         renderButton: RenderButton
       ) => {
         return (
