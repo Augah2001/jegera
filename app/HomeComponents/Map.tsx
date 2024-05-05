@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 
-import useMap from "../hooks/useMap";
+import useMap, { Options } from "../hooks/useMap";
 import { usePathname } from "next/navigation";
 
 interface house {
@@ -9,20 +9,26 @@ interface house {
   coordinates: [number, number];
 }
 
+interface Props {
+  setHasScrolled: Dispatch<SetStateAction<boolean>>;
+  options?: Options
+}
+
 const MyMap = ({
 
   
   setHasScrolled,
-}: {
-  setHasScrolled: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const { mapContainerRef } = useMap(setHasScrolled);
+  options
+  
+  
+}: Props) => {
+const { mapContainerRef } = useMap(setHasScrolled, options );
   const path = usePathname()
   return (
     <div>
       <div
         ref={mapContainerRef}
-        className={`w-full ${path === '/dashboard/1/add'? 'min-h-[500px]': 'min-h-[800px]'}  `}  
+        className={`w-full ${path === '/dashboard/1/add'? 'min-h-[600px]': 'min-h-[800px]'}  `}  
         onClick={() => {
           setHasScrolled(true);
         }}

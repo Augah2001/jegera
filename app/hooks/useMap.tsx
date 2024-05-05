@@ -7,10 +7,10 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { useRouter } from "next/navigation";
 import useHouses from "./useHouses";
 
-interface Options {
-  marker: boolean;
-  search: boolean;
-  directions: boolean;
+export interface Options {
+  marker?: boolean;
+  search?: boolean;
+  directions?: boolean;
 }
 
 const useMap = (

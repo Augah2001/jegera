@@ -12,7 +12,7 @@ const Page = () => {
     
   return (
     <div className='flex justify-center w-[100%]'>
-        < Modal modalBody = {<MyMap setHasScrolled={setHasScrolled}/>}/>
+        < Modal modalBody = {<MyMap setHasScrolled={setHasScrolled} options={{marker: false, directions: false, search: true}}/>}/>
       <div className=''>
       
           <AddForm />
