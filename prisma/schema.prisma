@@ -111,7 +111,7 @@ model House {
   perRoom         Int
   gender          Gender
   images          String[]
-  backGroundImage String?
+  backgroundImage String?
   curfew          Int
   owner           User  @relation(fields: [ownerId], references: [id])
   ownerId         Int

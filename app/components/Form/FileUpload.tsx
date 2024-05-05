@@ -86,6 +86,7 @@ const FileUpload = ({ publicId, setPublicId, label, imageSupplied, setImageSuppl
         </FormLabel>
 
         <CldUploadWidget
+          options={{sources: ['local', 'url', 'camera']}}
           uploadPreset="pqhkzhqu"
           onSuccess={(result) => handleUpload(result)}
           onError={(err) => console.log(err)}

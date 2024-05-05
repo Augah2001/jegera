@@ -15,20 +15,17 @@ import React, { useContext } from "react";
 import { FormModalContext } from "@/app/contexts/FormModalContext";
 import SignUpForm from "@/app/HomeComponents/SignInForm";
 import AddForm from "./AddForm";
+import Link from "next/link";
 
 const Dashboard = () => {
   const { showMap, setShowMap } = useContext(ShowMapContext);
   const { setHasScrolled, hasScrolled } = useMainView();
-  const { onOpen } = useContext(FormModalContext);
+  const { onOpen, isOpen } = useContext(FormModalContext);
+  console.log(isOpen)
 
   return (
     <div className=" py-8">
       {
-        <Modal
-          modalBody={ <AddForm/> }
-          headerContent={<h1 className="text-2xl">add</h1>}
-          footerContent= {<></>}
-        />
       }
       <Button
         className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] left-[50%] transform translate(-50%, -50%)"
@@ -40,13 +37,15 @@ const Dashboard = () => {
         <p className="font-medium mb-10  mx-6 text-slate-400 text-4xl">
           Dashboard
         </p>
-        {<BiPlusCircle 
-         className="font-normal
-         active:opacity-30 
-         hover:text-purple-600 text-4xl me-6 
-         text-slate-400"
-         onClick={onOpen}
-         />}
+        <Link href= "/dashboard/1/add">
+          <BiPlusCircle
+           className="font-normal
+           active:opacity-30
+           hover:text-purple-600 text-4xl me-6
+           text-slate-400"
+           
+           />
+        </Link>
       </div>
 
       <div

@@ -7,7 +7,7 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 interface Props {
   id: string;
   label: string;
-  options: Array<{ value: string; label: string }>;
+  options: Array<{ id: string | number; name: string }>;
   register: (...args: any) => any; // Update to match your React Hook Form setup
   handleInputChange?: (event: { target: { value: any; }; }) => void
 }
@@ -17,7 +17,7 @@ const Select1 = ({ id, label, options, register, handleInputChange }: Props) => 
  
   const { isDark } = useContext(ThemeContext);
   return (
-    <Box className="h-full mb-6 mx-4">
+    <Box className="h-full mb-6 ms-4">
       <FormControl>
         <FormLabel
           className="ps-2 text-base-content text-xl"
@@ -47,8 +47,8 @@ const Select1 = ({ id, label, options, register, handleInputChange }: Props) => 
         >
           <option className="text-base-content"  value=''>{`select ${label}`}</option>
           {options.map((option) => (
-            <option  key={option.value} value={option.value}>
-              {option.label}
+            <option  key={option.id} value={option.id}>
+              {option.name}
             </option>
           ))}
         </Select>

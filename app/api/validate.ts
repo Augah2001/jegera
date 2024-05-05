@@ -54,7 +54,7 @@ export const schemaHouse = z.object({
   perRoom: z.number().positive().optional(), // Allow optional perRoom value
   gender: z.enum(["male", "female", "both"]).optional(), // Allow optional gender
   images: z.array(z.string()).optional(), // Allow optional array of image URLs
-  backGroundImage: z.string().optional(), // Allow optional background image URL
+  backgroundImage: z.string().optional(), // Allow optional background image URL
   curfew: z.number().positive().optional(), // Allow optional curfew time
   ownerId: z.number().positive(), // Ensure positive owner ID
 });

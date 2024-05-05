@@ -32,7 +32,7 @@ function ImageModal({ headerContent, footerContent, modalBody }: Props) {
           <ModalHeader className=" flex justify-center rounded-md bg-base-100">
             <h1 className="text-pink-700 text-2xl">{headerContent}</h1>
           </ModalHeader>
-          <ModalBody className="bg-base-100 shadow-none">{modalBody}</ModalBody>
+          <ModalBody height={'600px'} className="bg-base-100 h-[600px] shadow-none">{modalBody}</ModalBody>
           <ModalFooter className="bg-base-100 rounded-md">{footerContent}</ModalFooter>
         </ModalContent>
       </Modal>

@@ -45,7 +45,7 @@ interface FormProps<T> {
 export type RenderSelect = (
   id: string,
   label: string,
-  options: Array<{ value: string; label: string }>,
+  options: Array<{ id: string | number; name: string }>,
   handleInputChange?: (event: {
     target: {
       value: any;

@@ -141,8 +141,8 @@ const SignUpForm = () => {
 
             {renderInput("confirmPassword", "text", "Confirm Password")}
             {renderSelect("gender", "Gender", [
-              { value: "male", label: "male" },
-              { value: "female", label: "female" },
+              { id: "male", name: "male" },
+              { id: "female", name: "female" },
             ])}
             {renderUpload("background image (optional)", publicId, setPublicId)}
             
@@ -150,8 +150,8 @@ const SignUpForm = () => {
               "accountType",
               "Account Type",
               [
-                { value: "tenant", label: "tenant" },
-                { value: "landlord", label: "landlord" },
+                { id: "tenant", name: "tenant" },
+                { id: "landlord", name: "landlord" },
               ],
               handleInputChange
             )}
