@@ -21,6 +21,7 @@
     "@types/react-icons": "^3.0.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
+    "cloudinary": "^2.2.0",
     "daisyui": "^4.7.3",
     "framer-motion": "^11.0.20",
     "jsonwebtoken": "^9.0.2",

@@ -1,16 +1,22 @@
 "use client";
 
-import React, { ReactNode, useContext, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 
 import { z } from "zod";
 
-import Form from "../components/Form/FormTemplate";
+import Form, {
+  RenderButton,
+  RenderInput,
+  RenderSelect,
+  RenderUpload,
+} from "../components/Form/FormTemplate";
 import apiClient from "../configs/apiClient";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
 
 import { UserContext, User } from "../contexts/UserContext";
 import { FormModalContext } from "../contexts/FormModalContext";
+import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 
 const FormSchema: any = z
   .object({
@@ -39,22 +45,6 @@ const FormSchema: any = z
     { path: ["authorizationKey"], message: "please supply authorization key" }
   );
 
-type RenderInput = (id: string, type: string, label: string) => ReactNode;
-
-type RenderButton = (label: string) => ReactNode;
-type RenderUpload = (label: string) => ReactNode;
-
-type RenderSelect = (
-  id: string,
-  label: string,
-  options: Array<{ value: string; label: string }>,
-  handleInputChange?: (event: {
-    target: {
-      value: any;
-    };
-  }) => void
-) => ReactNode;
-
 const SignUpForm = () => {
   const toast = useToast({
     position: "top",
@@ -68,12 +58,9 @@ const SignUpForm = () => {
   });
 
   const { setUser } = useContext(UserContext);
-
-  // const {onClose} = useContext(FormModalContext)
+  
 
   const [isTenant, setIsTenant] = useState(false);
-
-  const initialValues = useState<z.infer<typeof FormSchema>>();
 
   const handleSignup = async (data: z.infer<typeof FormSchema>) => {
     delete data["confirmPassword"];
@@ -95,14 +82,13 @@ const SignUpForm = () => {
         const authResponse = await apiClient.post("/auth", {
           authorizationKey: data.authorizationKey,
         });
-        console.log("pass");
+
 
         console.log(authResponse);
         if (!authResponse.data) {
           throw new Error("Invalid authorization key");
         }
 
-        console.log(data);
 
         const response = await apiClient.post("/users", data);
         console.log(response.data);

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import Button1 from "./Button";
 import Input1 from "./Input";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
@@ -7,6 +7,7 @@ import { z } from "zod";
 import Select1 from "./Select";
 import Checkbox from "./Checkbox";
 import FileUpload from "./FileUpload";
+import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 
 export type RenderInput = (
   id: string,
@@ -25,7 +26,6 @@ export type RenderCheckbox = (
 export type RenderButton = (label: string) => ReactNode;
 
 interface FormProps<T> {
-
   onSubmit: (data: SubmitHandler<any>) => void; // Enforce the expected data type for the submit function
   children: (
     renderInput: RenderInput,
@@ -53,7 +53,9 @@ export type RenderSelect = (
   }) => void
 ) => ReactNode;
 
-export type RenderUpload = (label: string) => ReactNode
+export type RenderUpload = (
+  label: string,
+) => ReactNode;
 
 const Form = ({
   children,
@@ -66,9 +68,10 @@ const Form = ({
     handleSubmit,
     formState: { errors },
   } = useForm<any>({
-    
     resolver: zodResolver(FormSchema),
   });
+
+  const [publicId, setPublicId] = useState("");
 
   const renderButton: RenderButton = (label) => {
     return <Button1 label="sign in" />;
@@ -84,8 +87,6 @@ const Form = ({
       />
     );
   };
-
-  
 
   const renderSelect: RenderSelect = (
     id,
@@ -104,28 +105,35 @@ const Form = ({
     );
   };
 
-  const renderCheckbox: RenderCheckbox  = (id: string,type: string, label: string) => {
-
+  const renderCheckbox: RenderCheckbox = (
+    id: string,
+    type: string,
+    label: string
+  ) => {
     return (
-      <Checkbox 
-       id= {id}
-       register={register}
+      <Checkbox
+        id={id}
+        register={register}
         errors={errors}
         label={label}
         type={type}
-       />
-    )
-  }
+      />
+    );
+  };
 
-  const renderUpload: RenderUpload = (label: string) => {
-      return (
-        <FileUpload label= {label}/>
-      )
-  }
+  const renderUpload: RenderUpload = (label) => {
+    return <FileUpload label={label} publicId= {publicId} setPublicId = {setPublicId}/>;
+  };
 
   return (
     <form className="rounded-xl" onSubmit={handleSubmit(onSubmit)}>
-      {children(renderInput,renderSelect,  renderCheckbox , renderUpload ,renderButton)}
+      {children(
+        renderInput,
+        renderSelect,
+        renderCheckbox,
+        renderUpload,
+        renderButton
+      )}
     </form>
   );
 };

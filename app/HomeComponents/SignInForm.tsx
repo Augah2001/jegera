@@ -78,6 +78,7 @@ const SignUpForm = () => {
             <Link href="/signup" className="mx-4 text-pink-700">
               forgot password
             </Link>
+
             {renderButton("sign in")}
           </>
         );

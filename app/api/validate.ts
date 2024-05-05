@@ -35,6 +35,10 @@ export const schemaTransaction = z.object({
   time: z.date().optional(), // Allow optional time (may need adjustment based on usage)
 });
 
+export const schemaPublicId = z.object({
+  publicId: z.string()
+})
+
 // **House Model Validation**
 export const schemaHouse = z.object({
   locationId: z.number().positive(), // Ensure positive location ID

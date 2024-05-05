@@ -1,10 +1,76 @@
-import { Box, Button, FormControl, FormLabel } from "@chakra-ui/react";
-import { CldUploadWidget } from "next-cloudinary";
-import { useState } from "react";
+"use client";
 
-const FileUpload = ({ label }: { label: string }) => {
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  useToast,
+} from "@chakra-ui/react";
+import {
+  CldUploadWidget,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-  const [result, setResult] = useState('')
+import { BiSolidTrash } from "react-icons/bi";
+import axios from "axios";
+import { Spinner } from "@chakra-ui/react";
+import { error } from "console";
+
+interface CloudinaryResult {
+  public_id: string;
+  original_filename: string;
+}
+
+interface body {
+  message: string;
+  value: boolean;
+}
+
+interface Props {
+  label: string;
+  publicId: string;
+  setPublicId: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const FileUpload = ({ publicId, setPublicId, label }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [filename, setFilename] = useState("");
+  const toast = useToast({
+    position: "top",
+    containerStyle: {
+      color: "green",
+    },
+  });
+
+  const handleUpload = async (myResult: CloudinaryUploadWidgetResults) => {
+    if (myResult.event === "success") {
+      setPublicId((myResult.info as CloudinaryResult).public_id);
+      setFilename((myResult.info as CloudinaryResult).original_filename);
+    }
+  };
+
+  const handleDelete = () => {
+    setIsLoading(true);
+    axios
+      .post<body>("http://localhost:3000/api/deleteImage", {
+        publicId: publicId,
+      })
+      .then((response) => {
+        if (response.data.value === true) {
+          setPublicId("");
+          setFilename("");
+        } else {
+          toast({title: 'could not delete image'})
+        }
+      }).catch(error=> {
+        toast({title: 'internal server error'})
+        console.error(error)
+      }).finally(()=> setIsLoading(false));
+  };
+
   return (
     <Box className="h-full mb-6 mx-4">
       <FormControl>
@@ -15,17 +81,39 @@ const FileUpload = ({ label }: { label: string }) => {
           {label}
         </FormLabel>
 
-        <CldUploadWidget uploadPreset="pqhkzhqu"
-        onOpen={({result,})}
-        
+        <CldUploadWidget
+          uploadPreset="pqhkzhqu"
+          onSuccess={(result) => handleUpload(result)}
+          onError={(err) => console.log(err)}
+          onShowCompleted={(result) => console.log(result)}
         >
           {({ open }) => {
             return (
-            
-            <div className=" flex">
-              <Button  onClick={() => open()}>upload</Button >
-              <p className="text-slate-400"> No file chosen</p>
-            </div>)
+              <div className=" flex justify-between">
+                <div className="flex">
+                  {!publicId && (
+                    <Button className="" onClick={() => open()}>
+                      upload
+                    </Button>
+                  )}
+                  <p className=" my-auto ms-3 text-green-600">
+                    {filename
+                      ? filename.length > 32
+                        ? filename.slice(0, 32) + "..."
+                        : filename
+                      : "No file chosen"}{" "}
+                  </p>
+                </div>
+                {publicId && !isLoading && (
+                  <BiSolidTrash
+                    className={`text-red-600 hover:opacity-60 active:opacity-100
+                   my-auto text-2xl`}
+                    onClick={publicId ? handleDelete : () => {}}
+                  />
+                )}
+                {publicId && isLoading&& <Spinner color="green.500"/>}
+              </div>
+            );
           }}
         </CldUploadWidget>
       </FormControl>
