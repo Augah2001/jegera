@@ -19,7 +19,7 @@ model User {
   firstName            String
   lastName             String
   password             String
-  authorizationKey      String?       @unique
+  authorizationKey     String?       @unique
   accountType          type
   isOnline             Boolean       @default(false)
   sentTransactions     Transaction[] @relation("TransactionToSender")
@@ -31,6 +31,7 @@ model User {
   gender               genderType
   logins               Login[]
   houses               House[]
+  backgroundImage      String  @default("images/profile_pictures/dlzmprvxcug8pgq5ucxx")
 }
 
 model Chat {

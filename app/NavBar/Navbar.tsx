@@ -11,14 +11,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FormModalContext } from "../contexts/FormModalContext";
 import { UserContext } from "../contexts/UserContext";
-import user_placeholder from '../assets/user_placeholder.jpeg'
+import user_placeholder from "../assets/user_placeholder.jpeg";
 import UserImage from "../components/UserImage";
 
-
 const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
-
-  const {user, setUser} = useContext(UserContext)
-  console.log(user)
+  const { user, setUser } = useContext(UserContext);
+  console.log(user);
   const path = usePathname();
   const { onOpen } = useContext(FormModalContext);
 
@@ -30,16 +28,15 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
 
   let imageMenuItems = [
     // user?.accountType === "landlord" && {label: "My assets", value: "/my-assets"},
-    {label: "signout", value: "/signout"},
-    
-  ]
+    { label: "signout", value: "/signout" },
+  ];
 
-  if (user?.accountType === 'landlord') {
-    imageMenuItems = [{label: "my properties", value: `/dashboard/${user.id}`},...imageMenuItems]
+  if (user?.accountType === "landlord") {
+    imageMenuItems = [
+      { label: "my properties", value: `/dashboard/${user.id}` },
+      ...imageMenuItems,
+    ];
   }
-
-
-  
 
   return (
     <div className="bg-transparent z-20 ">
@@ -62,16 +59,24 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
           </div>
         )}
         <div className="pe-5 pt-2 ">
+          
           <ColorModeSwitch />
-
-          {!user &&<Button
-            className="bg-gradient-to-r  to-pink.300 from-purple-600 h-[36px] me-5 cursor-pointer"
-            style={{ marginTop: "4px" }}
-            onClick={onOpen}
-          >
-            sign up
-          </Button>}
-          {user && <UserImage menuItems={imageMenuItems} heading= {user.firstName}/>}
+          {!user && (
+            <Button
+              className="bg-gradient-to-r  to-pink.300 from-purple-600 h-[36px] me-5 cursor-pointer"
+              style={{ marginTop: "4px" }}
+              onClick={onOpen}
+            >
+              sign up
+            </Button>
+          )}
+          {user && (
+            <UserImage
+              user={user}
+              menuItems={imageMenuItems}
+              heading={user.firstName}
+            />
+          )}
         </div>
       </div>
 

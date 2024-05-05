@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 // **User Model Validation**
@@ -9,6 +10,7 @@ export const schemaUser = z.object({
   authorizationKey: z.string().optional(), // Allow optional authorizationKey
   accountType: z.enum(["tenant", "landlord"]), // Enforce valid user type
   isOnline: z.boolean().optional(), // Allow optional isOnline
+  backgroundImage: z.string().optional()
 });
 
 // **Location Model Validation**

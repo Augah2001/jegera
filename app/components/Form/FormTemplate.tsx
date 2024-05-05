@@ -55,6 +55,10 @@ export type RenderSelect = (
 
 export type RenderUpload = (
   label: string,
+  publicId: string,
+  setPublicId: React.Dispatch<React.SetStateAction<string>>,
+  imageSupplied?: boolean,
+  setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>
 ) => ReactNode;
 
 const Form = ({
@@ -70,8 +74,6 @@ const Form = ({
   } = useForm<any>({
     resolver: zodResolver(FormSchema),
   });
-
-  const [publicId, setPublicId] = useState("");
 
   const renderButton: RenderButton = (label) => {
     return <Button1 label="sign in" />;
@@ -121,8 +123,21 @@ const Form = ({
     );
   };
 
-  const renderUpload: RenderUpload = (label) => {
-    return <FileUpload label={label} publicId= {publicId} setPublicId = {setPublicId}/>;
+  const renderUpload: RenderUpload = (
+    label,
+    publicId,
+    setPublicId,
+    imageSupplied, setImageSupplied
+  ) => {
+    return (
+      <FileUpload
+        label={label}
+        publicId={publicId}
+        setPublicId={setPublicId}
+        imageSupplied={imageSupplied}
+        setImageSupplied={setImageSupplied}
+      />
+    );
   };
 
   return (

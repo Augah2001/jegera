@@ -58,11 +58,16 @@ const SignUpForm = () => {
   });
 
   const { setUser } = useContext(UserContext);
-  
+  const [publicId, setPublicId] = useState("");
+  const [imageSupplied, setImageSupplied] = useState(true);
 
   const [isTenant, setIsTenant] = useState(false);
 
   const handleSignup = async (data: z.infer<typeof FormSchema>) => {
+
+    if (publicId) {
+      data['backgroundImage'] = publicId
+    }
     delete data["confirmPassword"];
 
     try {
@@ -71,7 +76,7 @@ const SignUpForm = () => {
         delete data["authorizationKey"];
         const response = await apiClient.post("/users", data);
         console.log(response.data);
-        console.log(response.headers);
+        // console.log(response.headers);
         toast({ title: "signup successful", colorScheme: "green" });
 
         localStorage.setItem("token", response.headers["x-auth-token"]);
@@ -139,7 +144,8 @@ const SignUpForm = () => {
               { value: "male", label: "male" },
               { value: "female", label: "female" },
             ])}
-            {renderUpload("background image")}
+            {renderUpload("background image (optional)", publicId, setPublicId)}
+            
             {renderSelect(
               "accountType",
               "Account Type",

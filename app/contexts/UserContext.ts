@@ -15,7 +15,8 @@ export type  User = {
   receivedMessages: any[]
   Chats: any[]
   isAuthorizer: boolean
-  logins: any[]         
+  logins: any[] 
+  backgroundImage: string        
   
 
 

@@ -32,9 +32,11 @@ interface Props {
   label: string;
   publicId: string;
   setPublicId: React.Dispatch<React.SetStateAction<string>>;
+  imageSupplied?: boolean,
+  setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const FileUpload = ({ publicId, setPublicId, label }: Props) => {
+const FileUpload = ({ publicId, setPublicId, label, imageSupplied, setImageSupplied }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [filename, setFilename] = useState("");
@@ -49,6 +51,7 @@ const FileUpload = ({ publicId, setPublicId, label }: Props) => {
     if (myResult.event === "success") {
       setPublicId((myResult.info as CloudinaryResult).public_id);
       setFilename((myResult.info as CloudinaryResult).original_filename);
+      setImageSupplied &&setImageSupplied(true)
     }
   };
 
@@ -65,6 +68,7 @@ const FileUpload = ({ publicId, setPublicId, label }: Props) => {
         } else {
           toast({title: 'could not delete image'})
         }
+       setImageSupplied && setImageSupplied(false)
       }).catch(error=> {
         toast({title: 'internal server error'})
         console.error(error)
@@ -117,6 +121,7 @@ const FileUpload = ({ publicId, setPublicId, label }: Props) => {
           }}
         </CldUploadWidget>
       </FormControl>
+      {(imageSupplied === false && <p className="text-red-600">please supply image</p>)}
     </Box>
   );
 };
