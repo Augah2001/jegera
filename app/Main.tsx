@@ -20,6 +20,7 @@ import { FormModalContext } from "./contexts/FormModalContext";
 import { User, UserContext, UserContextType } from "./contexts/UserContext";
 import { jwtDecode } from "jwt-decode";
 import Script from "next/script";
+import { mapLocationContext } from "./contexts/mapLocationContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -30,6 +31,7 @@ const inter = Inter({ subsets: ["latin"] });
 const Main = ({ childrenNode }: Props) => {
   const [isDark, setIsDark] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [mapLocation, setMapLocation] = useState<any>()
 
   const [hasScrolled, setHasScrolled] = useState(false);
   const scrollThreshold = 5;
@@ -61,7 +63,7 @@ const Main = ({ childrenNode }: Props) => {
   return (
     <html lang="en" data-theme="pastel" onScroll={() => console.log("augah")}>
       <body className={` ${inter.className} min-h-full bg-base-100`}>
-        <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></Script>
+        {/* <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></Script> */}
         
         <link
           rel="stylesheet"
@@ -95,8 +97,10 @@ const Main = ({ childrenNode }: Props) => {
                     <FormModalContext.Provider
                       value={{ onOpen, onClose, isOpen }}
                     >
-                      <Navbar hasScrolled={hasScrolled} />
-                      {childrenNode}
+                      <mapLocationContext.Provider value={{mapLocation, setMapLocation}}>
+                        <Navbar hasScrolled={hasScrolled} />
+                        {childrenNode}
+                      </mapLocationContext.Provider>
                     </FormModalContext.Provider>
                   </UserContext.Provider>
                 </Theme>

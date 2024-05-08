@@ -32,12 +32,13 @@ interface Props {
   label: string;
   publicId: string;
   setPublicId: React.Dispatch<React.SetStateAction<string>>;
-  imageSupplied?: boolean,
-  setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>
+  imageSupplied?: boolean;
+  setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FileUpload = ({ publicId, setPublicId, label, imageSupplied, setImageSupplied }: Props) => {
+const FileUpload = ({ label, imageSupplied, setImageSupplied }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [publicId, setPublicId] = useState("");
 
   const [filename, setFilename] = useState("");
   const toast = useToast({
@@ -51,7 +52,7 @@ const FileUpload = ({ publicId, setPublicId, label, imageSupplied, setImageSuppl
     if (myResult.event === "success") {
       setPublicId((myResult.info as CloudinaryResult).public_id);
       setFilename((myResult.info as CloudinaryResult).original_filename);
-      setImageSupplied &&setImageSupplied(true)
+      setImageSupplied && setImageSupplied(true);
     }
   };
 
@@ -66,13 +67,15 @@ const FileUpload = ({ publicId, setPublicId, label, imageSupplied, setImageSuppl
           setPublicId("");
           setFilename("");
         } else {
-          toast({title: 'could not delete image'})
+          toast({ title: "could not delete image" });
         }
-       setImageSupplied && setImageSupplied(false)
-      }).catch(error=> {
-        toast({title: 'internal server error'})
-        console.error(error)
-      }).finally(()=> setIsLoading(false));
+        setImageSupplied && setImageSupplied(false);
+      })
+      .catch((error) => {
+        toast({ title: "internal server error" });
+        console.error(error);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -86,7 +89,7 @@ const FileUpload = ({ publicId, setPublicId, label, imageSupplied, setImageSuppl
         </FormLabel>
 
         <CldUploadWidget
-          options={{sources: ['local', 'url', 'camera']}}
+          options={{ sources: ["local", "url", "camera"] }}
           uploadPreset="pqhkzhqu"
           onSuccess={(result) => handleUpload(result)}
           onError={(err) => console.log(err)}
@@ -116,13 +119,15 @@ const FileUpload = ({ publicId, setPublicId, label, imageSupplied, setImageSuppl
                     onClick={publicId ? handleDelete : () => {}}
                   />
                 )}
-                {publicId && isLoading&& <Spinner color="green.500"/>}
+                {publicId && isLoading && <Spinner color="green.500" />}
               </div>
             );
           }}
         </CldUploadWidget>
       </FormControl>
-      {(imageSupplied === false && <p className="text-red-600">please supply image</p>)}
+      {imageSupplied === false && (
+        <p className="text-red-600">please supply image</p>
+      )}
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import HouseMapPopup from "../HomeComponents/HouseMapPopup";
 import mapboxgl from "mapbox-gl";
@@ -7,6 +7,10 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { useRouter } from "next/navigation";
 import useHouses from "./useHouses";
 
+import { serialize } from "v8";
+import HelloWorldControl from "../classes/SearchControl";
+import { mapLocationContext } from "../contexts/mapLocationContext";
+
 export interface Options {
   marker?: boolean;
   search?: boolean;
@@ -14,8 +18,6 @@ export interface Options {
 }
 
 const useMap = (
-
-  
   setHasScrolled: Dispatch<SetStateAction<boolean>>,
   { marker, search, directions }: Options = {
     marker: true,
@@ -23,10 +25,12 @@ const useMap = (
     directions: true,
   }
 ) => {
-
-  const {data: houses, error, isLoading} = useHouses()
+  const { data: houses, error, isLoading } = useHouses();
   const mapContainerRef = useRef<HTMLDivElement | any>(undefined);
   const router = useRouter();
+
+  const {setMapLocation} = useContext(mapLocationContext)
+  
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -39,12 +43,18 @@ const useMap = (
       accessToken:
         "pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q",
       container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v12", // Choose your style
+      style: "mapbox://styles/mapbox/standard", // Choose your style
       center: [31.05139, -17.78421], // Initial center
       zoom: 13,
+      
     });
-
-    
+    map.on("click", (e) => {
+      const clickedLocation = {
+        longitude: e.lngLat.lng,
+        latitude: e.lngLat.lat,
+      };
+      console.log(clickedLocation);
+    });
 
     {
       marker &&
@@ -99,16 +109,20 @@ const useMap = (
         },
       });
       map.addControl(directions);
+
+      directions.on("click", () => {
+        console.log("wadii");
+      });
     };
 
     directions && addDirections();
 
-    const addSearch = () => {
+    function addSearch() {
       const search = new MapboxGeocoder({
         autocomplete: true,
 
         marker: true,
-
+        countries: 'ZW',
         flyTo: true,
         proximity: {
           latitude: 31.058826105504835,
@@ -117,10 +131,19 @@ const useMap = (
         accessToken:
           "pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q",
       });
-      map.addControl(search);
-    };
 
-    search&&addSearch() 
+      search.on('result', (result)=> {
+        setMapLocation(result)
+      })
+
+      map.addControl(search);
+    }
+
+    
+
+
+
+    search && addSearch();
 
     map.on("click", (e) => {
       setHasScrolled(true);

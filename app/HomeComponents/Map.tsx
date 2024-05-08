@@ -24,14 +24,16 @@ const MyMap = ({
 }: Props) => {
 const { mapContainerRef } = useMap(setHasScrolled, options );
   const path = usePathname()
+  
   return (
     <div>
       <div
         ref={mapContainerRef}
         className={`w-full ${path === '/dashboard/1/add'? 'min-h-[600px]': 'min-h-[800px]'}  `}  
-        onClick={() => {
-          setHasScrolled(true);
-        }}
+        // onClick={(event) => {
+        //   setHasScrolled(true);
+        //   console.log(event.currentTarget)
+        // }}
       ></div>
     </div>
   );
