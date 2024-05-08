@@ -7,6 +7,10 @@ import MyMap from "@/app/HomeComponents/Map";
 import { mapLocationContext } from "@/app/contexts/mapLocationContext";
 import { Button } from "@chakra-ui/react";
 import { BiTrash } from "react-icons/bi";
+import ImagesForm from "../ImagesForm";
+import ServicesForm from "../ServicesForm";
+import StepperComponent from "./Stepper";
+import MultiStepForm from "./MultiStepForm";
 
 const Page = () => {
   const [_, setHasScrolled] = useState(false);
@@ -72,7 +76,7 @@ const Page = () => {
       />
 
       <div className="">
-        <AddForm />
+        <MultiStepForm/>
       </div>
     </div>
   );

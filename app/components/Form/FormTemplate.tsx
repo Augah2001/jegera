@@ -19,7 +19,7 @@ export type RenderInput = (
 export type RenderCheckbox = (
   id: string,
 
-  type: string,
+
   label: string
 ) => ReactNode;
 
@@ -103,13 +103,13 @@ const Form = ({
         options={options}
         register={register}
         handleInputChange={handleInputChange}
+        errors={errors}
       />
     );
   };
 
   const renderCheckbox: RenderCheckbox = (
     id: string,
-    type: string,
     label: string
   ) => {
     return (
@@ -118,7 +118,7 @@ const Form = ({
         register={register}
         errors={errors}
         label={label}
-        type={type}
+        
       />
     );
   };

@@ -13,14 +13,14 @@ interface Props {
   errors: any;
 }
 
-const Input1 = ({ id, type, register, placeholder, label, errors }: Props) => {
+const InputComponent = ({ id, type, register, placeholder, label, errors }: Props) => {
   useEffect(() => {
     console.log(errors);
   }, [errors]);
 
   const { isDark } = useContext(ThemeContext);
   return (
-    <div className="h-full mb-6 mx-4">
+    <div className="h-full mb-4 mx-4">
       <FormControl>
         <FormLabel
           className="ps-2 text-base-content text-xl "
@@ -48,14 +48,14 @@ const Input1 = ({ id, type, register, placeholder, label, errors }: Props) => {
           borderWidth={"2px"}
           borderColor="purple.500"
           className="text-base-content bg-base-100"
-          {...register(id)}
+          {...register(id, type==='number'? {valueAsNumber : true}: {})}
         />
       </FormControl>
       {errors && (
-        <p className="text-red-600 mx-4 mt-1">{errors[id]?.message}</p>
+        <p className="text-red-600 mx-4 mt-1 font-medium">{errors[id]?.message}</p>
       )}
     </div>
   );
 };
 
-export default Input1;
+export default InputComponent;
