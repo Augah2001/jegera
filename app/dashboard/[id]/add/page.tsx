@@ -11,6 +11,7 @@ import ImagesForm from "../ImagesForm";
 import ServicesForm from "../ServicesForm";
 import StepperComponent from "./Stepper";
 import MultiStepForm from "./MultiStepForm";
+import { SelectErrorContext } from "@/app/contexts/SelectErrorContext";
 
 const Page = () => {
   const [_, setHasScrolled] = useState(false);
@@ -19,15 +20,16 @@ const Page = () => {
   const { mapLocation, setMapLocation } = useContext(mapLocationContext);
 
   const handleSave = ()=> {
-
+    setError('')
     onClose()
   }
   const handleDelete = ()=> {
 
-    setMapLocation(undefined)
-    console.log(mapLocation)
-    // onClose()
+    setMapLocation({})
+    onClose()
   }
+
+  const [error, setError] = useState('')
   
 
   return (
@@ -36,15 +38,15 @@ const Page = () => {
         headerContent={<p>Select Location {"(use search)"}</p>}
         modalBody={
           <>
-            {mapLocation && (
+            {typeof mapLocation === 'object' && Object.keys(mapLocation).length !== 0 && (
               <div className=" w-full">
                 <div>
                   <p className="text-slate-700  text-lg font-bold">
                     Verify location
                   </p>
-                  <p className="text-green-600 text-md font-bold">
-                    {mapLocation.result.place_name}
-                  </p>
+                  {<p className="text-green-600 text-md font-bold">
+                    {mapLocation.result?.place_name}
+                  </p>}
                   <div className="flex my-2 ">
                     {" "}
                     <Button
@@ -78,9 +80,11 @@ const Page = () => {
         }
       />
 
-      <div className="">
-        <MultiStepForm/>
-      </div>
+      <SelectErrorContext.Provider value={{error, setError}}>
+        <div className="">
+          <MultiStepForm/>
+        </div>
+      </SelectErrorContext.Provider>
     </div>
   );
 };

@@ -28,20 +28,30 @@ import useLocations from "@/app/hooks/useLocations";
 import { mapLocationContext } from "@/app/contexts/mapLocationContext";
 import LocationSelect from "./add/LocationSelect";
 import useSelectLocation from "@/app/hooks/useSelectLocation";
+import { SelectErrorContext } from "@/app/contexts/SelectErrorContext";
+import LocationInput from "./LocationInput";
 
 export const houseSchema = z.object({
-
-  houseNumber: z.number({invalid_type_error: 'House Number is required'}).positive(), // Enforce positive house number
+  houseNumber: z
+    .number({ invalid_type_error: "House Number is required" })
+    .positive(), // Enforce positive house number
   street: z.string().optional(), // Enforce non-empty street
   description: z.string().optional(), // Allow optional description
-  price: z.number({invalid_type_error: 'Price is required'}).positive(), // Allow optional price
-  minutes: z.number({invalid_type_error: 'Minutes are required'}), // Allow optional minutes (may need adjustment based on usage)
-  capacity: z.number({invalid_type_error: 'Total Capacity is required'}).positive().optional(), // Allow optional capacity
-  occupied: z.number({invalid_type_error: 'Occupied slots is required'}), // Allow optional occupied status
-  perRoom: z.number({invalid_type_error: 'People Per Room is required'}).positive(), // Allow optional perRoom value
+  price: z.number({ invalid_type_error: "Price is required" }).positive(), // Allow optional price
+  minutes: z.number({ invalid_type_error: "Minutes are required" }), // Allow optional minutes (may need adjustment based on usage)
+  capacity: z
+    .number({ invalid_type_error: "Total Capacity is required" })
+    .positive()
+    .optional(), // Allow optional capacity
+  occupied: z.number({ invalid_type_error: "Occupied slots is required" }), // Allow optional occupied status
+  perRoom: z
+    .number({ invalid_type_error: "People Per Room is required" })
+    .positive(), // Allow optional perRoom value
   // coordinates: z.array(z.number(),z.number()).length(2),
-  gender: z.enum(["male", "female", "both"], {errorMap: ()=> ({message: "Gender is required"})}), // Allow optional gender // Allow optional background image URL
-  curfew: z.string().min(1, 'Curfew is required'), // Allow optional curfew time
+  gender: z.enum(["male", "female", "both"], {
+    errorMap: () => ({ message: "Gender is required" }),
+  }), // Allow optional gender // Allow optional background image URL
+  curfew: z.string().min(1, "Curfew is required"), // Allow optional curfew time
   // location: z.string().min(1, 'Location is required')
   // Ensure positive owner ID
 });
@@ -57,27 +67,39 @@ interface Props {
 
   nextStep: () => void;
   prevStep: () => void;
+  houseData: any;
+  setHouseData: any;
 }
 
-const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
+const AddForm = ({
+  nextStep,
+  currentStep,
+  prevStep,
+  houseData,
+  setHouseData,
+}: Props) => {
+  const { mapLocation } = useContext(mapLocationContext);
+
+  const { location, setLocation } = useSelectLocation();
+  const {error, setError} = useContext(SelectErrorContext)
+
   
-  const {mapLocation} = useContext(mapLocationContext)
 
-  const {location, setLocation} = useSelectLocation()
+  const handleSubmit = (data: any) => {
+    if (typeof location === 'object' && Object.keys(location).length !== 0) {
+      const newData = { ...data, location };
+      setHouseData(newData)
+      nextStep()
+    } else {
+      const newData = data
+      delete newData['location']
+      setHouseData(newData)
+      setError('specify location')
+    }
+  };
 
-  const handleSubmit = (data: SubmitHandler<any>) => {
-      console.log(mapLocation)
-  }
-
-
-
-
- 
   return (
-    <Form
-      onSubmit={handleSubmit}
-      FormSchema={houseSchema}
-    >
+    <Form onSubmit={handleSubmit} FormSchema={houseSchema}>
       {(
         renderInput: RenderInput,
         renderSelect: RenderSelect,
@@ -89,12 +111,14 @@ const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
           <>
             <div className="flex justify-end">
               {
-                <Button className="my-4 mx-4
+                <Button
+                  className="my-4 mx-4
                  
-                " type="submit"
-                bg={'green.500'}
-                color={'white'}
-                _hover={{opacity: 0.8, bg: 'green.500'}}
+                "
+                  type="submit"
+                  bg={"green.500"}
+                  color={"white"}
+                  _hover={{ opacity: 0.8, bg: "green.500" }}
                 >
                   Next
                 </Button>
@@ -102,12 +126,16 @@ const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
             </div>
 
             <div className=" mx-auto  grid grid-cols-3 gap-4 ">
-              <LocationSelect id="location" label="Location" setLocation={setLocation}/>
-              {renderInput(
-                "houseNumber",
-                "number",
-                "House Number"
-              )}
+              <LocationSelect
+                location={location}
+                id="location"
+                label="Location"
+                setLocation={setLocation}
+                error = {error}
+                setError={setError}
+              />
+              <LocationInput/>
+              {renderInput("houseNumber", "number", "House Number")}
               {renderInput("street", "text", "Street")}
               {renderInput("description", "textarea", "Description")}
               {renderInput("price", "number", "Price *")}
@@ -120,7 +148,10 @@ const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
                 { id: "female", name: "Female" },
                 { id: "both", name: "Both" },
               ])}
-              {renderSelect("curfew", "Curfew *", [{id: 'no', name: 'No' }, {id: 'no', name: "Yes" }])}
+              {renderSelect("curfew", "Curfew *", [
+                { id: "no", name: "No" },
+                { id: "no", name: "Yes" },
+              ])}
             </div>
           </>
         );

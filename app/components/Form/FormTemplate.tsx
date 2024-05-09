@@ -7,7 +7,7 @@ import { z } from "zod";
 import Select1 from "./Select";
 import Checkbox from "./Checkbox";
 import FileUpload from "./FileUpload";
-import { CloudinaryUploadWidgetResults } from "next-cloudinary";
+
 
 export type RenderInput = (
   id: string,
@@ -57,8 +57,10 @@ export type RenderUpload = (
   label: string,
   publicId: string,
   setPublicId: React.Dispatch<React.SetStateAction<string>>,
+  key?: any,
   imageSupplied?: boolean,
-  setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>
+  setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>,
+  
 ) => ReactNode;
 
 const Form = ({
@@ -127,15 +129,18 @@ const Form = ({
     label,
     publicId,
     setPublicId,
-    imageSupplied, setImageSupplied
+    key,
+    imageSupplied, setImageSupplied, 
   ) => {
     return (
       <FileUpload
         label={label}
         publicId={publicId}
         setPublicId={setPublicId}
+        key={key}
         imageSupplied={imageSupplied}
         setImageSupplied={setImageSupplied}
+        
       />
     );
   };

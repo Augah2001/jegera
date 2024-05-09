@@ -14,9 +14,7 @@ interface Props {
 }
 
 const InputComponent = ({ id, type, register, placeholder, label, errors }: Props) => {
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+
 
   const { isDark } = useContext(ThemeContext);
   return (

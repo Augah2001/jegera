@@ -10,7 +10,14 @@ import Form, {
 import apiClient from "@/app/configs/apiClient";
 
 import axios from "axios";
-import { Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { BiPlusCircle } from "react-icons/bi";
 import { z } from "zod";
 import { BiLocationPlus } from "react-icons/bi";
@@ -43,15 +50,14 @@ interface Location {
 }
 
 interface Props {
-  currentStep: number
-  setCurrentStep: Dispatch<SetStateAction<number>>,
-  
-  nextStep: ()=> void
-  prevStep: ()=> void
+  currentStep: number;
+  setCurrentStep: Dispatch<SetStateAction<number>>;
+
+  nextStep: () => void;
+  prevStep: () => void;
 }
 
-const AddForm = ({nextStep, currentStep, prevStep }: Props) => {
-
+const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
   const [uploadInputs, setUploadInputs] = useState([1]);
   const [publicId, setPublicId] = useState("");
   return (
@@ -63,39 +69,60 @@ const AddForm = ({nextStep, currentStep, prevStep }: Props) => {
         renderUpload: RenderUpload,
         renderButton: RenderButton
       ) => {
-
-       
         return (
           <>
-          {<Button onClick={nextStep}>Next</Button>}
-          {<Button onClick={prevStep}>Back</Button>}
-          <div className="shadow-lg min-h-[500px] py-10">
-            <div className="flex justify-center">{renderUpload(`background Image`, publicId, setPublicId)}</div>
-            <div className="h-[1px] bg-base-300 w-full"></div>
-            <div className="mt-[70px] mx-auto  grid grid-cols-2 gap-4  ">
-              {uploadInputs.map((upload) =>
-                renderUpload(`display image ${upload}`, publicId, setPublicId)
-              )}
+            <div className="flex justify-end p-4">
               {
-                <div className="flex">
-                  <BiPlusCircle
-                    className="font-normal
+                <Button
+                  bg="yellow.400"
+                  color="white"
+                  marginX={3}
+                  onClick={prevStep}
+                  _hover={{opacity: 0.8}}
+                >
+                  Back
+                </Button>
+              }
+              {
+                <Button bg="green.500" color="white" _hover={{opacity: 0.8}} onClick={nextStep}>
+                  Next
+                </Button>
+              }
+            </div>
+            <div className="shadow-lg min-h-[500px] py-10">
+              <div className="flex justify-center">
+                {renderUpload(`background Image`, publicId, setPublicId)}
+              </div>
+              <div className="h-[1px] bg-base-300 w-full"></div>
+              <div className="mt-[70px] mx-auto  grid grid-cols-2 gap-4  ">
+                {uploadInputs.map((upload, index) =>
+                  renderUpload(
+                    `display image ${upload}`,
+                    publicId,
+                    setPublicId,
+                    index
+                  )
+                )}
+                {
+                  <div className="flex">
+                    <BiPlusCircle
+                      className="font-normal
                         active:opacity-30 
                         my-auto
                         hover:text-purple-600 text-4xl 
                         text-slate-400"
-                    onClick={() =>
-                      setUploadInputs([
-                        ...uploadInputs,
-                        uploadInputs.length + 1,
-                      ])
-                    }
-                  />{" "}
-                  <p className="text-slate-500 my-auto ms-3">Add image</p>
-                </div>
-              }
+                      onClick={() =>
+                        setUploadInputs([
+                          ...uploadInputs,
+                          uploadInputs.length + 1,
+                        ])
+                      }
+                    />{" "}
+                    <p className="text-slate-500 my-auto ms-3">Add image</p>
+                  </div>
+                }
+              </div>
             </div>
-          </div>
           </>
         );
       }}

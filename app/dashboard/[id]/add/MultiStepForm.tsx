@@ -9,7 +9,7 @@ import { steps } from 'framer-motion';
 const MultiStepForm = () => {
 
     const [currentStep, setCurrentStep] = useState(0);
-    
+    const [houseData, setHouseData] = useState<{[key: string]: string} >({})
       
   
 
@@ -26,10 +26,12 @@ const MultiStepForm = () => {
   };
 
   const steps = [
-    { title: "basic details", component: <AddForm nextStep={nextStep} currentStep={currentStep} prevStep={prevStep} setCurrentStep={setCurrentStep} /> },
+    { title: "basic details", component: <AddForm houseData={houseData} setHouseData={setHouseData} nextStep={nextStep} currentStep={currentStep} prevStep={prevStep} setCurrentStep={setCurrentStep} /> },
     { title: "images", component: <ImagesForm nextStep={nextStep} currentStep={currentStep} prevStep={prevStep} setCurrentStep={setCurrentStep} /> }, 
     { title: "amenities", component: <ServicesForm currentStep={currentStep} prevStep={prevStep} setCurrentStep={setCurrentStep}  /> },
   ];
+
+ 
 
   return (
     <div className='w-screen flex  my-6 mb-7'>

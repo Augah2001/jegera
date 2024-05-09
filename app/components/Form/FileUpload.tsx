@@ -34,9 +34,10 @@ interface Props {
   setPublicId: React.Dispatch<React.SetStateAction<string>>;
   imageSupplied?: boolean;
   setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>;
+  key: number | string
 }
 
-const FileUpload = ({ label, imageSupplied, setImageSupplied }: Props) => {
+const FileUpload = ({ label, imageSupplied, setImageSupplied, key }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [publicId, setPublicId] = useState("");
 
@@ -79,7 +80,7 @@ const FileUpload = ({ label, imageSupplied, setImageSupplied }: Props) => {
   };
 
   return (
-    <Box className="h-full mb-6 mx-4">
+    <Box key={key} className="h-full mb-6 mx-4">
       <FormControl>
         <FormLabel
           className="ps-2 text-base-content text-2xl"

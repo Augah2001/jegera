@@ -13,16 +13,16 @@ const useSelectLocation = () => {
   
 
   useEffect(() => {
-    if (mapLocation) {
+    if ( typeof mapLocation === 'object' && Object.keys(mapLocation).length !== 0) {
       const newLocation = {
         name: mapLocation.result.text,
         coordinates: mapLocation.result.center,
       };
       setLocation(newLocation);
-      console.log(location)
+
+   
     } else {
         setLocation({} as Location)
-        console.log(location)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapLocation]);

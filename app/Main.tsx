@@ -31,7 +31,7 @@ const inter = Inter({ subsets: ["latin"] });
 const Main = ({ childrenNode }: Props) => {
   const [isDark, setIsDark] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [mapLocation, setMapLocation] = useState<any>()
+  const [mapLocation, setMapLocation] = useState<any>({})
 
   const [hasScrolled, setHasScrolled] = useState(false);
   const scrollThreshold = 5;
