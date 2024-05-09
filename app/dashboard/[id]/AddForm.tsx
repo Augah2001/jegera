@@ -26,6 +26,8 @@ import { Button, useModalContext } from "@chakra-ui/react";
 import { FormModalContext } from "@/app/contexts/FormModalContext";
 import useLocations from "@/app/hooks/useLocations";
 import { mapLocationContext } from "@/app/contexts/mapLocationContext";
+import LocationSelect from "./add/LocationSelect";
+import useSelectLocation from "@/app/hooks/useSelectLocation";
 
 export const houseSchema = z.object({
 
@@ -59,10 +61,9 @@ interface Props {
 
 const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
   
-  const { onOpen} = useContext(FormModalContext);
   const {mapLocation} = useContext(mapLocationContext)
 
-  const {data:locations} = useLocations()
+  const {location, setLocation} = useSelectLocation()
 
   const handleSubmit = (data: SubmitHandler<any>) => {
       console.log(mapLocation)
@@ -101,20 +102,7 @@ const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
             </div>
 
             <div className=" mx-auto  grid grid-cols-3 gap-4 ">
-              <div className="flex">
-                <div className="w-[75%]">
-                  {renderSelect("location", "Location *", locations)}
-                </div>
-                <div className="flex my-auto">
-                  <BiLocationPlus className=" mt-[6px]  text-green-500" />
-                  <h1
-                    className=" text-green-500 cursor-pointer hover:text-green-600"
-                    onClick={onOpen}
-                  >
-                    map
-                  </h1>
-                </div>
-              </div>
+              <LocationSelect id="location" label="Location" setLocation={setLocation}/>
               {renderInput(
                 "houseNumber",
                 "number",

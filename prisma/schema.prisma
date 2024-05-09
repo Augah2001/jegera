@@ -48,7 +48,6 @@ model Auth {
 model Location {
   id          Int     @id @default(autoincrement())
   name        String  @unique
-  minutes     Int
   coordinates Float[] @unique
   houses      House[]
 }

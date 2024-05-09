@@ -48,13 +48,6 @@ const useMap = (
       zoom: 13,
       
     });
-    map.on("click", (e) => {
-      const clickedLocation = {
-        longitude: e.lngLat.lng,
-        latitude: e.lngLat.lat,
-      };
-      console.log(clickedLocation);
-    });
 
     {
       marker &&
@@ -134,6 +127,8 @@ const useMap = (
 
       search.on('result', (result)=> {
         setMapLocation(result)
+        console.log(result)
+      
       })
 
       map.addControl(search);

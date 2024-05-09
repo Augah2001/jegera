@@ -14,16 +14,19 @@ import MultiStepForm from "./MultiStepForm";
 
 const Page = () => {
   const [_, setHasScrolled] = useState(false);
-  const [locationData, setLocationData] = useState<any>();
+  const {onClose} = useContext(FormModalContext)
 
   const { mapLocation, setMapLocation } = useContext(mapLocationContext);
 
   const handleSave = ()=> {
-    setLocationData(mapLocation)
+
+    onClose()
   }
   const handleDelete = ()=> {
-    setLocationData(undefined)
+
     setMapLocation(undefined)
+    console.log(mapLocation)
+    // onClose()
   }
   
 
