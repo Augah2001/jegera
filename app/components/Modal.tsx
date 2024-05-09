@@ -13,6 +13,7 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import { ReactNode, useContext } from "react";
+import { GetCoordinatesContext } from "../contexts/GetCoordinatesContext";
 
 interface Props {
   // isOpen: boolean;
@@ -24,9 +25,17 @@ interface Props {
 }
 function ImageModal({ headerContent, footerContent, modalBody }: Props) {
   const { isOpen, onClose } = useContext(FormModalContext);
+
+  const {getCoordinates, setGetCoordinates} = useContext(GetCoordinatesContext)
+
+  const handleClose = ()=> {
+    setGetCoordinates(false)
+    console.log(getCoordinates)
+    onClose()
+  }
   return (
     
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent className="bg-base-100 shadow-3xl  ">
           <ModalHeader className=" flex justify-center rounded-md bg-base-100">

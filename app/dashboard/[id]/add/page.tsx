@@ -12,20 +12,27 @@ import ServicesForm from "../ServicesForm";
 import StepperComponent from "./Stepper";
 import MultiStepForm from "./MultiStepForm";
 import { SelectErrorContext } from "@/app/contexts/SelectErrorContext";
+import { GetCoordinatesContext } from "@/app/contexts/GetCoordinatesContext";
+import { HouseCoordinatesContext } from "@/app/contexts/HouseCoordinatesContext";
 
 const Page = () => {
   const [_, setHasScrolled] = useState(false);
   const {onClose} = useContext(FormModalContext)
 
   const { mapLocation, setMapLocation } = useContext(mapLocationContext);
+  const {getCoordinates } = useContext(GetCoordinatesContext);
+
+  
 
   const handleSave = ()=> {
     setError('')
+  
     onClose()
   }
   const handleDelete = ()=> {
 
     setMapLocation({})
+    
     onClose()
   }
 
@@ -40,7 +47,7 @@ const Page = () => {
           <>
             {typeof mapLocation === 'object' && Object.keys(mapLocation).length !== 0 && (
               <div className=" w-full">
-                <div>
+                { !getCoordinates &&<div>
                   <p className="text-slate-700  text-lg font-bold">
                     Verify location
                   </p>
@@ -69,7 +76,7 @@ const Page = () => {
                       delete
                     </Button>
                   </div>
-                </div>
+                </div>}
               </div>
             )}
             <MyMap
@@ -81,9 +88,11 @@ const Page = () => {
       />
 
       <SelectErrorContext.Provider value={{error, setError}}>
-        <div className="">
-          <MultiStepForm/>
-        </div>
+        {/* <HouseCoordinatesContext.Provider value={{HouseCoordinates, setHouseCoordinates}}> */}
+          <div className="">
+            <MultiStepForm/>
+          </div>
+        {/* </HouseCoordinatesContext.Provider> */}
       </SelectErrorContext.Provider>
     </div>
   );

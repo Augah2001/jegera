@@ -7,17 +7,22 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { useRouter } from "next/navigation";
 import useHouses from "./useHouses";
 
-import { serialize } from "v8";
-import HelloWorldControl from "../classes/SearchControl";
+
 import { mapLocationContext } from "../contexts/mapLocationContext";
+import { GetCoordinatesContext } from "../contexts/GetCoordinatesContext";
+import { HouseCoordinatesContext } from "../contexts/HouseCoordinatesContext";
+import { FormModalContext } from "../contexts/FormModalContext";
+import { HouseErrorInputContext } from "../contexts/HouseInputErrorContext";
 
 export interface Options {
   marker?: boolean;
   search?: boolean;
   directions?: boolean;
+
 }
 
 const useMap = (
+
   setHasScrolled: Dispatch<SetStateAction<boolean>>,
   { marker, search, directions }: Options = {
     marker: true,
@@ -29,7 +34,12 @@ const useMap = (
   const mapContainerRef = useRef<HTMLDivElement | any>(undefined);
   const router = useRouter();
 
+  const {getCoordinates} = useContext(GetCoordinatesContext)
+  const { setHouseCoordinates} = useContext(HouseCoordinatesContext)
   const {setMapLocation} = useContext(mapLocationContext)
+  const {onClose} = useContext(FormModalContext)
+  const {setGetCoordinates} = useContext(GetCoordinatesContext)
+  const {setError} = useContext(HouseErrorInputContext)
   
 
   useEffect(() => {
@@ -103,9 +113,7 @@ const useMap = (
       });
       map.addControl(directions);
 
-      directions.on("click", () => {
-        console.log("wadii");
-      });
+     
     };
 
     directions && addDirections();
@@ -136,7 +144,17 @@ const useMap = (
 
     
 
+    getCoordinates && map.on('click', (event) => {
+      const coordinates = [event.lngLat.lng, event.lngLat.lat]
+      setHouseCoordinates(coordinates)
+      setError('')
 
+      const close = () => {
+        setGetCoordinates(false)
+        onClose()
+      }
+      close()
+    })
 
     search && addSearch();
 

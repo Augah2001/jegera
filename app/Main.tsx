@@ -21,6 +21,9 @@ import { User, UserContext, UserContextType } from "./contexts/UserContext";
 import { jwtDecode } from "jwt-decode";
 import Script from "next/script";
 import { mapLocationContext } from "./contexts/mapLocationContext";
+import { GetCoordinatesContext } from "./contexts/GetCoordinatesContext";
+import { HouseCoordinatesContext } from "./contexts/HouseCoordinatesContext";
+import { HouseErrorInputContext } from "./contexts/HouseInputErrorContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -29,13 +32,15 @@ interface Props {
 const inter = Inter({ subsets: ["latin"] });
 
 const Main = ({ childrenNode }: Props) => {
+  const [houseCoordinates, setHouseCoordinates] = useState<number[]>([]);
   const [isDark, setIsDark] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [mapLocation, setMapLocation] = useState<any>({})
+  const [mapLocation, setMapLocation] = useState<any>({});
+  const [getCoordinates, setGetCoordinates] = useState(false);
 
   const [hasScrolled, setHasScrolled] = useState(false);
   const scrollThreshold = 5;
-
+  const [errorInput, setErrorInput] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [selectValue, setSelectValue] = useState("");
   const [showMap, setShowMap] = useState(false);
@@ -64,7 +69,7 @@ const Main = ({ childrenNode }: Props) => {
     <html lang="en" data-theme="pastel" onScroll={() => console.log("augah")}>
       <body className={` ${inter.className} min-h-full bg-base-100`}>
         {/* <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></Script> */}
-        
+
         <link
           rel="stylesheet"
           href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.css"
@@ -97,9 +102,26 @@ const Main = ({ childrenNode }: Props) => {
                     <FormModalContext.Provider
                       value={{ onOpen, onClose, isOpen }}
                     >
-                      <mapLocationContext.Provider value={{mapLocation, setMapLocation}}>
-                        <Navbar hasScrolled={hasScrolled} />
-                        {childrenNode}
+                      <mapLocationContext.Provider
+                        value={{ mapLocation, setMapLocation }}
+                      >
+                        <GetCoordinatesContext.Provider
+                          value={{ getCoordinates, setGetCoordinates }}
+                        >
+                          <HouseCoordinatesContext.Provider
+                            value={{ houseCoordinates, setHouseCoordinates }}
+                          >
+                            <HouseErrorInputContext.Provider
+                              value={{
+                                error: errorInput,
+                                setError: setErrorInput,
+                              }}
+                            >
+                              <Navbar hasScrolled={hasScrolled} />
+                              {childrenNode}
+                            </HouseErrorInputContext.Provider>
+                          </HouseCoordinatesContext.Provider>
+                        </GetCoordinatesContext.Provider>
                       </mapLocationContext.Provider>
                     </FormModalContext.Provider>
                   </UserContext.Provider>

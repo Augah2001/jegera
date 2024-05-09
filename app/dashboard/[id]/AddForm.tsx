@@ -30,6 +30,8 @@ import LocationSelect from "./add/LocationSelect";
 import useSelectLocation from "@/app/hooks/useSelectLocation";
 import { SelectErrorContext } from "@/app/contexts/SelectErrorContext";
 import LocationInput from "./LocationInput";
+import { HouseCoordinatesContext } from "@/app/contexts/HouseCoordinatesContext";
+import { HouseErrorInputContext } from "@/app/contexts/HouseInputErrorContext";
 
 export const houseSchema = z.object({
   houseNumber: z
@@ -73,39 +75,47 @@ interface Props {
 
 const AddForm = ({
   nextStep,
-  currentStep,
-  prevStep,
-  houseData,
   setHouseData,
 }: Props) => {
-  const { mapLocation } = useContext(mapLocationContext);
+  const { houseCoordinates } = useContext(HouseCoordinatesContext);
 
   const { location, setLocation } = useSelectLocation();
   const {error, setError} = useContext(SelectErrorContext)
+  const {error: errorInput, setError :setErrorInput} = useContext(HouseErrorInputContext)
+  
 
   
 
   const handleSubmit = (data: any) => {
-    if (typeof location === 'object' && Object.keys(location).length !== 0) {
-      const newData = { ...data, location };
+    if ((typeof location === 'object' && Object.keys(location).length !== 0) && (houseCoordinates.length>0)) {
+      const newData = { ...data, location, houseCoordinates };
       setHouseData(newData)
       nextStep()
+      console.log(newData)
     } else {
-      const newData = data
+
+      
+
+      if ((typeof location === 'object' && Object.keys(location).length === 0))
+     { const newData = data
       delete newData['location']
       setHouseData(newData)
-      setError('specify location')
+      setError('specify location')}
+      
     }
-  };
+    if (houseCoordinates.length ===0) {
+      const newData = data
+      delete newData['houseCoordinates']
+      setHouseData(newData)
+      setErrorInput('specify coordinates')}
+    }
+  
 
   return (
     <Form onSubmit={handleSubmit} FormSchema={houseSchema}>
       {(
         renderInput: RenderInput,
         renderSelect: RenderSelect,
-        renderCheckbox: RenderCheckbox,
-        renderUpload: RenderUpload,
-        renderButton: RenderButton
       ) => {
         return (
           <>
@@ -134,7 +144,7 @@ const AddForm = ({
                 error = {error}
                 setError={setError}
               />
-              <LocationInput/>
+              <LocationInput error= {errorInput}/>
               {renderInput("houseNumber", "number", "House Number")}
               {renderInput("street", "text", "Street")}
               {renderInput("description", "textarea", "Description")}

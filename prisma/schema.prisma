@@ -31,7 +31,7 @@ model User {
   gender               genderType
   logins               Login[]
   houses               House[]
-  backgroundImage      String  @default("images/profile_pictures/dlzmprvxcug8pgq5ucxx")
+  backgroundImage      String        @default("images/profile_pictures/dlzmprvxcug8pgq5ucxx")
 }
 
 model Chat {
@@ -41,7 +41,6 @@ model Chat {
 }
 
 model Auth {
-  
   authorizationKey String @unique
 }
 
@@ -97,8 +96,8 @@ model Login {
 }
 
 model House {
-  id              Int      @id @default(autoincrement())
-  location        Location @relation(fields: [locationId], references: [id])
+  id              Int       @id @default(autoincrement())
+  location        Location  @relation(fields: [locationId], references: [id])
   locationId      Int
   houseNumber     Int
   street          String?
@@ -106,17 +105,16 @@ model House {
   price           Float
   minutes         Int
   capacity        Int
-  occupants       Int   @default(0)
+  occupied        Int       @default(0)
   perRoom         Int
   gender          Gender
   images          String[]
   backgroundImage String?
   curfew          Int
-  owner           User  @relation(fields: [ownerId], references: [id])
+  owner           User      @relation(fields: [ownerId], references: [id])
   ownerId         Int
   coordinates     Int[]
-  services Service[]
-
+  services        Service[]
 }
 
 model Service {
