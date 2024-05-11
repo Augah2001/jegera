@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  console.log(body)
   const validateBody = validate(schemaHouse, body); // Perform validation
 
   if (!validateBody.success) {
@@ -19,19 +20,27 @@ export async function POST(request: NextRequest) {
   }
 
   const existingHouse = await prisma.house.findMany({
-    where: { houseNumber: body.houseNumber, locationId: body.locationId },
+    where: {
+      AND: [
+        { houseNumber: body.houseNumber },
+        { locationId: body.locationId },
+      ],
+    },
   });
+  
 
-  if (existingHouse) {
+  if (Object.keys(existingHouse).length  !== 0) {
     return NextResponse.json({ error: "House with this number and location already exists" }, { status: 400 });
   }
 
+  const services = body.services
+  delete body['services']
   const newHouse = await prisma.house.create<House>({
-    data: body,
-    include: { location: true }, // Include related Location data upon creation
+    data: {...body, services: {create: services} },
+    include: { location: true, services: true }, // Include related Location data upon creation
   });
 
-  return NextResponse.json({message: "helo"});
+  return NextResponse.json({message: newHouse});
 }
 
 export async function DELETE(request: NextRequest) {

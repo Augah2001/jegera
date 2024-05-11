@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, Checkbox as Chk } from '@chakra-ui/react';
+import { error } from 'console';
 import React from 'react'
 import { UseFormRegister } from 'react-hook-form';
 
@@ -12,6 +13,7 @@ interface Props {
   }
 
 const Checkbox = ({ id, register,  label, errors }: Props) => {
+
   return (
     <div className="h-full mb-6 mx-4 hover:bg-base-200 rounded-sm px-2">
       <FormControl display= 'flex'>

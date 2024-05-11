@@ -31,7 +31,7 @@ model User {
   gender               genderType
   logins               Login[]
   houses               House[]
-  backgroundImage      String        @default("images/profile_pictures/dlzmprvxcug8pgq5ucxx")
+  backgroundImage      String        @default("images/profile_pictures/user_placeholder_xsx9ws")
 }
 
 model Chat {
@@ -110,7 +110,7 @@ model House {
   gender          Gender
   images          String[]
   backgroundImage String?
-  curfew          Int
+  curfew          String
   owner           User      @relation(fields: [ownerId], references: [id])
   ownerId         Int
   coordinates     Int[]
@@ -118,9 +118,10 @@ model House {
 }
 
 model Service {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
+
+  name   String  @unique @id
   houses House[]
+
 }
 
 enum Gender {

@@ -18,20 +18,21 @@ import {
   useEffect,
   useState,
 } from "react";
-import { BiPlusCircle } from "react-icons/bi";
+
 import { number, z } from "zod";
-import { BiLocationPlus } from "react-icons/bi";
-import { SubmitHandler, useFormContext } from "react-hook-form";
+
 import { Button, useModalContext } from "@chakra-ui/react";
-import { FormModalContext } from "@/app/contexts/FormModalContext";
+
 import useLocations from "@/app/hooks/useLocations";
-import { mapLocationContext } from "@/app/contexts/mapLocationContext";
+
 import LocationSelect from "./add/LocationSelect";
 import useSelectLocation from "@/app/hooks/useSelectLocation";
 import { SelectErrorContext } from "@/app/contexts/SelectErrorContext";
 import LocationInput from "./LocationInput";
 import { HouseCoordinatesContext } from "@/app/contexts/HouseCoordinatesContext";
 import { HouseErrorInputContext } from "@/app/contexts/HouseInputErrorContext";
+import { UserContext } from "@/app/contexts/UserContext";
+import { House } from "@/app/hooks/useHouses";
 
 export const houseSchema = z.object({
   houseNumber: z
@@ -73,50 +74,75 @@ interface Props {
   setHouseData: any;
 }
 
-const AddForm = ({
-  nextStep,
-  setHouseData,
-}: Props) => {
+const AddForm = ({ nextStep, setHouseData }: Props) => {
   const { houseCoordinates } = useContext(HouseCoordinatesContext);
 
   const { location, setLocation } = useSelectLocation();
-  const {error, setError} = useContext(SelectErrorContext)
-  const {error: errorInput, setError :setErrorInput} = useContext(HouseErrorInputContext)
-  
-
-  
+  const { error, setError } = useContext(SelectErrorContext);
+  const { error: errorInput, setError: setErrorInput } = useContext(
+    HouseErrorInputContext
+  );
+  const { user } = useContext(UserContext);
+  const { data: locations } = useLocations();
 
   const handleSubmit = (data: any) => {
-    if ((typeof location === 'object' && Object.keys(location).length !== 0) && (houseCoordinates.length>0)) {
-      const newData = { ...data, location, houseCoordinates };
-      setHouseData(newData)
-      nextStep()
-      console.log(newData)
+    if (
+      typeof location === "object" &&
+      Object.keys(location).length !== 0 &&
+      houseCoordinates.length > 0
+    ) {
+      const myLocation = locations.find(
+        (l) => l.name === location.name
+      ) as Location;
+
+      // console.log(myLocation)
+      // console.log(location);
+      if (!myLocation) {
+        // console.log(location)
+
+        apiClient
+          .post<Location>("/locations", location)
+          .then((res) => {
+            const newData = {
+              ...data,
+              coordinates: houseCoordinates,
+              ownerId: user?.id,
+              locationId: res.data.id,
+            };
+
+            console.log(newData);
+            setHouseData(newData);
+            nextStep();
+
+            // apiClient
+            //   .post<House>("/houses", newData)
+            //   .then((res) => console.log(res.data))
+            //   .catch((err) => console.log(err));
+            // setHouseData(newData);
+          })
+          .catch((err) => console.log(err));
+      }
+
+      
     } else {
-
-      
-
-      if ((typeof location === 'object' && Object.keys(location).length === 0))
-     { const newData = data
-      delete newData['location']
-      setHouseData(newData)
-      setError('specify location')}
-      
+      if (typeof location === "object" && Object.keys(location).length === 0) {
+        const newData = data;
+        delete newData["location"];
+        setHouseData(newData);
+        setError("specify location");
+      }
     }
-    if (houseCoordinates.length ===0) {
-      const newData = data
-      delete newData['houseCoordinates']
-      setHouseData(newData)
-      setErrorInput('specify coordinates')}
+    if (houseCoordinates.length === 0) {
+      const newData = data;
+      delete newData["houseCoordinates"];
+      setHouseData(newData);
+      setErrorInput("specify coordinates");
     }
-  
+  };
 
   return (
     <Form onSubmit={handleSubmit} FormSchema={houseSchema}>
-      {(
-        renderInput: RenderInput,
-        renderSelect: RenderSelect,
-      ) => {
+      {(renderInput: RenderInput, renderSelect: RenderSelect) => {
         return (
           <>
             <div className="flex justify-end">
@@ -141,10 +167,10 @@ const AddForm = ({
                 id="location"
                 label="Location"
                 setLocation={setLocation}
-                error = {error}
+                error={error}
                 setError={setError}
               />
-              <LocationInput error= {errorInput}/>
+              <LocationInput error={errorInput} />
               {renderInput("houseNumber", "number", "House Number")}
               {renderInput("street", "text", "Street")}
               {renderInput("description", "textarea", "Description")}

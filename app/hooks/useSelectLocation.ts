@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { mapLocationContext } from '../contexts/mapLocationContext';
 import useLocations, { Location } from './useLocations';
+import { LocationContext } from '../contexts/locationContext';
 
 const useSelectLocation = () => {
 
     const { mapLocation } = useContext(mapLocationContext);
-  const [location, setLocation] = useState<Location>();
+    const {location, setLocation} = useContext(LocationContext)
 
   
 

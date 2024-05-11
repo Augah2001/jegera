@@ -1,5 +1,5 @@
 
-import { z } from "zod";
+import { boolean, z } from "zod";
 
 // **User Model Validation**
 export const schemaUser = z.object({
@@ -41,6 +41,11 @@ export const schemaPublicId = z.object({
   publicId: z.string()
 })
 
+export const schemaService = z.object({
+  name: z.string(), // Enforce non-empty service name
+
+});
+
 // **House Model Validation**
 export const schemaHouse = z.object({
   locationId: z.number().positive(), // Ensure positive location ID
@@ -48,21 +53,20 @@ export const schemaHouse = z.object({
   street: z.string().optional(), // Enforce non-empty street
   description: z.string().optional(), // Allow optional description
   price: z.number().nonnegative(), // Allow optional price
-  minutes: z.string(), // Allow optional minutes (may need adjustment based on usage)
+  minutes: z.number(), // Allow optional minutes (may need adjustment based on usage)
   capacity: z.number().positive().optional(), // Allow optional capacity
   occupied: z.number(), // Allow optional occupied status
   perRoom: z.number().positive().optional(), // Allow optional perRoom value
   gender: z.enum(["male", "female", "both"]).optional(), // Allow optional gender
   images: z.array(z.string()).optional(), // Allow optional array of image URLs
   backgroundImage: z.string().optional(), // Allow optional background image URL
-  curfew: z.number().positive().optional(), // Allow optional curfew time
+  curfew: z.string().min(1), // Allow optional curfew time
   ownerId: z.number().positive(), // Ensure positive owner ID
+  services: z.array(schemaService.optional()).optional()
 });
 
 // **Service Model Validation** (assuming simple name validation)
-export const schemaService = z.object({
-  name: z.string(), // Enforce non-empty service name
-});
+
 
 
 

@@ -24,6 +24,8 @@ import { mapLocationContext } from "./contexts/mapLocationContext";
 import { GetCoordinatesContext } from "./contexts/GetCoordinatesContext";
 import { HouseCoordinatesContext } from "./contexts/HouseCoordinatesContext";
 import { HouseErrorInputContext } from "./contexts/HouseInputErrorContext";
+import { Location } from "./hooks/useLocations";
+import { LocationContext } from "./contexts/locationContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -37,7 +39,7 @@ const Main = ({ childrenNode }: Props) => {
   const [user, setUser] = useState<User | null>(null);
   const [mapLocation, setMapLocation] = useState<any>({});
   const [getCoordinates, setGetCoordinates] = useState(false);
-
+  const [location, setLocation] = useState<Location | undefined>();
   const [hasScrolled, setHasScrolled] = useState(false);
   const scrollThreshold = 5;
   const [errorInput, setErrorInput] = useState("");
@@ -117,8 +119,12 @@ const Main = ({ childrenNode }: Props) => {
                                 setError: setErrorInput,
                               }}
                             >
-                              <Navbar hasScrolled={hasScrolled} />
-                              {childrenNode}
+                              <LocationContext.Provider
+                                value={{ location, setLocation }}
+                              >
+                                <Navbar hasScrolled={hasScrolled} />
+                                {childrenNode}
+                              </LocationContext.Provider>
                             </HouseErrorInputContext.Provider>
                           </HouseCoordinatesContext.Provider>
                         </GetCoordinatesContext.Provider>

@@ -57,6 +57,7 @@ export type RenderUpload = (
   label: string,
   publicId: string,
   setPublicId: React.Dispatch<React.SetStateAction<string>>,
+  onUpload: (publicId: string)=> any,
   key?: any,
   imageSupplied?: boolean,
   setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -129,6 +130,7 @@ const Form = ({
     label,
     publicId,
     setPublicId,
+    onUpload,
     key,
     imageSupplied, setImageSupplied, 
   ) => {
@@ -137,9 +139,11 @@ const Form = ({
         label={label}
         publicId={publicId}
         setPublicId={setPublicId}
+        onUpload={onUpload}
         key={key}
         imageSupplied={imageSupplied}
         setImageSupplied={setImageSupplied}
+
         
       />
     );

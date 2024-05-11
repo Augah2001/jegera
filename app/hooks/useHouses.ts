@@ -12,7 +12,6 @@ enum Gender {
 
 export interface House {
     id: number;
-    location: Location;
     locationId: number;
     houseNumber: number;
     street: string;
@@ -26,7 +25,7 @@ export interface House {
     images: string[];
     backGroundImage: string;
     curfew: number; // Time in 24-hour format (0-23)?
-    owner: User;
+
     ownerId: number;
     services: Service[];
     coordinates: LngLatLike

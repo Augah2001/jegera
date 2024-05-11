@@ -32,12 +32,14 @@ interface Props {
   label: string;
   publicId: string;
   setPublicId: React.Dispatch<React.SetStateAction<string>>;
+  onUpload: (publicId: string) => any
   imageSupplied?: boolean;
   setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>;
   key: number | string
+  
 }
 
-const FileUpload = ({ label, imageSupplied, setImageSupplied, key }: Props) => {
+const FileUpload = ({ label, imageSupplied, setImageSupplied, key, onUpload }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [publicId, setPublicId] = useState("");
 
@@ -50,10 +52,13 @@ const FileUpload = ({ label, imageSupplied, setImageSupplied, key }: Props) => {
   });
 
   const handleUpload = async (myResult: CloudinaryUploadWidgetResults) => {
+    
     if (myResult.event === "success") {
       setPublicId((myResult.info as CloudinaryResult).public_id);
       setFilename((myResult.info as CloudinaryResult).original_filename);
       setImageSupplied && setImageSupplied(true);
+      console.log((myResult.info as CloudinaryResult).public_id)
+      onUpload((myResult.info as CloudinaryResult).public_id)
     }
   };
 
@@ -105,7 +110,7 @@ const FileUpload = ({ label, imageSupplied, setImageSupplied, key }: Props) => {
                       upload
                     </Button>
                   )}
-                  <p className=" my-auto ms-3 text-green-600">
+                  <p className=" my-auto ms-3  text-green-600" onClick={() => open()}>
                     {filename
                       ? filename.length > 32
                         ? filename.slice(0, 32) + "..."

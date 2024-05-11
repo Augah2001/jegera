@@ -28,20 +28,7 @@ import Modal from "@/app/components/Modal";
 import MyMap from "@/app/HomeComponents/Map";
 
 export const houseSchema = z.object({
-  locationId: z.number().positive(), // Ensure positive location ID
-  houseNumber: z.number().positive(), // Enforce positive house number
-  street: z.string().optional(), // Enforce non-empty street
-  description: z.string().optional(), // Allow optional description
-  price: z.number().nonnegative(), // Allow optional price
-  minutes: z.number(), // Allow optional minutes (may need adjustment based on usage)
-  capacity: z.number().positive().optional(), // Allow optional capacity
-  occupied: z.number(), // Allow optional occupied status
-  perRoom: z.number().positive().optional(), // Allow optional perRoom value
-  gender: z.enum(["male", "female", "both"]).optional(), // Allow optional gender
-  images: z.array(z.string()).optional(), // Allow optional array of image URLs
-  backgroundImage: z.string().optional(), // Allow optional background image URL
-  curfew: z.number().positive().optional(), // Allow optional curfew time
-  ownerId: z.number().positive(), // Ensure positive owner ID
+  
 });
 
 interface Location {
@@ -55,13 +42,41 @@ interface Props {
 
   nextStep: () => void;
   prevStep: () => void;
+  houseData: any;
+  setHouseData: any;
 }
 
-const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
+const ImagesForm = ({
+  nextStep,
+  prevStep,
+  setHouseData,
+  houseData,
+}: Props) => {
   const [uploadInputs, setUploadInputs] = useState([1]);
   const [publicId, setPublicId] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const onUpload = (publicId: string) => {
+    setImages([...images, publicId]);
+
+    console.log(publicId, images);
+  };
+
+  const handleSubmit = (data: any) => {
+
+    const newData = {
+      ...houseData,
+      images,
+      backgroundImage,
+    };
+    console.log(newData);
+    setHouseData(newData);
+    console.log(houseData)
+    nextStep()
+  };
+
   return (
-    <Form onSubmit={() => {}} FormSchema={houseSchema}>
+    <Form onSubmit={handleSubmit} FormSchema={houseSchema}>
       {(
         renderInput: RenderInput,
         renderSelect: RenderSelect,
@@ -78,31 +93,46 @@ const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
                   color="white"
                   marginX={3}
                   onClick={prevStep}
-                  _hover={{opacity: 0.8}}
+                  _hover={{ opacity: 0.8 }}
                 >
                   Back
                 </Button>
               }
               {
-                <Button bg="green.500" color="white" _hover={{opacity: 0.8}} onClick={nextStep}>
+                <Button
+                  bg="green.500"
+                  color="white"
+                  _hover={{ opacity: 0.8 }}
+                  type="submit"
+                >
                   Next
                 </Button>
               }
             </div>
             <div className="shadow-lg min-h-[500px] py-10">
               <div className="flex justify-center">
-                {renderUpload(`background Image`, publicId, setPublicId)}
+                {renderUpload(
+                  `background Image`,
+                  publicId,
+                  setPublicId,
+                  (publicId) => {
+                    setBackgroundImage(publicId);
+                  }
+                )}
               </div>
               <div className="h-[1px] bg-base-300 w-full"></div>
               <div className="mt-[70px] mx-auto  grid grid-cols-2 gap-4  ">
-                {uploadInputs.map((upload, index) =>
-                  renderUpload(
-                    `display image ${upload}`,
-                    publicId,
-                    setPublicId,
-                    index
-                  )
-                )}
+                {uploadInputs.map((upload, index) => (
+                  <div key={index}>
+                    {renderUpload(
+                      `display image ${upload}`,
+                      publicId,
+                      setPublicId,
+                      onUpload,
+                      index
+                    )}
+                  </div>
+                ))}
                 {
                   <div className="flex">
                     <BiPlusCircle
@@ -130,4 +160,4 @@ const AddForm = ({ nextStep, currentStep, prevStep }: Props) => {
   );
 };
 
-export default AddForm;
+export default ImagesForm;

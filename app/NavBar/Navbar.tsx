@@ -16,7 +16,7 @@ import UserImage from "../components/UserImage";
 
 const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
   const { user, setUser } = useContext(UserContext);
-  console.log(user);
+
   const path = usePathname();
   const { onOpen } = useContext(FormModalContext);
 

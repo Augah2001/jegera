@@ -21,6 +21,8 @@ export async function POST(request: NextRequest) {
     where: { name: body.name },
   });
 
+  console.log(existingLocation)
+
   if (existingLocation) {
     return NextResponse.json({ error: "Location with this name already exists" }, { status: 400 });
   }

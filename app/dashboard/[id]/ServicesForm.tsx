@@ -21,22 +21,26 @@ import Modal from "@/app/components/Modal";
 import MyMap from "@/app/HomeComponents/Map";
 import { steps } from "framer-motion";
 import { Step } from "./add/Stepper";
+import useServices, { Service } from "@/app/hooks/useServices";
+import { House } from "@/app/hooks/useHouses";
 
-export const houseSchema = z.object({
-  locationId: z.number().positive(), // Ensure positive location ID
-  houseNumber: z.number().positive(), // Enforce positive house number
-  street: z.string().optional(), // Enforce non-empty street
-  description: z.string().optional(), // Allow optional description
-  price: z.number().nonnegative(), // Allow optional price
-  minutes: z.number(), // Allow optional minutes (may need adjustment based on usage)
-  capacity: z.number().positive().optional(), // Allow optional capacity
-  occupied: z.number(), // Allow optional occupied status
-  perRoom: z.number().positive().optional(), // Allow optional perRoom value
-  gender: z.enum(["male", "female", "both"]).optional(), // Allow optional gender
-  images: z.array(z.string()).optional(), // Allow optional array of image URLs
-  backgroundImage: z.string().optional(), // Allow optional background image URL
-  curfew: z.number().positive().optional(), // Allow optional curfew time
-  ownerId: z.number().positive(), // Ensure positive owner ID
+export const amenitySchema = z.object({
+  wifi: z.boolean().optional(),
+  meals: z.boolean().optional(),
+  backupPower: z.boolean().optional(),
+  stove: z.boolean().optional(),
+  fridge: z.boolean().optional(),
+  separateKitchen: z.boolean().optional(),
+  curfew: z.boolean().optional(),
+  visitors: z.boolean().optional(),
+  shelves: z.boolean().optional(),
+  waterTank: z.boolean().optional(),
+  maid: z.boolean().optional(),
+  gasStove: z.boolean().optional(),
+  gyser: z.boolean().optional(),
+  swimmingPool: z.boolean().optional(),
+  beds: z.boolean().optional(),
+  security: z.boolean().optional(),
 });
 
 interface Location {
@@ -51,27 +55,53 @@ interface Props {
   setCurrentStep: Dispatch<SetStateAction<number>>,
   
   prevStep: ()=> void
+  houseData: any;
+  setHouseData: any;
 }
 
-const AddForm = ({currentStep, prevStep}: Props ) => {
+const AddForm = ({currentStep, prevStep, setHouseData, houseData}: Props ) => {
   const [locations, setLocations] = useState<Location[]>([] as Location[]);
   const [uploadInputs, setUploadInputs] = useState([1]);
   const [publicId, setPublicId] = useState("");
   const { onOpen, isOpen } = useContext(FormModalContext);
   const [_, setHasScrolled] = useState(true);
 
-  console.log(isOpen);
 
-  useEffect(() => {
-    apiClient
-      .get<Location[]>("/locations")
-      .then((res) => {
-        setLocations(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const handleSubmit = (data: any) => {
+
+
+    const myServices: Service[] = []
+  //   console.log('augah')
+    Object.keys(data).forEach(itemKey => {
+
+      if (data[itemKey] !== false){
+        const service = {
+          name: itemKey,
+        }
+
+        myServices.push(service)
+      }
+
+      
+    }
+    
+    
+  
+  )
+
+  const newHouseData = {
+    ...houseData, services: myServices
+  }
+  console.log(newHouseData)
+  apiClient.post<House>('/houses', newHouseData ).then(res=> {
+    console.log(res.data)
+    // setHouseData(res.data)
+  }).catch(err=> console.log(err))
+    
+  }
+ 
   return (
-    <Form onSubmit={() => {}} FormSchema={houseSchema}>
+    <Form onSubmit={handleSubmit} FormSchema={amenitySchema}>
       {(
         renderInput: RenderInput,
         renderSelect: RenderSelect,
@@ -79,11 +109,14 @@ const AddForm = ({currentStep, prevStep}: Props ) => {
         renderUpload: RenderUpload,
         renderButton: RenderButton
       ) => {
+
+
         return (
 
           <>
+          
           {<Button onClick={prevStep}>Prev</Button>}
-          {<Button onClick={prevStep}>Prev</Button>}
+          {<Button type="submit" >submit</Button>}
           <div className=" rounded-md">
 
             <div className="mt-[70px] mx-auto  grid grid-cols-3 gap-3 pt-4 ">
@@ -103,7 +136,7 @@ const AddForm = ({currentStep, prevStep}: Props ) => {
               {renderCheckbox("swimmingPool", "Swimming Pool")}
               {renderCheckbox("beds", "Beds")}
               {renderCheckbox("security", "Security Features")}
-              
+                
             </div>
           </div>
           </>

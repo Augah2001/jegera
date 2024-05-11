@@ -135,7 +135,7 @@ const useMap = (
 
       search.on('result', (result)=> {
         setMapLocation(result)
-        console.log(result)
+
       
       })
 
