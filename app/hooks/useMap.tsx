@@ -30,19 +30,24 @@ const useMap = (
     directions: true,
   }
 ) => {
-  const { data: houses, error, isLoading } = useHouses();
+  
   const mapContainerRef = useRef<HTMLDivElement | any>(undefined);
   const router = useRouter();
+  const { data: houses, error, isLoading } = useHouses();
 
+  // console.log(houses)
   const {getCoordinates} = useContext(GetCoordinatesContext)
   const { setHouseCoordinates} = useContext(HouseCoordinatesContext)
   const {setMapLocation} = useContext(mapLocationContext)
   const {onClose} = useContext(FormModalContext)
   const {setGetCoordinates} = useContext(GetCoordinatesContext)
   const {setError} = useContext(HouseErrorInputContext)
+
+
   
 
   useEffect(() => {
+    
     navigator.geolocation.getCurrentPosition(
       () => {},
       () => {}
@@ -59,8 +64,10 @@ const useMap = (
       
     });
 
+    console.log(houses)
+
     {
-      marker &&
+      
         houses.forEach((house) => {
           const btn = document.createElement("button");
 
@@ -77,14 +84,14 @@ const useMap = (
           const popupContainer = document.createElement("div");
           const root = createRoot(popupContainer); // Create a root for the popup content
           root.render(<HouseMapPopup />);
-          // btn.style.fontSize = '12px'
+      
           const popup = new mapboxgl.Popup({ closeButton: false });
           popup.getElement();
           popupContainer.addEventListener("click", () => {
-            router.push("./view");
+            router.push(`/houses/${house.id}`);
           });
           popup
-            .setLngLat([31.058826105504835, -17.768739785090247])
+            .setLngLat(house.coordinates)
             .setDOMContent(popupContainer);
 
           const marker = new mapboxgl.Marker({ element: btn });
@@ -162,7 +169,7 @@ const useMap = (
       setHasScrolled(true);
     });
     return () => map.remove();
-  }, []);
+  }, [houses]);
 
   return { mapContainerRef, setHasScrolled };
 };

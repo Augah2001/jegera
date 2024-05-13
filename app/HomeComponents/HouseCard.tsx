@@ -4,12 +4,15 @@ import { Badge } from "@radix-ui/themes";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
 import { House } from "../hooks/useHouses";
+import { useRouter } from "next/navigation";
 
 interface Props {
   house: House
 }
 
 const HouseCard = ({house}: Props) => {
+
+  const router = useRouter()
   const { isDark } = useContext(ThemeContext);
   return (
     <div className=" card rounded-none w-[100%] mb-4">
@@ -23,12 +26,15 @@ const HouseCard = ({house}: Props) => {
           className="object-cover w-[55%] object-center" // Add Tailwind class for object-fit
           priority // Prioritize loading this image for a better experience
         />
-        <div className="card-body  ">
+        <div className="card-body  "  onClick={()=> router.push(`/houses/${house.id}`)}>
           <div className="flex justify-end">
             <h2 className="card-title text-base-content">{house.location.name}</h2>
           </div>
           <div className="flex justify-end">
-            <h2 className="font-semibold text-gray-500">{house.minutes}</h2>
+            <h2 className="font-semibold text-gray-500">{`${house.minutes} minutes`}</h2>
+          </div>
+          <div className="flex justify-end">
+            <h2 className="font-semibold text-gray-500">{`${house.capacity-house.occupied} remaining`}</h2>
           </div>
           <div className=" flex justify-end">
             <Badge
@@ -38,7 +44,7 @@ const HouseCard = ({house}: Props) => {
                   : "text-indigo-700 bg-white"
               } ps-[10px] font-semibold h-8 w-16 text-lg rounded-0`}
             >
-              {house.price}
+              {`$ ${house.price}`}
             </Badge>
           </div>
         </div>

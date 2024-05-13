@@ -6,6 +6,9 @@ import dheni from "../assets/dheni.jpg";
 import { useRouter } from "next/navigation";
 
 const HouseMapPopup = () => {
+
+  
+  
   return (
     <div
       className=" card rounded-none w-[100%] mb-4 max-h-[10px]] mx-0  "

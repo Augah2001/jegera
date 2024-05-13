@@ -4,7 +4,7 @@ import PictureView from "./PictureView";
 import ImageModal from "./Modal";
 import SidePanel from "./SidePanel";
 
-const page = () => {
+const Page = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
@@ -20,4 +20,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

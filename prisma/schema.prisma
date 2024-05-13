@@ -113,7 +113,7 @@ model House {
   curfew          String
   owner           User      @relation(fields: [ownerId], references: [id])
   ownerId         Int
-  coordinates     Int[]
+  coordinates     Float[]
   services        Service[]
 }
 

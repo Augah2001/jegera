@@ -27,7 +27,7 @@ const SidePanel = () => {
 
         <div className="mx-auto  grid grid-cols-3">
           {amenities.map((amenity, index) => (
-            <Main text={amenity} />
+            <Main key={index} text={amenity} />
           ))}
         </div>
         <div className="flex justify-center">

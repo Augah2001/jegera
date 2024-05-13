@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import validate, { schemaHouse } from "../validate"; // Assuming your validation function is in validate.js
 import prisma from '../../../prisma/client'
 import { House } from "@prisma/client"; // Import House and Location types
+import { Service } from "@/app/hooks/useServices";
+import { create } from "lodash";
 
 export async function GET(request: NextRequest) {
   const houses = await prisma.house.findMany({
@@ -32,11 +34,9 @@ export async function POST(request: NextRequest) {
   if (Object.keys(existingHouse).length  !== 0) {
     return NextResponse.json({ error: "House with this number and location already exists" }, { status: 400 });
   }
-
-  const services = body.services
-  delete body['services']
+ 
   const newHouse = await prisma.house.create<House>({
-    data: {...body, services: {create: services} },
+    data: {...body, services: { connect: body.services} },
     include: { location: true, services: true }, // Include related Location data upon creation
   });
 

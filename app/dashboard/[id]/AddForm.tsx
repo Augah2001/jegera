@@ -95,10 +95,10 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
         (l) => l.name === location.name
       ) as Location;
 
-      // console.log(myLocation)
-      // console.log(location);
+      console.log(myLocation)
+      console.log(location);
       if (!myLocation) {
-        // console.log(location)
+        console.log(location)
 
         apiClient
           .post<Location>("/locations", location)

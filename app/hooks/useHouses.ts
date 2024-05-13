@@ -13,17 +13,18 @@ enum Gender {
 export interface House {
     id: number;
     locationId: number;
+    location: Location
     houseNumber: number;
     street: string;
     description: string;
     price: number;
     minutes: number; // To what point of reference (e.g., from city center)?
     capacity: number;
-    occupied: boolean;
+    occupied: number;
     perRoom: number; // Price per room or total price per stay?
     gender: Gender;
     images: string[];
-    backGroundImage: string;
+    backgroundImage: string;
     curfew: number; // Time in 24-hour format (0-23)?
 
     ownerId: number;
