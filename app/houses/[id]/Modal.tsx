@@ -15,7 +15,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onOpen: () => void;
-  house: House
+  house: House | undefined
 }
 function ImageModal({ onClose, isOpen, house }: Props) {
   return (

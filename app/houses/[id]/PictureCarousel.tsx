@@ -24,13 +24,17 @@ const settings = {
   vertical: false,
 };
 
-
-
-export default function PictureCarousel({house}: {house: House}) {
+export default function PictureCarousel({
+  house,
+}: {
+  house: House | undefined;
+}) {
   const { isDark } = useContext(ThemeContext);
   const [slider, setSlider] = React.useState<Slider | null>(null);
 
-  const images = [house?.backgroundImage, ...house.images]
+  const images = house?.images
+    ? [house?.backgroundImage, ...house.images]
+    : [house?.backgroundImage];
 
   return (
     <div className="shadow-2xl w-full m-0">
@@ -73,19 +77,20 @@ export default function PictureCarousel({house}: {house: House}) {
           {...settings}
           ref={(slider) => setSlider(slider)}
         >
-          {images.map((image, index) => (
+          {images?.map((image, index) => (
             <div
               key={index}
-              className="flex justify-center max-h-[600px] bg-gray-600 w-screen"
+              className="flex justify-center  bg-gray-600 w-screen"
             >
-              <CldImage src={image}
-            alt="thumbnail"
-       
-             className="object-cover object-center  "
-            fill = {true} 
-          
-            />
-            
+              {image && (
+                <CldImage
+                  src={image}
+                  alt="thumbnail"
+                  className="  "
+                  width={1000}
+                  height={1000}
+                />
+              )}
             </div>
           ))}
         </Slider>

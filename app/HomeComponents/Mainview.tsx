@@ -29,7 +29,7 @@ const Mainview = () => {
         {showMap ? "show list" : "show map"}
       </Button>
       <GradientDiv />
-      <div className="mt-[90px] fixed top-2 left-0 w-full z-10 bg-base-100">
+      {!hasScrolled && <div className="mt-[90px] fixed top-2 left-0 w-full z-10 bg-base-100">
         {path === "/" && !hasScrolled && (
           <animated.div style={springProps}>
             {!hasScrolled && <SearchComponent />}
@@ -41,10 +41,18 @@ const Mainview = () => {
           </div>
         )}
 
-        {!isDark && (
-          <div className={` bg-base-300  h-[1px] min-w-[100%] mt-9`}></div>
-        )}
-        {<Slider />}
+        
+        
+      </div>}
+      <div
+        className={` ${hasScrolled? 'mt-[124px]': 'mt-[150px]'}  ms- left-0 ${
+          hasScrolled
+            ? "w-[80%] transition duration-1000 ease-in-out"
+            : "w-[100%] transition duration-1000 ease-in-out"
+        } fixed z-10 `}
+      >
+        <div className="h-[1px] bg-base-300 w-full"></div>
+        <Slider />
       </div>
       <div className={`${!hasScrolled ? "mt-[235px]" : "mt-[100px]"}`}>
         {showMap ? (

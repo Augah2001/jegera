@@ -7,7 +7,7 @@ import { create } from "lodash";
 
 export async function GET(request: NextRequest) {
   const houses = await prisma.house.findMany({
-    include: { location: true }, // Include related Location data
+    include: { location: true, services: true }, // Include related Location data
   });
   return NextResponse.json(houses);
 }

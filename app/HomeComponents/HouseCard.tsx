@@ -5,6 +5,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
 import { House } from "../hooks/useHouses";
 import { useRouter } from "next/navigation";
+import { CldImage } from "next-cloudinary";
 
 interface Props {
   house: House
@@ -16,15 +17,14 @@ const HouseCard = ({house}: Props) => {
   const { isDark } = useContext(ThemeContext);
   return (
     <div className=" card rounded-none w-[100%] mb-4">
-      <figure className=" shadow-md bg-bse-200  max-h-[415px] h-auto">
-        <Image
-          src={dheni}
+      <figure className=" shadow-md bg-base-200  h-[380px]">
+        <CldImage
+          src={house.backgroundImage? house.backgroundImage: '/images/profile_pictures/OIP_wqanmu'}
+          width={1000}
+          height={1000}
           alt="thumbnail"
-          objectPosition="center"
-          layout="fit" // Use layout="fill" for responsive sizing
-          objectFit="cover" // Use objectFit="cover" to crop if needed
-          className="object-cover w-[55%] object-center" // Add Tailwind class for object-fit
-          priority // Prioritize loading this image for a better experience
+          className="object-cover w-[55%] object-center h-full" // Add Tailwind class for object-fit
+         
         />
         <div className="card-body  "  onClick={()=> router.push(`/houses/${house.id}`)}>
           <div className="flex justify-end">

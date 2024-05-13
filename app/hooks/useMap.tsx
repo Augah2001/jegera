@@ -83,7 +83,7 @@ const useMap = (
 
           const popupContainer = document.createElement("div");
           const root = createRoot(popupContainer); // Create a root for the popup content
-          root.render(<HouseMapPopup />);
+          root.render(<HouseMapPopup house={house} />);
       
           const popup = new mapboxgl.Popup({ closeButton: false });
           popup.getElement();
