@@ -1,11 +1,12 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { Chat } from "../HomeComponents/Chats";
+import { User } from "./UserContext";
 
 
 
 interface ChatContextType {
-  chat: Chat | undefined;
-  setChat: Dispatch<SetStateAction<Chat | undefined>>;
+  chatUser: User | undefined;
+  setChatUser: Dispatch<SetStateAction<User | undefined>>;
 }
 
 export const ChatContext = createContext<ChatContextType>(

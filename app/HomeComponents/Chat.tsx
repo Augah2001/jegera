@@ -6,18 +6,16 @@ const socket = io("http://localhost:8000");
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 
-import Image from "next/image";
-import user_image from "../assets/user_placeholder.jpeg";
 import { Button } from "@radix-ui/themes";
-import { House } from "../hooks/useHouses";
+
 import { HouseContext } from "../contexts/SelectedHouseContext";
-import { houseSchema } from "../dashboard/[id]/AddForm";
+
 import { UserContext } from "../contexts/UserContext";
-import { BiMessageAltAdd, BiMinus, BiStar } from "react-icons/bi";
-import apiClient from "../configs/apiClient";
+
 import { ShowMessageContext } from "../contexts/ShowMessageContext";
 import { ShowChatsContext } from "../contexts/ShowChatsContext";
 import { ChatContext } from "../contexts/SelectedChatContext";
+import { BiMinus } from "react-icons/bi";
 type Input = {
   message: string;
 };
@@ -26,54 +24,63 @@ export type Message = {
   sender: number | undefined;
   receiver: number | undefined;
   body: string;
+  senderId?: number;
+  receiverId?: number;
 
   sentByMe: boolean;
 };
 
+
 const Chat = () => {
+
+  const chatContainerRef = useRef<HTMLDivElement>(null)
   const [messages, setMessages] = useState<Message[]>([]);
   const { selectedHouse } = useContext(HouseContext);
   const { user } = useContext(UserContext);
-  const {setShowMessage} = useContext(ShowMessageContext)
-
+  const { setShowMessage } = useContext(ShowMessageContext);
+  
 
   const { setShowChats } = useContext(ShowChatsContext);
-  const { chat } = useContext(ChatContext);
+  const { chatUser } = useContext(ChatContext);
+  
 
   const { register, handleSubmit, watch, setValue } = useForm<Input>();
-  const [isFocused, setIsFocused] = useState(true);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  console.log(user?.id, selectedHouse?.ownerId);
+  
+
 
   useEffect(() => {
-    socket.emit("joinChat", [user, selectedHouse?.owner]);
-    console.log([user, selectedHouse]);
 
+    if (chatUser) {socket.emit("joinChat", [user, chatUser]);
+    console.log([user, chatUser]);
+  }
     // Listen for chat messages
     socket.on("chatMessages", (messages) => {
       console.log(messages);
       setMessages(messages);
     });
-  }, []);
+
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatUser, user]);
 
   socket.on("message", (message) => {
     setMessages([...messages, message]);
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = 10000;
+    }
   });
 
   const onSend: SubmitHandler<Input> = ({ message }) => {
     console.log(message);
     const newMessage: Message = {
       sender: user?.id,
-      receiver: selectedHouse?.ownerId,
+      receiver: chatUser?.id,
       body: message,
       sentByMe: true,
     };
     socket.emit("message", newMessage);
-    socket.on("messageSaved", (message) => {
-      console.log(message);
-    });
-    setMessages([...messages, newMessage]);
 
     setValue("message", "");
   };
@@ -90,32 +97,34 @@ const Chat = () => {
                 src={user_image}
                 alt="hello"
               /> */}
-            <h1 className="text-xl text-base-content ms-3 font-bold">Augah</h1>
+            <h1 className="text-xl text-base-content ms-3 font-bold">{chatUser?.firstName}</h1>
           </div>
           <div
             className="text-3xl font-2xl text-pink-600"
             onClick={() => {
-              setShowMessage(false)
-              setShowChats(false)}}
+              setShowMessage(false);
+              setShowChats(false);
+            }}
           >
             <BiMinus />
           </div>
         </header>
         <div className="bg-base-300 h-[2px] w-[100%]"></div>
         <main
+        ref={chatContainerRef}
           // style={{ backgroundImage: "url('@assets/dheni.jpg)" }}
-          className="flex-grow min-h-[450px] overflow-y-auto mx-4 mt-5"
+          className=" max-h-[450px] min-h-[450px] overflow-y-auto message-area  mt-5"
         >
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex items-end mb-6 ${
-                message.senderId !== user?.id ? "justify-end" : "justify-start"
+              className={`flex items-end mb-6 mx-4  ${
+                message.senderId === user?.id ? "justify-end" : "justify-start"
               }`}
             >
               <div
                 className={`px-4 py-2 rounded-[100px] max-w-[70%]  text-white shadow-md ${
-                  message.senderId !== user?.id ? "bg-blue-500" : "bg-gray-300"
+                  message.senderId === user?.id ? "bg-blue-500" : "bg-gray-300"
                 }`}
               >
                 {message.body}

@@ -1,14 +1,12 @@
 "use client";
-import { background, Input, useConst } from "@chakra-ui/react";
+import { background, Input } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
-import Image from "next/image";
-import user_image from "../assets/user_placeholder.jpeg";
-import { BiHappy, BiMinus } from "react-icons/bi";
 import { ShowChatsContext } from "../contexts/ShowChatsContext";
 import apiClient from "../configs/apiClient";
 import { User, UserContext } from "../contexts/UserContext";
 import { CldImage } from "next-cloudinary";
+import { ChatContext } from "../contexts/SelectedChatContext";
 
 export interface Chat {
   id: string;
@@ -21,18 +19,24 @@ const Chats = () => {
   const { user } = useContext(UserContext);
 
   const { isDark } = useContext(ThemeContext);
-  const { setShowChats } = useContext(ShowChatsContext);
   const [chats, setChats] = useState<Chat[]>();
+  const {setChatUser} =useContext(ChatContext)
+  const [chatee, setChatee] = useState<User>()
 
   useEffect(()=> {
     apiClient
     .get<Chat[]>("/chats/1")
     .then((res) => {
       const newChats: Chat[] = [] as Chat[];
-
+      const users = res.data[0].users
+      const newChatUser = users.find(u => u.id !== user?.id)
+      if (newChatUser) {
+        setChatUser(newChatUser)
+      }
       res.data.forEach((chat) => {
         const chatee = chat.users.find((u) => u.id !== user?.id);
         if (chatee) {
+          setChatee(chatee)
           const newChat = {
             ...chat,
             name: chatee.firstName,
@@ -42,9 +46,10 @@ const Chats = () => {
         }
       });
       setChats(newChats);
+
     })
     .catch((err) => console.log(err));
-  }, [])
+  }, [ user?.id])
 
   return (
     <>
@@ -99,7 +104,7 @@ const Chats = () => {
                 >
                   
                   <li className=" ms-3 my-auto text-base-content flex items-center " onClick={()=> {
-
+                    setChatUser(chatee)
                   }}>
                   <div className="h-[50px] w-[50px] flex me-3  rounded-[50px]">
                     <CldImage

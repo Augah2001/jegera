@@ -24,6 +24,7 @@ import {  ShowMessageContext } from "../contexts/ShowMessageContext";
 import { HousesContext } from "../contexts/HouseContext";
 import { HouseContext } from "../contexts/SelectedHouseContext";
 import { UserContext } from "../contexts/UserContext";
+import { ChatContext } from "../contexts/SelectedChatContext";
 
 export interface Options {
   marker?: boolean;
@@ -53,7 +54,7 @@ const useMap = (
   const { setError } = useContext(HouseErrorInputContext);
   const {setSelectedHouse, selectedHouse} = useContext(HouseContext)
   const {user} = useContext(UserContext)
-
+  const {setChatUser} = useContext(ChatContext)
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       () => {},
@@ -112,7 +113,9 @@ const useMap = (
         });
         footerContainer.addEventListener("click", () => {
           setShowMessage(!showMessage)
+          setChatUser(house.owner)
           setSelectedHouse(house)
+          
 
         });
         popup.setLngLat(house.coordinates).setDOMContent(popupContainer);

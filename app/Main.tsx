@@ -59,7 +59,7 @@ const Main = ({ childrenNode }: Props) => {
 
   const [showMessage, setShowMessage] = useState(false);
   const [showChats, setShowChats] = useState(false);
-  const [chat, setChat] = useState<Chat>()
+  const [chatUser, setChatUser] = useState<User>()
 
   useEffect(() => {
     const onScroll = () => {
@@ -148,7 +148,7 @@ const Main = ({ childrenNode }: Props) => {
                                       value={{ houses, setHouses }}
                                     >
                                       <ShowChatsContext.Provider value={{showChats, setShowChats}}>
-                                        <ChatContext.Provider value={{chat, setChat}}>
+                                        <ChatContext.Provider value={{chatUser, setChatUser}}>
                                           <Navbar hasScrolled={hasScrolled} />
                                           {childrenNode}
                                         </ChatContext.Provider>
