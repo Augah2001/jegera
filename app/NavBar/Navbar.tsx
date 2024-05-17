@@ -13,9 +13,16 @@ import { FormModalContext } from "../contexts/FormModalContext";
 import { UserContext } from "../contexts/UserContext";
 import user_placeholder from "../assets/user_placeholder.jpeg";
 import UserImage from "../components/UserImage";
+import { BiChat, BiLogoMessenger } from "react-icons/bi";
+import { ShowChatsContext } from "../contexts/ShowChatsContext";
+import { ShowMessageContext } from "../contexts/ShowMessageContext";
+
 
 const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
   const { user, setUser } = useContext(UserContext);
+
+  const { setShowChats}= useContext(ShowChatsContext)
+  const { setShowMessage}= useContext(ShowMessageContext)
 
   const path = usePathname();
   const { onOpen } = useContext(FormModalContext);
@@ -28,7 +35,7 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
 
   let imageMenuItems = [
     // user?.accountType === "landlord" && {label: "My assets", value: "/my-assets"},
-    { label: "signout", value: "/signout" },
+    { label: "signout", value: `/signout` },
   ];
 
   if (user?.accountType === "landlord") {
@@ -59,7 +66,9 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
           </div>
         )}
         <div className="pe-5 pt-2 ">
-          
+         {user && <BiLogoMessenger onClick={()=> {setShowChats(true)
+          setShowMessage(false)
+         }} className="text-slate-500 text-3xl"/>} 
           <ColorModeSwitch />
           {!user && (
             <Button

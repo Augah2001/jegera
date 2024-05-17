@@ -26,6 +26,13 @@ import { HouseCoordinatesContext } from "./contexts/HouseCoordinatesContext";
 import { HouseErrorInputContext } from "./contexts/HouseInputErrorContext";
 import { Location } from "./hooks/useLocations";
 import { LocationContext } from "./contexts/locationContext";
+import { ShowMessageContext } from "./contexts/ShowMessageContext";
+import { HousesContext } from "./contexts/HouseContext";
+import useHouses, { House } from "./hooks/useHouses";
+import { HouseContext } from "./contexts/SelectedHouseContext";
+import { ShowChatsContext } from "./contexts/ShowChatsContext";
+import { ChatContext } from "./contexts/SelectedChatContext";
+import { Chat } from "./HomeComponents/Chats";
 
 interface Props {
   childrenNode: ReactNode;
@@ -34,6 +41,7 @@ interface Props {
 const inter = Inter({ subsets: ["latin"] });
 
 const Main = ({ childrenNode }: Props) => {
+  const { data } = useHouses();
   const [houseCoordinates, setHouseCoordinates] = useState<number[]>([]);
   const [isDark, setIsDark] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -45,13 +53,21 @@ const Main = ({ childrenNode }: Props) => {
   const [errorInput, setErrorInput] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [selectValue, setSelectValue] = useState("");
+  const [houses, setHouses] = useState<House[]>();
+  const [selectedHouse, setSelectedHouse] = useState<House>();
   const [showMap, setShowMap] = useState(false);
+
+  const [showMessage, setShowMessage] = useState(false);
+  const [showChats, setShowChats] = useState(false);
+  const [chat, setChat] = useState<Chat>()
 
   useEffect(() => {
     const onScroll = () => {
       const scrolled = window.scrollY > scrollThreshold;
       setHasScrolled(scrolled);
     };
+
+    setHouses(data);
 
     window.addEventListener("scroll", onScroll);
     try {
@@ -63,7 +79,7 @@ const Main = ({ childrenNode }: Props) => {
     } catch (ex) {}
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, [scrollThreshold]);
+  }, [scrollThreshold, data]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -122,8 +138,24 @@ const Main = ({ childrenNode }: Props) => {
                               <LocationContext.Provider
                                 value={{ location, setLocation }}
                               >
-                                <Navbar hasScrolled={hasScrolled} />
-                                {childrenNode}
+                                <ShowMessageContext.Provider
+                                  value={{ showMessage, setShowMessage }}
+                                >
+                                  <HouseContext.Provider
+                                    value={{ selectedHouse, setSelectedHouse }}
+                                  >
+                                    <HousesContext.Provider
+                                      value={{ houses, setHouses }}
+                                    >
+                                      <ShowChatsContext.Provider value={{showChats, setShowChats}}>
+                                        <ChatContext.Provider value={{chat, setChat}}>
+                                          <Navbar hasScrolled={hasScrolled} />
+                                          {childrenNode}
+                                        </ChatContext.Provider>
+                                      </ShowChatsContext.Provider>
+                                    </HousesContext.Provider>
+                                  </HouseContext.Provider>
+                                </ShowMessageContext.Provider>
                               </LocationContext.Provider>
                             </HouseErrorInputContext.Provider>
                           </HouseCoordinatesContext.Provider>

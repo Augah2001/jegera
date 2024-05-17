@@ -26,7 +26,7 @@ export interface House {
     images: string[];
     backgroundImage: string;
     curfew: number; // Time in 24-hour format (0-23)?
-
+    owner: User
     ownerId: number;
     services: Service[];
     coordinates: LngLatLike

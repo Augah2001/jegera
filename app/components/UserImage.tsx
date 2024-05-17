@@ -39,14 +39,17 @@ const UserImage = ({ menuItems, user, heading }: Props) => {
   console.log(user.backgroundImage)
   return (
     <Menu>
-      <MenuButton as={CustomButton} w="fit-content">
-        <CldImage
-          src={user.backgroundImage}
-          alt="user_Image"
-          className="w-[50px] rounded-full"
-          width={50}
-          height={50}
-        />
+      <MenuButton as={CustomButton} >
+        <div className="h-[50px] w-[50px] rounded-[50px]">
+          <CldImage
+            src={user.backgroundImage}
+            alt="user_Image"
+           
+            width={50}
+            height={50}
+            className="object-cover rounded-full object-center"
+          />
+        </div>
       </MenuButton>
       <MenuList>
         <Heading as="h6" fontSize="20px" textAlign="center" color="pink.500">

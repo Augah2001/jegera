@@ -35,7 +35,7 @@ model User {
 }
 
 model Chat {
-  ChatId   String    @id
+  id   String    @id
   users    User[]
   messages Message[]
 }
@@ -61,7 +61,7 @@ model Message {
   body       String
   time       DateTime @default(now())
   sentByMe   Boolean
-  chat       Chat     @relation(fields: [chatId], references: [ChatId])
+  chat       Chat     @relation(fields: [chatId], references: [id])
 }
 
 model Transaction {

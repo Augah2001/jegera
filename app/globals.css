@@ -8,6 +8,28 @@
   --background-end-rgb: 255, 255, 255; */
 }
 
+.message-area::-webkit-scrollbar {
+  width: 10px; /* Adjust width as needed */
+  background-color: #f5f5f5; /* Customize track color */
+  display: none;
+}
+
+.message-area::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* Customize thumb color */
+  border-radius: 50px; /* Add rounded corners */
+  width: 10px;
+}
+
+.message-area::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+  width: 10px; /* Customize hover color for thumb */
+}
+
+
+.message-area:hover::-webkit-scrollbar,
+.message-area::-webkit-scrollbar-thumb {
+  display: block; /* Show scrollbar on hover or overflow */
+}
 
 
 .css-ey1fm0 {

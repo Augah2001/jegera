@@ -6,7 +6,7 @@ export async function GET(request: NextRequest, {params: {id}}:{params: {id: str
 
     const house = await prisma?.house.findFirst({
         where: {id: parseInt(id)},
-        include: {services: true}
+        include: {services: true, location: true, owner: true}
     })
 
     if (!house) return NextResponse.json({error: 'house not found'}, {status: 404})

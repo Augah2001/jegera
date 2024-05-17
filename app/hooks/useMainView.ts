@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useSpring } from 'react-spring';
+import useHouses from './useHouses';
 
 const useMainView = () => {
+
+    
 
     const [hasScrolled, setHasScrolled] = useState(false);
     const scrollThreshold = 2

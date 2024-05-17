@@ -62,11 +62,11 @@ const SignUpForm = () => {
   const [imageSupplied, setImageSupplied] = useState(true);
 
   const [isTenant, setIsTenant] = useState(false);
-
+  const { onClose } = useContext(FormModalContext);
   const handleSignup = async (data: z.infer<typeof FormSchema>) => {
-
+    console.log(publicId);
     if (publicId) {
-      data['backgroundImage'] = publicId
+      data["backgroundImage"] = publicId;
     }
     delete data["confirmPassword"];
 
@@ -78,6 +78,7 @@ const SignUpForm = () => {
         console.log(response.data);
         // console.log(response.headers);
         toast({ title: "signup successful", colorScheme: "green" });
+        onClose();
 
         localStorage.setItem("token", response.headers["x-auth-token"]);
         const userLogged: User = jwtDecode(response.headers["x-auth-token"]);
@@ -88,16 +89,15 @@ const SignUpForm = () => {
           authorizationKey: data.authorizationKey,
         });
 
-
         console.log(authResponse);
         if (!authResponse.data) {
           throw new Error("Invalid authorization key");
         }
 
-
         const response = await apiClient.post("/users", data);
         console.log(response.data);
         toast({ title: "signup successful", colorScheme: "green" });
+        onClose();
 
         localStorage.setItem("token", response.headers["x-auth-token"]);
         const userLogged: User = jwtDecode(response.headers["x-auth-token"]);
@@ -144,8 +144,15 @@ const SignUpForm = () => {
               { id: "male", name: "male" },
               { id: "female", name: "female" },
             ])}
-            {renderUpload("background image (optional)", publicId, setPublicId)}
-            
+            {renderUpload(
+              "background image (optional)",
+              publicId,
+              setPublicId,
+              (publicId) => {
+                setPublicId(publicId);
+              }
+            )}
+
             {renderSelect(
               "accountType",
               "Account Type",

@@ -21,12 +21,7 @@ const SignUpForm = () => {
   const toast = useToast({
     position: "top",
     title: "signup successful",
-    containerStyle: {
-      width: "800px",
-      maxWidth: "500px",
-      color: "green",
-      backgroundColor: "pink.green",
-    },
+   
   });
 
   const { onClose } = useContext(FormModalContext);
@@ -38,8 +33,7 @@ const SignUpForm = () => {
       .string()
       .min(1, "password is required")
       .min(4, "password must have more than 4 characters"),
-
-    gas: z.boolean()  
+ 
   });
 
   const onSubmit = (data: SubmitHandler<any>) => {
@@ -55,7 +49,16 @@ const SignUpForm = () => {
         console.log(user);
         onClose();
         toast({ title: "signup successful", colorScheme: "green" });
-      });
+      }).catch((error => {
+        toast({
+          title: error.response.data.error
+            ? error.response.data.error
+            : "signup failed",
+          position: "top",
+          colorScheme: "red",
+        });
+        console.error(error);
+      }));
   };
 
   return (
@@ -63,7 +66,6 @@ const SignUpForm = () => {
       {(renderInput, _, renderCheckbox, ___, renderButton) => {
         return (
           <>
-            {renderCheckbox('gas','Gas')}
             
             {renderInput("email", "text", "Email")}
             {renderInput("password", "password", "Password")}

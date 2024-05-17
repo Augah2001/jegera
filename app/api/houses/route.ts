@@ -2,12 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import validate, { schemaHouse } from "../validate"; // Assuming your validation function is in validate.js
 import prisma from '../../../prisma/client'
 import { House } from "@prisma/client"; // Import House and Location types
-import { Service } from "@/app/hooks/useServices";
-import { create } from "lodash";
 
 export async function GET(request: NextRequest) {
   const houses = await prisma.house.findMany({
-    include: { location: true, services: true }, // Include related Location data
+    include: { location: true, services: true, owner: true }, // Include related Location data
   });
   return NextResponse.json(houses);
 }
@@ -40,7 +38,7 @@ export async function POST(request: NextRequest) {
     include: { location: true, services: true }, // Include related Location data upon creation
   });
 
-  return NextResponse.json({message: newHouse});
+  return NextResponse.json(newHouse);
 }
 
 export async function DELETE(request: NextRequest) {

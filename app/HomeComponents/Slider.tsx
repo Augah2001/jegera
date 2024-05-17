@@ -14,13 +14,7 @@ import useLocations from "../hooks/useLocations";
 // import { Location } from "@prisma/client";
 
 // Settings for the slider
-const settings = {
-  dots: false,
-  infinite: false,
-  speed: 500,
-  slidesToScroll: 6,
-  slidesToShow: 6,
-};
+
 
 interface Location {
   id: number;
@@ -32,7 +26,15 @@ interface Location {
 
 
 
-export default function CaptionCarousel() {
+export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
+
+  const settings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToScroll: hasScrolled? 3: 6,
+    slidesToShow: hasScrolled? 3:6,
+  };
   const { isDark } = useContext(ThemeContext);
 
   const [isClicked, setIsClicked] = useState(0);

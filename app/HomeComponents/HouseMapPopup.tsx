@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { House } from "../hooks/useHouses";
 import Main from "../houses/[id]/Main";
 import { ThemeContext } from "../contexts/ThemeContext";
+import { BiLogoMessenger } from "react-icons/bi";
 
 const HouseMapPopup = ({ house }: { house: House }) => {
   const { isDark } = useContext(ThemeContext);
@@ -15,7 +16,10 @@ const HouseMapPopup = ({ house }: { house: House }) => {
       className=" card rounded-none w-[100%] mb-4 max-h-[10px]] mx-0  "
       onClick={() => {}}
     >
-      <figure className=" bg-bse-200  max-h-[180px] ">
+      <figure
+        className=" bg-bse-200  max-h-[180px] "
+       
+      >
         <Image
           src={dheni}
           alt="thumbnail"
@@ -29,7 +33,7 @@ const HouseMapPopup = ({ house }: { house: House }) => {
       <div className="card-body p-2 m- h-[full]">
         <div className="flex">
           <h2 className="card-title ms-2 text-purple-700">Amenities</h2>
-        </div >
+        </div>
 
         <div className="flex flex-wrap">
           {house?.services?.map((amenity, index) => (
@@ -49,6 +53,7 @@ const HouseMapPopup = ({ house }: { house: House }) => {
             </div>
           ))}
         </div>
+        
       </div>
     </div>
   );

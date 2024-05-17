@@ -33,6 +33,7 @@ import { HouseCoordinatesContext } from "@/app/contexts/HouseCoordinatesContext"
 import { HouseErrorInputContext } from "@/app/contexts/HouseInputErrorContext";
 import { UserContext } from "@/app/contexts/UserContext";
 import { House } from "@/app/hooks/useHouses";
+import { HouseContext } from "@/app/contexts/SelectedHouseContext";
 
 export const houseSchema = z.object({
   houseNumber: z
@@ -95,10 +96,10 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
         (l) => l.name === location.name
       ) as Location;
 
-      console.log(myLocation)
+      console.log(myLocation);
       console.log(location);
       if (!myLocation) {
-        console.log(location)
+        console.log(location);
 
         apiClient
           .post<Location>("/locations", location)
@@ -110,20 +111,34 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
               locationId: res.data.id,
             };
 
-            console.log(newData);
-            setHouseData(newData);
-            nextStep();
-
+            // console.log(newData);
             // apiClient
             //   .post<House>("/houses", newData)
-            //   .then((res) => console.log(res.data))
+            //   .then((res) => setHouseData(res.data))
             //   .catch((err) => console.log(err));
-            // setHouseData(newData);
+            setHouseData(newData)
+            nextStep();
           })
           .catch((err) => console.log(err));
-      }
+      } else {
+        const newData = {
+          ...data,
+          coordinates: houseCoordinates,
+          ownerId: user?.id,
+          locationId: myLocation.id,
+        };
 
-      
+        // apiClient
+        //   .post<House>("/houses", newData)
+        //   .then((res) => {
+        //     setHouseData(newData);
+        //     nextStep();
+        //   })
+        //   .catch((err) => console.log(err));
+
+        setHouseData(newData)
+        nextStep()
+      }
     } else {
       if (typeof location === "object" && Object.keys(location).length === 0) {
         const newData = data;

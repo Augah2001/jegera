@@ -79,7 +79,7 @@ const Form = ({
   });
 
   const renderButton: RenderButton = (label) => {
-    return <Button1 label="sign in" />;
+    return <Button1 label={label} />;
   };
   const renderInput: RenderInput = (id, type, label) => {
     return (
