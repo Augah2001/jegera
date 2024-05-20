@@ -16,6 +16,7 @@ import { ShowMessageContext } from "../contexts/ShowMessageContext";
 import { ShowChatsContext } from "../contexts/ShowChatsContext";
 import { ChatContext } from "../contexts/SelectedChatContext";
 import { BiMinus } from "react-icons/bi";
+import { MessagesContext } from "../contexts/MessagesContext";
 type Input = {
   message: string;
 };
@@ -26,42 +27,37 @@ export type Message = {
   body: string;
   senderId?: number;
   receiverId?: number;
-
+  time?: string;
   sentByMe: boolean;
 };
 
-
 const Chat = () => {
-
-  const chatContainerRef = useRef<HTMLDivElement>(null)
-  const [messages, setMessages] = useState<Message[]>([]);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const { messages, setMessages } = useContext(MessagesContext);
   const { selectedHouse } = useContext(HouseContext);
   const { user } = useContext(UserContext);
   const { setShowMessage } = useContext(ShowMessageContext);
-  
 
   const { setShowChats } = useContext(ShowChatsContext);
   const { chatUser } = useContext(ChatContext);
-  
 
   const { register, handleSubmit, watch, setValue } = useForm<Input>();
 
-  
-
-
   useEffect(() => {
-
-    if (chatUser) {socket.emit("joinChat", [user, chatUser]);
-    console.log([user, chatUser]);
-  }
+    // console.log(messages)
+    if (chatUser) {
+      // console.log(chatUser)
+      socket.emit("joinChat", [user, chatUser]);
+      // console.log([user, chatUser]);
+    }
     // Listen for chat messages
     socket.on("chatMessages", (messages) => {
-      console.log(messages);
       setMessages(messages);
     });
 
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, [chatUser, user]);
 
@@ -73,7 +69,7 @@ const Chat = () => {
   });
 
   const onSend: SubmitHandler<Input> = ({ message }) => {
-    console.log(message);
+    // console.log(message);
     const newMessage: Message = {
       sender: user?.id,
       receiver: chatUser?.id,
@@ -97,7 +93,9 @@ const Chat = () => {
                 src={user_image}
                 alt="hello"
               /> */}
-            <h1 className="text-xl text-base-content ms-3 font-bold">{chatUser?.firstName}</h1>
+            <h1 className="text-xl text-base-content ms-3 font-bold">
+              {chatUser?.firstName}
+            </h1>
           </div>
           <div
             className="text-3xl font-2xl text-pink-600"
@@ -111,11 +109,11 @@ const Chat = () => {
         </header>
         <div className="bg-base-300 h-[2px] w-[100%]"></div>
         <main
-        ref={chatContainerRef}
+          ref={chatContainerRef}
           // style={{ backgroundImage: "url('@assets/dheni.jpg)" }}
           className=" max-h-[450px] min-h-[450px] overflow-y-auto message-area  mt-5"
         >
-          {messages.map((message, index) => (
+          {messages?.map((message, index) => (
             <div
               key={index}
               className={`flex items-end mb-6 mx-4  ${

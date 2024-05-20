@@ -31,13 +31,15 @@ model User {
   gender               genderType
   logins               Login[]
   houses               House[]
-  backgroundImage      String        @default("images/profile_pictures/user_placeholder_xsx9ws")
+  backgroundImage      String        @default("images/profile_pictures/user_placeholder_xsx9ws") 
+  
 }
 
 model Chat {
   id   String    @id
   users    User[]
   messages Message[]
+  updated               DateTime? @updatedAt()
 }
 
 model Auth {

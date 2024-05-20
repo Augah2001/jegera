@@ -2,14 +2,24 @@ import React, { useContext, useEffect } from "react";
 import Chats from "./Chats";
 import Chat from "./Chat";
 import { ChatContext } from "../contexts/SelectedChatContext";
+import { MessagesContext } from "../contexts/MessagesContext";
+import { ChatsContext } from "../contexts/ChatsContext";
+import apiClient from "../configs/apiClient";
+import { UserContext } from "../contexts/UserContext";
 
 const ChatInterace = () => {
-
+  const {chats} = useContext(ChatsContext)
   const {chatUser, setChatUser} =useContext(ChatContext)
+  const {messages, setMessages} = useContext(MessagesContext)
+  const {} = useContext(ChatContext)
+  const {user} = useContext(UserContext)
   useEffect(()=> {
+    // apiClient.get<Chat>(`/chats/${user?.id}`)
+    // .then(res)
+    
+  }, [messages])
 
-    return 
-  })
+  console.log('wadii')
 
   
   return (

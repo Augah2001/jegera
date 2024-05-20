@@ -7,34 +7,44 @@ import apiClient from "../configs/apiClient";
 import { User, UserContext } from "../contexts/UserContext";
 import { CldImage } from "next-cloudinary";
 import { ChatContext } from "../contexts/SelectedChatContext";
+import { Message } from "./Chat";
+import { MessagesContext } from "../contexts/MessagesContext";
+import { ChatsContext } from "../contexts/ChatsContext";
 
 export interface Chat {
   id: string;
   users: User[];
   name: string;
   backgroundImage: string;
+  messages: Message[]
 }
 
 const Chats = () => {
   const { user } = useContext(UserContext);
-
+  const {messages, setMessages} = useContext(MessagesContext)
   const { isDark } = useContext(ThemeContext);
-  const [chats, setChats] = useState<Chat[]>();
-  const {setChatUser} =useContext(ChatContext)
+  const { chats, setChats } = useContext(ChatsContext);
+  
+  const {setChatUser, chatUser} =useContext(ChatContext)
   const [chatee, setChatee] = useState<User>()
 
   useEffect(()=> {
     apiClient
-    .get<Chat[]>("/chats/1")
+    .get<Chat[]>(`chats/${user?.id}`)
     .then((res) => {
+      
+      // console.log(new Date(res.data[0].messages[0].time)< new Date(res.data[0].messages[1].time) )
+    
       const newChats: Chat[] = [] as Chat[];
       const users = res.data[0].users
       const newChatUser = users.find(u => u.id !== user?.id)
+      // console.log(newChatUser)
       if (newChatUser) {
         setChatUser(newChatUser)
       }
       res.data.forEach((chat) => {
         const chatee = chat.users.find((u) => u.id !== user?.id);
+        // console.log(chatee)
         if (chatee) {
           setChatee(chatee)
           const newChat = {
@@ -43,13 +53,19 @@ const Chats = () => {
             backgroundImage: chatee.backgroundImage,
           };
           newChats.push(newChat);
+          
         }
       });
-      setChats(newChats);
+
+      const sorted = newChats.sort((a,b)=> new Date(b.messages[b.messages.length -1].time) - new Date(a.messages[a.messages.length -1].time))
+
+      setChats(sorted);
+      console.log(sorted)
 
     })
     .catch((err) => console.log(err));
-  }, [ user?.id])
+  }, [ user?.id, setChatUser,])
+  console.log('macGeez')
 
   return (
     <>
@@ -104,7 +120,11 @@ const Chats = () => {
                 >
                   
                   <li className=" ms-3 my-auto text-base-content flex items-center " onClick={()=> {
-                    setChatUser(chatee)
+                    
+                    const chate = chat.users.find(u=> u.id !== user?.id)
+                    setChatUser(chate)
+                    // console.log(chate)
+
                   }}>
                   <div className="h-[50px] w-[50px] flex me-3  rounded-[50px]">
                     <CldImage

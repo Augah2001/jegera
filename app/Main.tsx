@@ -33,6 +33,9 @@ import { HouseContext } from "./contexts/SelectedHouseContext";
 import { ShowChatsContext } from "./contexts/ShowChatsContext";
 import { ChatContext } from "./contexts/SelectedChatContext";
 import { Chat } from "./HomeComponents/Chats";
+import { Message } from "./HomeComponents/Chat";
+import { MessagesContext } from "./contexts/MessagesContext";
+import { ChatsContext } from "./contexts/ChatsContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -60,6 +63,8 @@ const Main = ({ childrenNode }: Props) => {
   const [showMessage, setShowMessage] = useState(false);
   const [showChats, setShowChats] = useState(false);
   const [chatUser, setChatUser] = useState<User>()
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [chats, setChats] = useState<Chat[]>();
 
   useEffect(() => {
     const onScroll = () => {
@@ -149,8 +154,12 @@ const Main = ({ childrenNode }: Props) => {
                                     >
                                       <ShowChatsContext.Provider value={{showChats, setShowChats}}>
                                         <ChatContext.Provider value={{chatUser, setChatUser}}>
-                                          <Navbar hasScrolled={hasScrolled} />
-                                          {childrenNode}
+                                          <MessagesContext.Provider value={{messages, setMessages}}>
+                                            <ChatsContext.Provider value={{chats, setChats}}>
+                                              <Navbar hasScrolled={hasScrolled} />
+                                              {childrenNode}
+                                            </ChatsContext.Provider>
+                                          </MessagesContext.Provider>
                                         </ChatContext.Provider>
                                       </ShowChatsContext.Provider>
                                     </HousesContext.Provider>
