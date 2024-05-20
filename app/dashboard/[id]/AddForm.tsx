@@ -41,7 +41,7 @@ export const houseSchema = z.object({
     .positive(), // Enforce positive house number
   street: z.string().optional(), // Enforce non-empty street
   description: z.string().optional(), // Allow optional description
-  price: z.number({ invalid_type_error: "Price is required" }).positive(), // Allow optional price
+  // price: z.number({ invalid_type_error: "Price is required" }).positive(), // Allow optional price
   minutes: z.number({ invalid_type_error: "Minutes are required" }), // Allow optional minutes (may need adjustment based on usage)
   capacity: z
     .number({ invalid_type_error: "Total Capacity is required" })
@@ -52,7 +52,7 @@ export const houseSchema = z.object({
     .number({ invalid_type_error: "People Per Room is required" })
     .positive(), // Allow optional perRoom value
   // coordinates: z.array(z.number(),z.number()).length(2),
-  gender: z.enum(["male", "female", "both"], {
+  gender: z.enum(["girls", "boys", "both"], {
     errorMap: () => ({ message: "Gender is required" }),
   }), // Allow optional gender // Allow optional background image URL
   curfew: z.string().min(1, "Curfew is required"), // Allow optional curfew time
@@ -189,19 +189,19 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
               {renderInput("houseNumber", "number", "House Number")}
               {renderInput("street", "text", "Street")}
               {renderInput("description", "textarea", "Description")}
-              {renderInput("price", "number", "Price *")}
+              {/* {renderInput("price", "number", "Price *")} */}
               {renderInput("minutes", "number", "Minutes to UZ *")}
               {renderInput("capacity", "number", "Capacity *")}
               {renderInput("occupied", "number", "Occupied Slots  (vaapo) *")}
               {renderInput("perRoom", "number", "People per room *")}
               {renderSelect("gender", "Gender *", [
-                { id: "male", name: "Male" },
-                { id: "female", name: "Female" },
+                { id: "boys", name: "Male" },
+                { id: "girls", name: "Female" },
                 { id: "both", name: "Both" },
               ])}
               {renderSelect("curfew", "Curfew *", [
                 { id: "no", name: "No" },
-                { id: "no", name: "Yes" },
+                { id: "yes", name: "Yes" },
               ])}
             </div>
           </>

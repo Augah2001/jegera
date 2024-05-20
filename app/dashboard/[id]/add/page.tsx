@@ -14,6 +14,10 @@ import MultiStepForm from "./MultiStepForm";
 import { SelectErrorContext } from "@/app/contexts/SelectErrorContext";
 import { GetCoordinatesContext } from "@/app/contexts/GetCoordinatesContext";
 import { HouseCoordinatesContext } from "@/app/contexts/HouseCoordinatesContext";
+import PriceForm from "../PriceForm";
+import { z } from "zod";
+
+
 
 const Page = () => {
   const [_, setHasScrolled] = useState(false);
@@ -91,6 +95,7 @@ const Page = () => {
         {/* <HouseCoordinatesContext.Provider value={{HouseCoordinates, setHouseCoordinates}}> */}
           <div className="">
             <MultiStepForm/>
+            {/* <PriceForm/> */}
           </div>
         {/* </HouseCoordinatesContext.Provider> */}
       </SelectErrorContext.Provider>

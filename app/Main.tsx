@@ -36,6 +36,7 @@ import { Chat } from "./HomeComponents/Chats";
 import { Message } from "./HomeComponents/Chat";
 import { MessagesContext } from "./contexts/MessagesContext";
 import { ChatsContext } from "./contexts/ChatsContext";
+import { MessageContext } from "./contexts/MessageContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -64,6 +65,7 @@ const Main = ({ childrenNode }: Props) => {
   const [showChats, setShowChats] = useState(false);
   const [chatUser, setChatUser] = useState<User>()
   const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<Message>({} as Message);
   const [chats, setChats] = useState<Chat[]>();
 
   useEffect(() => {
@@ -156,8 +158,10 @@ const Main = ({ childrenNode }: Props) => {
                                         <ChatContext.Provider value={{chatUser, setChatUser}}>
                                           <MessagesContext.Provider value={{messages, setMessages}}>
                                             <ChatsContext.Provider value={{chats, setChats}}>
-                                              <Navbar hasScrolled={hasScrolled} />
-                                              {childrenNode}
+                                              <MessageContext.Provider value={{message, setMessage}}>
+                                                <Navbar hasScrolled={hasScrolled} />
+                                                {childrenNode}
+                                              </MessageContext.Provider>
                                             </ChatsContext.Provider>
                                           </MessagesContext.Provider>
                                         </ChatContext.Provider>

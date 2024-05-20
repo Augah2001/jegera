@@ -13,11 +13,11 @@ const ChatInterace = () => {
   const {messages, setMessages} = useContext(MessagesContext)
   const {} = useContext(ChatContext)
   const {user} = useContext(UserContext)
-  useEffect(()=> {
-    // apiClient.get<Chat>(`/chats/${user?.id}`)
-    // .then(res)
+  // useEffect(()=> {
+  //   // apiClient.get<Chat>(`/chats/${user?.id}`)
+  //   // .then(res)
     
-  }, [messages])
+  // }, [messages])
 
   console.log('wadii')
 

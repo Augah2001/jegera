@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { Component, useState } from "react";
 import AddForm from "../AddForm";
 import ImagesForm from "../ImagesForm";
 import ServicesForm from "../ServicesForm";
 import StepperComponent from "./Stepper";
 import { Button } from "@chakra-ui/react";
 import { steps } from "framer-motion";
+import { title } from "process";
+import PriceForm from "../PriceForm";
 
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -36,6 +38,7 @@ const MultiStepForm = () => {
         />
       ),
     },
+    
     {
       title: "images",
       component: (
@@ -49,6 +52,7 @@ const MultiStepForm = () => {
         />
       ),
     },
+    
     {
       title: "amenities",
       component: (
@@ -58,9 +62,11 @@ const MultiStepForm = () => {
           setHouseData={setHouseData}
           prevStep={prevStep}
           setCurrentStep={setCurrentStep}
+          nextStep = {nextStep}
         />
       ),
     },
+    {title: "price", component: <PriceForm prevStep={prevStep} HouseData={houseData} setHouseData={setHouseData}/>}
   ];
 
   return (

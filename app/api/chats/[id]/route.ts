@@ -18,7 +18,7 @@ export async function GET(
   chats.sort(
     (a: Chat, b: Chat) =>
       new Date(b.messages[b.messages.length - 1]?.time) -
-      b.messages[b.messages.length - 1]?.time
+      a.messages[a.messages.length - 1]?.time
   );
   console.log(chats);
 

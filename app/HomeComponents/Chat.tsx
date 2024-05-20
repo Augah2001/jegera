@@ -17,6 +17,8 @@ import { ShowChatsContext } from "../contexts/ShowChatsContext";
 import { ChatContext } from "../contexts/SelectedChatContext";
 import { BiMinus } from "react-icons/bi";
 import { MessagesContext } from "../contexts/MessagesContext";
+import { MessageContext } from "../contexts/MessageContext";
+import { CldImage } from "next-cloudinary";
 type Input = {
   message: string;
 };
@@ -34,6 +36,7 @@ export type Message = {
 const Chat = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { messages, setMessages } = useContext(MessagesContext);
+  const { message, setMessage } = useContext(MessageContext);
   const { selectedHouse } = useContext(HouseContext);
   const { user } = useContext(UserContext);
   const { setShowMessage } = useContext(ShowMessageContext);
@@ -51,20 +54,23 @@ const Chat = () => {
       // console.log([user, chatUser]);
     }
     // Listen for chat messages
+
     socket.on("chatMessages", (messages) => {
       setMessages(messages);
     });
-
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [chatUser, user]);
+  }, [chatUser, user, message]);
 
   socket.on("message", (message) => {
+    console.log(message);
     setMessages([...messages, message]);
+    setMessage(message);
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = 10000;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   });
 
@@ -75,7 +81,9 @@ const Chat = () => {
       receiver: chatUser?.id,
       body: message,
       sentByMe: true,
+      time: Date.now().toString(),
     };
+    setMessage(newMessage);
     socket.emit("message", newMessage);
 
     setValue("message", "");
@@ -84,15 +92,17 @@ const Chat = () => {
   const isDisabled = watch("message", "").trim() == "";
 
   return (
-    <div className="">
+    <div className="max-w-[380px] ">
       <div className=" bg-base-200 rounded-2xl ">
-        <header className="flex bg-base-100 justify-between items-center p-4 ">
-          <div>
-            {/* <Image
-                className="w-[12%] rounded-[100px]"
-                src={user_image}
-                alt="hello"
-              /> */}
+        <header className="flex bg-base-100 justify-between items-center py-2 px-4 ">
+          <div  className="flex items-center ">
+            {chatUser && <CldImage
+              src={chatUser?.backgroundImage}
+              alt="user_Image"
+              width={50}
+              height={50}
+              className="object-cover h-[50px] w-[50px] rounded-full object-center"
+            />}
             <h1 className="text-xl text-base-content ms-3 font-bold">
               {chatUser?.firstName}
             </h1>
@@ -127,6 +137,9 @@ const Chat = () => {
               >
                 {message.body}
               </div>
+              <small className="font-medium ms-1">
+                {message.time?.slice(12, 16)}
+              </small>
             </div>
           ))}
         </main>

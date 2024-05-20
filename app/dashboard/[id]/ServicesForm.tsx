@@ -35,17 +35,17 @@ export const amenitySchema = z.object({
   wifi: z.boolean().optional(),
   meals: z.boolean().optional(),
   backupPower: z.boolean().optional(),
-  stove: z.boolean().optional(),
-  fridge: z.boolean().optional(),
-  separateKitchen: z.boolean().optional(),
+  Stove: z.boolean().optional(),
+  Fridge: z.boolean().optional(),
+  separate_kitchen: z.boolean().optional(),
   curfew: z.boolean().optional(),
   visitors: z.boolean().optional(),
-  shelves: z.boolean().optional(),
-  waterTank: z.boolean().optional(),
+  Shelves: z.boolean().optional(),
+  Water_tank: z.boolean().optional(),
   maid: z.boolean().optional(),
-  gasStove: z.boolean().optional(),
+  gas_stove: z.boolean().optional(),
   gyser: z.boolean().optional(),
-  swimmingPool: z.boolean().optional(),
+  swimming_pool: z.boolean().optional(),
   beds: z.boolean().optional(),
   security: z.boolean().optional(),
 });
@@ -62,16 +62,18 @@ interface Props {
   prevStep: () => void;
   houseData: any;
   setHouseData: any;
+  nextStep: ()=> void
 }
 
-const AddForm = ({ currentStep, prevStep, setHouseData, houseData }: Props) => {
-  const [locations, setLocations] = useState<Location[]>([] as Location[]);
-  const [uploadInputs, setUploadInputs] = useState([1]);
-  const [publicId, setPublicId] = useState("");
+const AddForm = ({ prevStep, setHouseData, houseData, nextStep }: Props) => {
   const { onClose } = useContext(FormModalContext);
-  const [_, setHasScrolled] = useState(true);
+  
+
 
   const handleSubmit = (data: any) => {
+  
+    
+
     const myServices: Service[] = [];
    
     Object.keys(data).forEach((itemKey) => {
@@ -88,24 +90,26 @@ const AddForm = ({ currentStep, prevStep, setHouseData, houseData }: Props) => {
       ...houseData,
       services: myServices,
     };
-    apiClient
-      .post<House>("/houses", newHouseData)
-      .then((res) => {
-        console.log(res.data);
-        setHouseData(res.data);
-        onClose()
-      })
-      .catch((err) => console.log(err));
+    console.log(newHouseData)
+    setHouseData(newHouseData)
+    nextStep()
+    // apiClient
+    //   .post<House>("/houses", newHouseData)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setHouseData(res.data);
+    //     onClose()
+    //   })
+    //   .catch((err) => console.log(err));
   };
 
   return (
     <Form onSubmit={handleSubmit} FormSchema={amenitySchema}>
       {(
-        renderInput: RenderInput,
-        renderSelect: RenderSelect,
+        _: RenderInput,
+        __: RenderSelect,
         renderCheckbox: RenderCheckbox,
-        renderUpload: RenderUpload,
-        renderButton: RenderButton
+        
       ) => {
         return (
           <>
@@ -116,15 +120,15 @@ const AddForm = ({ currentStep, prevStep, setHouseData, houseData }: Props) => {
                 {renderCheckbox("wifi", "Wifi")}
                 {renderCheckbox("meals", "Meals")}
                 {renderCheckbox("backupPower", "Backup Power")}
-                {renderCheckbox("stove", "Stove")}
-                {renderCheckbox("fridge", "Fridge")}
-                {renderCheckbox("separateKitchen", "Separate Kitchen")}
+                {renderCheckbox("Stove", "Stove")}
+                {renderCheckbox("Fridge", "Fridge")}
+                {renderCheckbox("separate_kitchen", "Separate Kitchen")}
                 {renderCheckbox("curfew", "Curfew")}
                 {renderCheckbox("visitors", "Visitors Allowed")}
-                {renderCheckbox("shelves", "Shelves")}
-                {renderCheckbox("waterTank", "Water Tank")}
+                {renderCheckbox("Shelves", "Shelves")}
+                {renderCheckbox("Water_tank", "Water Tank")}
                 {renderCheckbox("maid", "Maid")}
-                {renderCheckbox("gasStove", "Gas Stove")}
+                {renderCheckbox("gas_stove", "Gas Stove")}
                 {renderCheckbox("gyser", "Gyser (Water Heater)")}
                 {renderCheckbox("swimmingPool", "Swimming Pool")}
                 {renderCheckbox("beds", "Beds")}
