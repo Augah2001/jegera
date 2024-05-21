@@ -113,8 +113,29 @@ const AddForm = ({ prevStep, setHouseData, houseData, nextStep }: Props) => {
       ) => {
         return (
           <>
-            {<Button onClick={prevStep}>Prev</Button>}
-            {<Button type="submit">submit</Button>}
+          <div className="flex justify-between mt-8">
+        {
+          <Button
+            bg="yellow.400"
+            color="white"
+            marginX={3}
+            onClick={prevStep}
+            _hover={{ opacity: 0.8 }}
+          >
+            Back
+          </Button>
+        }
+        {
+          <Button
+            bg="green.500"
+            color="white"
+            _hover={{ opacity: 0.8 }}
+            type="submit"
+          >
+            Next
+          </Button>
+        }
+      </div>
             <div className=" rounded-md">
               <div className="mt-[70px] mx-auto  grid grid-cols-3 gap-3 pt-4 ">
                 {renderCheckbox("wifi", "Wifi")}

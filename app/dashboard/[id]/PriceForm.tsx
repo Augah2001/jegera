@@ -4,7 +4,13 @@ import { HouseContext } from "@/app/contexts/SelectedHouseContext";
 import { ThemeContext } from "@/app/contexts/ThemeContext";
 import HouseCard from "@/app/HomeComponents/HouseCard";
 import { Button, Input } from "@chakra-ui/react";
-import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { z } from "zod";
 import { Location } from "@/app/hooks/useLocations";
 import axios from "axios";
@@ -24,25 +30,65 @@ interface Props {
 }
 
 const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
+  const [paragraph, setParagraph] = useState("");
+  const [box, setBox] = useState("");
+  const [currentCharParagraph, setCurrentCharParagraph] = useState(0);
+  const [currentCharBox, setCurrentCharBox] = useState(0);
+  const paragraphText =
+    "use our intelligent prediction engine to predict a competitive price";
+    const [boxText, setBoxText] = useState('')
+    
+  //   const paragraph = document.getElementById("my-paragraph");
 
+  //   async function  typeWriter() {
+  //     if (currentChar < text.length && paragraph) {
+
+  //       paragraph.textContent += text.charAt(currentChar);
+  //       currentChar++;
+  //       console.log(currentChar)
+  //     }
+  //   }
+
+  const delayPrint = (
+    currentChar: number,
+    setCurrentChar: React.Dispatch<React.SetStateAction<number>>,
+    text: string, setText: React.Dispatch<React.SetStateAction<string>>, element: string
+  ) => {
+    setTimeout(() => {
+      if (currentChar < text.length) {
+        setText(element + text.charAt(currentChar));
+        setCurrentChar(currentChar + 1);
+      }
+    }, 15);
+  };
+
+  useEffect(() => {
+    delayPrint(currentCharParagraph, setCurrentCharParagraph, paragraphText, setParagraph, paragraph);
+    
+    
+  }, [currentCharParagraph])
+
+  
 
   const { isDark } = useContext(ThemeContext);
   const [predictData, setPredictData] = useState({});
+
   const [data, setData] = useState({
     price: NaN,
   });
   const [error, setError] = useState<string>();
   console.log(HouseData);
-  const [location,setLocation] = useState<Location>()
+  const [location, setLocation] = useState<Location>();
 
-  useEffect(()=> {
-    apiClient.get<Location>(`locations/${HouseData.locationId}`).
-    then(res => {
-        setPredictData({...predictData, Location: res.data.name})
-    }).catch(err=> console.log(err))
-    
-    
-  }, [])
+  useEffect(() => {
+    apiClient
+      .get<Location>(`locations/${HouseData.locationId}`)
+      .then((res) => {
+        setPredictData({ ...predictData, Location: res.data.name });
+        
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,24 +131,29 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
     let data = {}; // Initialize data as an empty object
 
     for (let s of services) {
-
-        if (s!== 'Shelves') {
-            data[s] = serviceNames.has(s) ? 1 : 0; // Use a ternary operator for compactness
-        } else {
-            data[s] = serviceNames.has(s) ? 'yes' : 'no'; // Use a ternary operator for compactness
-        }
-       
-        
+      if (s !== "Shelves") {
+        data[s] = serviceNames.has(s) ? 1 : 0; // Use a ternary operator for compactness
+      } else {
+        data[s] = serviceNames.has(s) ? "yes" : "no"; // Use a ternary operator for compactness
+      }
     }
 
-    data['distance'] = 2.456
-    data['per_room'] = HouseData.perRoom
-    data['gender'] = HouseData.gender
-    data['Location'] = 'mt_pleasant'
+    data["distance"] = 2.456;
+    data["per_room"] = HouseData.perRoom;
+    data["gender"] = HouseData.gender;
+    data["Location"] = "mt_pleasant";
 
-    console.log(data)
-    axios.post('http://localhost:8000/predict/', data).
-    then(res=> console.log(res.data))
+    console.log(data);
+    axios
+      .post("http://localhost:8000/predict/", data)
+      .then((res) => {
+        setBox(res.data)
+        console.log(typeof res.data)
+        setData({...data, price: res.data})
+        
+        
+        
+      });
   };
   return (
     <form onSubmit={(data) => handleSubmit(data)}>
@@ -132,16 +183,20 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
       <div className="flex ">
         <div className="m-auto p-10">
           <div className="flex">
-            <p className="text-slate-600 text-lg font-medium mx-auto ">
+            <p
+              className="  text-slate-600 text-lg font-medium mx-auto "
+              id="my-paragraph"
+            >
               {" "}
-              use our intelligent prediction engine to predict a competitive
-              price
+              {paragraph}
             </p>
           </div>
+
           <div className="flex justify-center mt-8">
             <Button
               onClick={handlePredict}
               width={"50%"}
+              minW={"280px"}
               height={"60px"}
               bg={"blue.500"}
               className="text-2xl"
@@ -151,9 +206,16 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
               Predict
             </Button>
           </div>
-          <div className="flex pt-12 justify-center items-center">
+          <div
+            className="bg-base-300 shadow-xl border-solid border-blue-500 flex   w-[100px] h-[65px] mt-4 m-auto"
+            style={{ borderWidth: "2px" }}
+          >
+            {box && <h1 className="m-auto font-semibold text-base-content ">{`$ ${box.toString().slice(0,5)}`}</h1>}
+          </div>
+          <div className="flex  justify-center items-center">
             <Input
               width={"50%"}
+              minW={"280px"}
               type={"number"}
               placeholder="Price"
               height={12}
@@ -164,7 +226,7 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
                 borderStyle: "solid",
                 bg: isDark ? "#302E5E" : "#ECECEC",
               }}
-              marginY={"auto"}
+              marginTop={6}
               _hover={{ borderWidth: "1.5px", borderStyle: "solid" }}
               marginX="auto"
               variant="outline"

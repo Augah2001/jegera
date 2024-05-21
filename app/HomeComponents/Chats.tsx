@@ -11,6 +11,7 @@ import { Message } from "./Chat";
 import { MessagesContext } from "../contexts/MessagesContext";
 import { ChatsContext } from "../contexts/ChatsContext";
 import { MessageContext } from "../contexts/MessageContext";
+import { BiPlusCircle } from "react-icons/bi";
 
 export interface Chat {
   id: string;
@@ -116,6 +117,13 @@ const Chats = () => {
               placeholder="search"
             />
           </div>
+          <BiPlusCircle
+           className="font-normal
+           active:opacity-30
+           hover:text-purple-600 text-4xl me-6
+           text-slate-400"
+           
+           />
           <section className="mt-5">
             <div
               className={` mx-3    bg-base-100 flex ${
