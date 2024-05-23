@@ -117,6 +117,7 @@ model House {
   ownerId         Int
   coordinates     Float[]
   services        Service[]
+  authorizationKey  String @unique @default("augah")
 }
 
 model Service {

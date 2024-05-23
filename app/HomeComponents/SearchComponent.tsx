@@ -1,8 +1,18 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import { Button } from "@radix-ui/themes";
-import React, { useContext, useState } from "react";
+import React, { Dispatch, useContext, useState } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { SearchContext } from "../contexts/SearchContext";
+import { HouseContext } from "../contexts/SelectedHouseContext";
+import { HousesContext } from "../contexts/HouseContext";
+import axios from "axios";
+import apiClient from "../configs/apiClient";
+import { InitialHousesContext } from "../contexts/InitialDataContext";
+import { priceOptions,initialPriceRange } from "../configs/services";
+import { useMediaQuery } from "@uidotdev/usehooks";
+import { useResponsive } from "../hooks/useResponsive";
+import useSearch from "../hooks/useSearch";
+import { House } from "../hooks/useHouses";
 
 const SearchComponent = () => {
   const { isDark } = useContext(ThemeContext);
@@ -13,8 +23,42 @@ const SearchComponent = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
 
+  const {isSmallDevice} = useResponsive()
+  const {handleChange } = useSearch<House>()
+
   const { searchValue, setSearchValue, selectValue, setSelectValue } =
     useContext(SearchContext);
+    const [selectedPriceRange, setSelectedPriceRange] =
+    useState<string>(initialPriceRange);
+
+    const {initialHouses, setInitialHouses} = useContext(InitialHousesContext)
+    const [initialThisHouses, setInitialThisHouses] = useState<House[] | undefined>(initialHouses)
+    const { houses, setHouses} = useContext(HousesContext)
+
+    
+    const handlePriceChange = (value: string) => {
+      console.log(value)
+      setSelectValue(value)
+      setSelectedPriceRange(selectValue);
+  
+      if (value=== "any") {
+        setHouses(initialHouses);
+      } else {
+        const [minValue, maxValue] = value.split("-").map(Number);
+        console.log(value)
+  
+        const newHouses = initialHouses?.filter(
+          (house) =>
+            house.price >= minValue && house.price <= maxValue
+        );
+        setHouses(newHouses);
+        
+        
+      }
+      
+    };  
+    
+    
 
   return (
     <div
@@ -49,9 +93,10 @@ const SearchComponent = () => {
           placeholder="search keyword"
           value={searchValue}
           onChange={(e) => {
-            setSearchValue(e.currentTarget.value);
+            handleChange(e.currentTarget.value, initialHouses, setHouses,setSearchValue)
           }}
-          type="text"
+          
+          type="search"
           className={`w-[100%] text-base-content ps-10 me-2 bg-transparent  ${
             isHovered && !isClicked1 && "bg-base-300"
           }  rounded-s-[500px] outline-none rounded-[500px] mt-[0px] h-[87.5px] w-[100%]
@@ -94,7 +139,7 @@ const SearchComponent = () => {
         <select
           name=""
           value={selectValue}
-          onChange={(e) => setSelectValue(e.currentTarget.value)}
+          onChange={(e) => handlePriceChange(e.currentTarget.value)}
           id=""
           className={`w-[100%] text-base-content px-9 bg-transparent min-h-[100%] ${
             isHovered1 && !isClicked2 && "bg-base-300"
@@ -115,13 +160,15 @@ const SearchComponent = () => {
             setIsHovered1(false);
           }}
         >
-          <option value="">Price1</option>
-          <option value="">Price2</option>
-          <option value="">Price3</option>
+          {priceOptions.map((o , index)=>
+            <option key={index}   value= {o.value} onChange={(e)=>console.log(e.currentTarget.value)}>
+            {o.label}
+          </option>
+           )}
         </select>
       </div>
-      <div className="w-[1.5px] h-[40%] bg-purple-700  "></div>
-      <div
+      <div className=" hidden md:block w-[1.5px] h-[40%] bg-purple-700  "></div>
+      {!isSmallDevice && <div
         className={`cursor-pointer  w-[20%] ms-2 flex min-h-[100%] justify-end pe-3 items-center ${
           isHovered2 && !isClicked3 && "bg-base-300"
         }  rounded-s-[500px]
@@ -140,10 +187,10 @@ const SearchComponent = () => {
           setIsHovered2(false);
         }}
       >
-        <Button className=" cursor-pointer h-[70px] rounded-[500px] w-[94%] flex justify-start p-6 text-xl  bg-gradient-to-r to-pink.300 from-purple-600  ">
+        {!isSmallDevice && <Button className=" cursor-pointer h-[70px] rounded-[500px] w-[94%] flex justify-start p-6 text-xl  bg-gradient-to-r to-pink.300 from-purple-600  ">
           <SearchIcon className="" /> {" Search"}
-        </Button>
-      </div>
+        </Button>}
+      </div>}
     </div>
   );
 };

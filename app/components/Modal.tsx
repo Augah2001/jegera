@@ -18,7 +18,7 @@ import { GetCoordinatesContext } from "../contexts/GetCoordinatesContext";
 interface Props {
   // isOpen: boolean;
   // onClose: () => void;
-  // onOpen: () => void;
+  // onOpen: () => void
   headerContent?: ReactNode;
   footerContent?: ReactNode;
   modalBody: ReactNode;

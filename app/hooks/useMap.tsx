@@ -45,6 +45,7 @@ const useMap = (
   const router = useRouter();
   const {houses} = useContext(HousesContext)
 
+  const {onOpen} = useContext(FormModalContext)
   // console.log(houses)
   const { getCoordinates } = useContext(GetCoordinatesContext);
   const { setHouseCoordinates } = useContext(HouseCoordinatesContext);
@@ -109,7 +110,10 @@ const useMap = (
         const popup = new mapboxgl.Popup({ closeButton: false });
         popup.getElement();
         housePopContainer.addEventListener("click", () => {
-          router.push(`/houses/${house.id}`);
+          
+          {!user && onOpen()}
+         
+          {user && router.push(`/houses/${house.id}`)};
         });
         footerContainer.addEventListener("click", () => {
           setShowMessage(!showMessage)
@@ -136,7 +140,7 @@ const useMap = (
     );
 
     const addDirections = () => {
-      const directions = new MapboxDirections({
+      const direction = new MapboxDirections({
         accessToken:
           "pk.eyJ1IjoiYXVnYWgiLCJhIjoiY2x0a2pidTFiMGZnbDJrb2VzcnZ6YTJ5biJ9.ulIIDJl3rnwWq8iGBzre5Q",
         proximity: {
@@ -144,7 +148,8 @@ const useMap = (
           longitude: -17.768739785090247,
         },
       });
-      map.addControl(directions);
+      
+      map.addControl(direction);
     };
 
     directions && addDirections();
@@ -189,7 +194,9 @@ const useMap = (
     map.on("click", (e) => {
       setHasScrolled(true);
     });
-    return () => map.remove();
+    return () =>{
+      map.removeControl
+      map.remove();}
   }, [houses]);
 
   return { mapContainerRef, setHasScrolled };

@@ -4,7 +4,7 @@ import { User } from '../contexts/UserContext'
 
 
 
-const useUsers =  () => useFetch<User[]>('/users')
+const useUsers =  () => useFetch<User>('/users')
  
 
 export default useUsers

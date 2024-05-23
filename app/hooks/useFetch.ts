@@ -17,18 +17,21 @@ const useFetch =<T>(url:string,deps?:string[]) => {
     apiClient.get<T[]>(url, {signal: controller.signal})
     .then(res => {
       setData(res.data)
+      
 
     }).catch((err: AxiosError)=> {
       setError(err.message)
+     
     })
 
-
+    setIsLoading(false)
     
     return () =>controller.abort()
     
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps?deps: [])
+  
 
 
   return {data, error, isLoading}

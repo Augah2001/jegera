@@ -3,6 +3,7 @@ import useFetch from './useFetch'
 import { User } from '../contexts/UserContext';
 import { Location } from './useLocations';
 import { LngLatLike } from 'mapbox-gl';
+import { strict } from 'assert';
 
 
 enum Gender {
@@ -29,7 +30,8 @@ export interface House {
     owner: User
     ownerId: number;
     services: Service[];
-    coordinates: LngLatLike
+    coordinates: LngLatLike,
+    [key: string]: any
   }
 
 export interface Service {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 // Here we have used react-icons package for the icons
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 // And react-slick as our Carousel Lib
@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { ThemeContext } from "../contexts/ThemeContext";
 import GradientDiv from "../components/GradientDiv";
 import useLocations from "../hooks/useLocations";
+import { useResponsive } from "../hooks/useResponsive";
 // import { Location } from "@prisma/client";
 
 // Settings for the slider
@@ -28,12 +29,14 @@ interface Location {
 
 export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
 
+  const {isSmallDevice,isMediumDevice,isLargeDevice} = useResponsive()
+
   const settings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToScroll: hasScrolled? 3: 6,
-    slidesToShow: hasScrolled? 3:6,
+    slidesToScroll: isSmallDevice? hasScrolled? 2:2: hasScrolled? 3: 6 ,
+    slidesToShow: isSmallDevice? hasScrolled? 3:3: hasScrolled? 3: 6 ,
   };
   const { isDark } = useContext(ThemeContext);
 
@@ -42,12 +45,14 @@ export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
   const [slider, setSlider] = React.useState<Slider | null>(null);
 
   const {data: locations, error, isLoading} = useLocations()
+  
 
   
 
   return (
     <div className="shadow-2xl">
-      <Box
+     
+      {<Box
         position={"relative"}
         height={"120x"}
         width={"full"}
@@ -56,6 +61,7 @@ export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
         {/* CSS files for react-slick */}
 
         {/* Left Icon */}
+        {isLoading && <div className="flex justify-center items-center"> <Spinner className="my-auto "/></div>}
         <div
           className="
           text-slate-400 hover:text-slate-600
@@ -147,7 +153,7 @@ export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
             </div>
           ))}
         </Slider>
-      </Box>
+      </Box>}
       {isDark ? (
         <div className="shadow-xl ">
           <GradientDiv />

@@ -7,7 +7,7 @@ const useMainView = () => {
     
 
     const [hasScrolled, setHasScrolled] = useState(false);
-    const scrollThreshold = 2
+    const scrollThreshold = 1
     const springProps = useSpring({
     opacity: hasScrolled ? 0 : 1, // Adjust opacity values for desired fade effect
     from: { opacity: 1 }, // Set initial opacity for smooth transition

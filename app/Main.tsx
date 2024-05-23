@@ -1,7 +1,7 @@
 "use client";
 
 import { Inter } from "next/font/google";
-import { Button, Theme } from "@radix-ui/themes";
+
 import { ThemeContext } from "./contexts/ThemeContext";
 import "./HomeComponents/beepingButton.css";
 import {
@@ -11,8 +11,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Navbar from "./NavBar/Navbar";
-import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
+import { Button, ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import { SearchContext } from "./contexts/SearchContext";
 import { ShowMapContext } from "./contexts/ShowMapContext";
 import theme from "./configs/theme";
@@ -37,6 +38,13 @@ import { Message } from "./HomeComponents/Chat";
 import { MessagesContext } from "./contexts/MessagesContext";
 import { ChatsContext } from "./contexts/ChatsContext";
 import { MessageContext } from "./contexts/MessageContext";
+import { InitialHousesContext } from "./contexts/InitialDataContext";
+import apiClient from "./configs/apiClient";
+import { useMediaQuery } from "@uidotdev/usehooks";
+import { ResponsiveContext } from "./contexts/ResponseContext";
+import { Theme } from "@radix-ui/themes";
+
+
 
 interface Props {
   childrenNode: ReactNode;
@@ -45,6 +53,8 @@ interface Props {
 const inter = Inter({ subsets: ["latin"] });
 
 const Main = ({ childrenNode }: Props) => {
+
+  const router = useRouter()
   const { data } = useHouses();
   const [houseCoordinates, setHouseCoordinates] = useState<number[]>([]);
   const [isDark, setIsDark] = useState(false);
@@ -58,9 +68,10 @@ const Main = ({ childrenNode }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [selectValue, setSelectValue] = useState("");
   const [houses, setHouses] = useState<House[]>();
+  const [initialHouses, setInitialHouses] = useState<House[]>();
   const [selectedHouse, setSelectedHouse] = useState<House>();
   const [showMap, setShowMap] = useState(false);
-
+  const path = usePathname()
   const [showMessage, setShowMessage] = useState(false);
   const [showChats, setShowChats] = useState(false);
   const [chatUser, setChatUser] = useState<User>()
@@ -68,7 +79,21 @@ const Main = ({ childrenNode }: Props) => {
   const [message, setMessage] = useState<Message>({} as Message);
   const [chats, setChats] = useState<Chat[]>();
 
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+const isMediumDevice = useMediaQuery(
+  "only screen and (min-width : 769px) and (max-width : 992px)"
+);
+const isLargeDevice = useMediaQuery(
+  "only screen and (min-width : 993px) and (max-width : 1200px)"
+);
+const isExtraLargeDevice = useMediaQuery(
+  "only screen and (min-width : 1201px)"
+);
+  
+
   useEffect(() => {
+    apiClient.get<House[]>('/houses').
+    then(res=> setInitialHouses(res.data) ).catch(err=> console.log(err))
     const onScroll = () => {
       const scrolled = window.scrollY > scrollThreshold;
       setHasScrolled(scrolled);
@@ -117,6 +142,16 @@ const Main = ({ childrenNode }: Props) => {
           type="text/css"
         /> */}
         <ThemeContext.Provider value={{ isDark, setIsDark }}>
+        {path !== '/predict' && <div className="flex justify-end pe-5 fixed z-50 top-[150px] ms-5">
+          <Button
+            className="beeping-button text-white px-3 cursor-pointer font-medium text-2xl h-14 rounded-3xl bg-[#2a1d57]   transform translate(-50%, -50%)"
+            onClick={() => {
+              
+              router.push('/predict')}}
+          >
+            predict
+          </Button>
+        </div>}
           <SearchContext.Provider
             value={{ searchValue, setSearchValue, selectValue, setSelectValue }}
           >
@@ -159,8 +194,12 @@ const Main = ({ childrenNode }: Props) => {
                                           <MessagesContext.Provider value={{messages, setMessages}}>
                                             <ChatsContext.Provider value={{chats, setChats}}>
                                               <MessageContext.Provider value={{message, setMessage}}>
-                                                <Navbar hasScrolled={hasScrolled} />
-                                                {childrenNode}
+                                                <InitialHousesContext.Provider value={{initialHouses, setInitialHouses}}>
+                                                  <ResponsiveContext.Provider value={{isSmallDevice,isExtraLargeDevice,isLargeDevice,isMediumDevice}}>
+                                                    <Navbar hasScrolled={hasScrolled} />
+                                                    {childrenNode}
+                                                  </ResponsiveContext.Provider>
+                                                </InitialHousesContext.Provider>
                                               </MessageContext.Provider>
                                             </ChatsContext.Provider>
                                           </MessagesContext.Provider>

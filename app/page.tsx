@@ -17,6 +17,7 @@ export default function Home({}) {
 
   return (
     <div>
+      
       {
         <Modal
           modalBody={isSignIn ? <SignInForm /> : <SignUpForm />}
@@ -26,9 +27,9 @@ export default function Home({}) {
           footerContent={
             <div className="flex mx-6">
               {isSignIn ? (
-                <p>{"don't have an account, sign up "} </p>
+                <p>{"don't have an account, "} </p>
               ) : (
-                <p>{"already have an account, sign in "} </p>
+                <p>{"already have an account, "} </p>
               )}
               <Link
                 href={"/"}

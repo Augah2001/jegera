@@ -16,6 +16,7 @@ import { ShowChatsContext } from "../contexts/ShowChatsContext";
 import ChatInterace from "./ChatInterace";
 import { ShowMessageContext } from "../contexts/ShowMessageContext";
 import Chat from "./Chat";
+import { useResponsive } from "../hooks/useResponsive";
 
 const Mainview = () => {
   const path = usePathname();
@@ -23,6 +24,7 @@ const Mainview = () => {
   const { showMessage } = useContext(ShowMessageContext);
 
   const { isDark } = useContext(ThemeContext);
+  const { isSmallDevice } = useResponsive();
 
   const { hasScrolled, setHasScrolled, springProps } = useMainView();
 
@@ -30,14 +32,24 @@ const Mainview = () => {
   const { showChats } = useContext(ShowChatsContext);
   return (
     <div className="">
-      {showChats && <div className="ms-[50%]"><ChatInterace/></div>}
-      {showMessage && <div className="ms-[70%] flex mt-10 fixed z-50 bg-base-300 rounded-2xl shadow-lg"><Chat/></div>}
-      <Button
-        className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] left-[50%] transform translate(-50%, -50%)"
-        onClick={() => setShowMap(!showMap)}
-      >
-        {showMap ? "show list" : "show map"}
-      </Button>
+      {showChats && (
+        <div className="ms-[50%]">
+          <ChatInterace />
+        </div>
+      )}
+      {showMessage && (
+        <div className="ms-[70%] flex mt-10 fixed z-50 bg-base-300 rounded-2xl shadow-lg">
+          <Chat />
+        </div>
+      )}
+      <div className="flex justify-center">
+        <Button
+          className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] transform translate(-50%, -50%)"
+          onClick={() => setShowMap(!showMap)}
+        >
+          {showMap ? "show list" : "show map"}
+        </Button>
+      </div>
       <GradientDiv />
       {!hasScrolled && (
         <div className="mt-[90px] fixed top-2 left-0 w-full z-10 bg-base-100">
@@ -54,10 +66,14 @@ const Mainview = () => {
         </div>
       )}
       <div
-        className={` ${hasScrolled ? "mt-[124px]" : "mt-[150px]"}  ms- left-0 ${
+        className={` ${
+          hasScrolled ? (isLoading ? "" : "mt-[154px]") : "mt-[150px]"
+        }  ms- left-0 ${
           hasScrolled
-            ? "w-[41%] transition duration-1000 ease-in-out"
-            : "w-[100%] transition duration-1000 ease-in-out"
+            ? !isSmallDevice
+              ? "w-[41%] transition duration-1000 ease-in-out  mt-36 "
+              : "w-[100%] transition duration-1000  ease-in-out"
+            : "w-[100%] transition duration-1000 ease-in-out  "
         } fixed z-10 `}
       >
         <div className="h-[1px] bg-base-300 w-full"></div>

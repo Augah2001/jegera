@@ -12,6 +12,10 @@ import { MessagesContext } from "../contexts/MessagesContext";
 import { ChatsContext } from "../contexts/ChatsContext";
 import { MessageContext } from "../contexts/MessageContext";
 import { BiPlusCircle } from "react-icons/bi";
+import { useRouter } from "next/navigation";
+import { useResponsive } from "../hooks/useResponsive";
+import useSearch from "../hooks/useSearch";
+import useUsers from "../hooks/useUsers";
 
 export interface Chat {
   id: string;
@@ -23,19 +27,28 @@ export interface Chat {
 }
 
 const Chats = () => {
+  const { handleChange } = useSearch<Chat>();
   const { user } = useContext(UserContext);
   const { messages, setMessages } = useContext(MessagesContext);
   const { isDark } = useContext(ThemeContext);
   const { chats, setChats } = useContext(ChatsContext);
+  const router = useRouter();
+  const [searchChats, setSearchChats] = useState<Chat[] | undefined>();
+  const [searchValue, setSearchValue] = useState("");
+  const [newChat, setNewChat] = useState(false);
 
   const { setChatUser, chatUser } = useContext(ChatContext);
   const [chatee, setChatee] = useState<User>();
   const { message, setMessage } = useContext(MessageContext);
 
+  const { isSmallDevice, isMediumDevice } = useResponsive();
+
+  const { data: users } = useUsers();
   useEffect(() => {
     apiClient
       .get<Chat[]>(`chats/${user?.id}`)
       .then((res) => {
+        setSearchChats(res.data);
         const newChats: Chat[] = [] as Chat[];
         const users = res.data[0].users;
 
@@ -85,7 +98,7 @@ const Chats = () => {
         setChats(newChats);
       })
       .catch((err) => console.log(err));
-  }, [user?.id, message, chatUser]);
+  }, [user?.id, message, chatUser, searchValue]);
 
   return (
     <>
@@ -105,25 +118,74 @@ const Chats = () => {
           <h1 className="text-3xl text-pink-600 ms-3 font-bold">Chats</h1>
         </header>
         <main className="mt-4  ">
-          <div className="flex">
+          <div className="flex items-center justify-around">
+            <BiPlusCircle
+              className="font-normal
+           active:opacity-30
+           hover:text-purple-600 text-4xl mx-3
+           text-slate-400"
+              onClick={() => setNewChat(!newChat)}
+            />
+
             <Input
               focusBorderColor="purple.500"
               borderRadius="100px"
-              width={"80%"}
-              marginX="auto"
+              marginRight={3}
+              // marginX="auto"
               variant="outline"
               borderStyle={"none"}
               bg={`${isDark ? "#3f3c72" : "#ECECEC"}`}
               placeholder="search"
+              value={searchValue}
+              onChange={(e) =>
+                handleChange(
+                  e.currentTarget.value,
+                  searchChats,
+                  setChats,
+                  setSearchValue
+                )
+              }
             />
           </div>
-          <BiPlusCircle
-           className="font-normal
-           active:opacity-30
-           hover:text-purple-600 text-4xl me-6
-           text-slate-400"
-           
-           />
+          {newChat && (
+            <div className="z-50 fixed shadow-xl rounded-sm  border border-base-200 bg-white max-h-[400px] overflow-auto  message-area">
+              <ul>
+                {users.map((myUser, index) => (
+                  <div
+                    key={index}
+                    className={` ps-2 mt-4 h-20 
+              ${
+                isDark ? "hover:bg-[#3f3c72]" : "hover:bg-[#ECECEC]"
+              } hover:rounded-md hover:border-b-0
+
+               bg-base-100 flex ${
+                 isDark ? " border-b-purple-700" : " border-b-base-300"
+               }`}
+                  >
+                    <li className=" ms-3 cursor-pointer
+                      my-auto hover:bg-base-300 text-base-content w-full flex items-center "
+                      onClick={()=> setChatUser(myUser)}
+                      >
+                      <div className="flex w-[100%]">
+                        <div className="h-[50px] w-[50px] flex me-3  rounded-[50px]">
+                          <CldImage
+                            src={myUser.backgroundImage}
+                            alt="user_Image"
+                            width={50}
+                            height={50}
+                            className="object-cover rounded-full object-center"
+                          />
+                        </div>
+                        <div className="min-w-[200px]">
+                          <h1>{myUser.firstName}</h1>
+                        </div>
+                      </div>
+                    </li>
+                  </div>
+                ))}
+              </ul>
+            </div>
+          )}
           <section className="mt-5">
             <div
               className={` mx-3    bg-base-100 flex ${
@@ -150,12 +212,15 @@ const Chats = () => {
                }`}
                 >
                   <li
-                    
                     className=" ms-3 cursor-pointer my-auto text-base-content w-full flex items-center "
                     onClick={() => {
                       chat.hasUnread = false;
                       const chate = chat.users.find((u) => u.id !== user?.id);
                       setChatUser(chate);
+                      {
+                        (isMediumDevice || isSmallDevice) &&
+                          router.push("/chat");
+                      }
                       // console.log(chate)
                     }}
                   >
@@ -182,13 +247,10 @@ const Chats = () => {
                           >
                             {chat?.name}
                           </h1>
-                          {
-                      
-                          chat.hasUnread &&
+                          {chat.hasUnread &&
                             chat.messages[chat.messages.length - 1].senderId !==
                               user?.id &&
-                              chatUser?.id!== user?.id &&
-                              (
+                            chatUser?.id !== user?.id && (
                               <div className="h-3 me-2 my-auto w-3 bg-pink-600 rounded-[400px]" />
                             )}
                         </div>

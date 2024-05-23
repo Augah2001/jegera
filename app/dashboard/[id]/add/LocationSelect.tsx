@@ -4,6 +4,7 @@ import { mapLocationContext } from "@/app/contexts/mapLocationContext";
 import { ThemeContext } from "@/app/contexts/ThemeContext";
 import useLocations, { Location } from "@/app/hooks/useLocations";
 import { Select, FormControl, FormLabel, Box } from "@chakra-ui/react";
+import { usePathname } from "next/navigation";
 
 import React, {
   Dispatch,
@@ -32,7 +33,7 @@ const LocationSelect = ({
   location,
 }: Props) => {
   const { isDark } = useContext(ThemeContext);
-
+  const path = usePathname()
   const { onOpen } = useContext(FormModalContext);
   const { data: locations } = useLocations();
 
@@ -84,15 +85,15 @@ const LocationSelect = ({
                     </option>
                   ))}
                 </Select>
-                <div className="flex my-auto min-[100%]">
-                  <BiLocationPlus className=" mt-[6px]  text-green-500" />
+                { path !== '/predict' && <div className="flex my-auto min-[100%]">
+                    <BiLocationPlus className=" mt-[6px]  text-green-500" />
                   <h1
                     className=" text-green-500 cursor-pointer hover:text-green-600"
                     onClick={onOpen}
                   >
                     map
                   </h1>
-                </div>
+                </div>}
               </div>
             </FormControl>
             {/* <p className="text-red-600 mx-4 mt-1 font-medium">{errors[id]?.message}</p> */}
