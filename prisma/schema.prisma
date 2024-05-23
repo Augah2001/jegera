@@ -112,12 +112,13 @@ model House {
   gender          Gender
   images          String[]
   backgroundImage String?
-  curfew          String
+
   owner           User      @relation(fields: [ownerId], references: [id])
   ownerId         Int
   coordinates     Float[]
   services        Service[]
-  authorizationKey  String @unique @default("augah")
+  authorizationKey  String   @default("augah")
+  predictedPrice Float? 
 }
 
 model Service {
@@ -128,7 +129,7 @@ model Service {
 }
 
 enum Gender {
-  male
-  female
+  girls
+  boys
   both
 }

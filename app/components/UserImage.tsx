@@ -36,7 +36,6 @@ const CustomButton = forwardRef<HTMLButtonElement, CustomButtonProps>(
 
 const UserImage = ({ menuItems, user, heading }: Props) => {
 
-  console.log(user.backgroundImage)
   return (
     <Menu>
       <MenuButton as={CustomButton} >

@@ -9,7 +9,11 @@ export async function GET(request: NextRequest) {
     include: { users: true, messages: true },
   });
 
-  chats.sort((a: Chat,b: Chat) => new Date(b.messages[b.messages.length-1]?.time) - b.messages[b.messages.length-1]?.time )
-  console.log(chats)
+  chats.sort(
+    (a: Chat, b: Chat) =>
+      new Date(b.messages[b.messages.length - 1]?.time) -
+      b.messages[b.messages.length - 1]?.time
+  );
+  console.log(chats);
   return NextResponse.json(chats);
 }

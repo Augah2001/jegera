@@ -55,9 +55,7 @@ export const houseSchema = z.object({
   gender: z.enum(["girls", "boys", "both"], {
     errorMap: () => ({ message: "Gender is required" }),
   }), // Allow optional gender // Allow optional background image URL
-  curfew: z.string().min(1, "Curfew is required"), // Allow optional curfew time
-  // location: z.string().min(1, 'Location is required')
-  // Ensure positive owner ID
+  authorizationKey: z.string(),
 });
 
 interface Location {
@@ -104,12 +102,17 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
         apiClient
           .post<Location>("/locations", location)
           .then((res) => {
+
+            
             const newData = {
               ...data,
               coordinates: houseCoordinates,
               ownerId: user?.id,
               locationId: res.data.id,
+              location: res.data,
             };
+
+            console.log(newData)
 
             // console.log(newData);
             // apiClient
@@ -126,15 +129,10 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
           coordinates: houseCoordinates,
           ownerId: user?.id,
           locationId: myLocation.id,
+          location: myLocation
         };
 
-        // apiClient
-        //   .post<House>("/houses", newData)
-        //   .then((res) => {
-        //     setHouseData(newData);
-        //     nextStep();
-        //   })
-        //   .catch((err) => console.log(err));
+        
 
         setHouseData(newData)
         nextStep()
@@ -194,15 +192,14 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
               {renderInput("capacity", "number", "Capacity *")}
               {renderInput("occupied", "number", "Occupied Slots  (vaapo) *")}
               {renderInput("perRoom", "number", "People per room *")}
+              {renderInput("perRoom", "number", "People per room *")}
+              {renderInput("authorizationKey", "string", "Auth key *")}
               {renderSelect("gender", "Gender *", [
                 { id: "boys", name: "Male" },
                 { id: "girls", name: "Female" },
                 { id: "both", name: "Both" },
               ])}
-              {renderSelect("curfew", "Curfew *", [
-                { id: "no", name: "No" },
-                { id: "yes", name: "Yes" },
-              ])}
+              
             </div>
           </>
         );

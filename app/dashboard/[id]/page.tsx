@@ -16,15 +16,28 @@ import { FormModalContext } from "@/app/contexts/FormModalContext";
 import SignUpForm from "@/app/HomeComponents/SignInForm";
 import AddForm from "./AddForm";
 import Link from "next/link";
+import { HousesContext } from "@/app/contexts/HouseContext";
+import { userAgent } from "next/server";
+import { UserContext } from "@/app/contexts/UserContext";
+import ChartsInterface from "@/app/HomeComponents/chartsInterface";
+import CapacityChart from "../CapacityChart";
 
 const Dashboard = () => {
   const { showMap, setShowMap } = useContext(ShowMapContext);
   const { setHasScrolled, hasScrolled } = useMainView();
   const { onOpen, isOpen } = useContext(FormModalContext);
+  const { user } = useContext(UserContext);
   console.log(isOpen)
+
+  const {houses} = useContext(HousesContext)
+  const filteredHouses = houses?.filter(house => house.ownerId === user?.id)
+  console.log(filteredHouses)
 
   return (
     <div className=" py-8">
+
+      {/* <ChartsInterface houses={filteredHouses}/> */}
+     
       {
       }
       <Button
@@ -56,13 +69,13 @@ const Dashboard = () => {
         } fixed z-10 `}
       >
         <div className="h-[1px] bg-base-300 w-full"></div>
-        <Slider />
+        <Slider  hasScrolled= {hasScrolled}/>
       </div>
       <div className="">
         {showMap ? (
           <MyMap setHasScrolled={setHasScrolled} />
         ) : (
-          <HouseCardGrid />
+          <HouseCardGrid houses={filteredHouses}/>
         )}
       </div>
     </div>

@@ -4,7 +4,7 @@ import prisma from '../../../prisma/client'
 import { Location } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
-  const locations = await prisma.location.findMany();
+  const locations = await prisma.location.findMany({orderBy: { id: 'asc' }});
   return NextResponse.json(locations);
 }
 

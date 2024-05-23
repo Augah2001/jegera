@@ -57,12 +57,15 @@ export const schemaHouse = z.object({
   capacity: z.number().positive().optional(), // Allow optional capacity
   occupied: z.number(), // Allow optional occupied status
   perRoom: z.number().positive().optional(), // Allow optional perRoom value
-  gender: z.enum(["male", "female", "both"]).optional(), // Allow optional gender
+  gender: z.enum(["girls", "boys", "both"]).optional(), // Allow optional gender
   images: z.array(z.string()).optional(), // Allow optional array of image URLs
   backgroundImage: z.string().optional(), // Allow optional background image URL
-  curfew: z.string().min(1), // Allow optional curfew time
+
   ownerId: z.number().positive(), // Ensure positive owner ID
-  services: z.array(schemaService.optional()).optional()
+  services: z.array(schemaService.optional()).optional(),
+  authorizationKey: z.string(),
+  predictedPrice: z.number().optional()
+  
 });
 
 // **Service Model Validation** (assuming simple name validation)

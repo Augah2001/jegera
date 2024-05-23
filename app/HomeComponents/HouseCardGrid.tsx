@@ -2,12 +2,12 @@ import { SimpleGrid, Box, grid } from "@chakra-ui/react";
 
 import React, { useContext } from "react";
 import HouseCard from "./HouseCard";
-import useHouses from "../hooks/useHouses";
+import useHouses, { House } from "../hooks/useHouses";
 import { HousesContext } from "../contexts/HouseContext";
 import { useResponsive } from "../hooks/useResponsive";
 
-const HouseCardGrid = () => {
-  const {houses} = useContext(HousesContext)
+const HouseCardGrid = ({houses}: {houses: House[] | undefined}) => {
+  
 
   const {isSmallDevice} =useResponsive()
   return (

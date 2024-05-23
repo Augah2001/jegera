@@ -5,7 +5,7 @@ import { House } from "@prisma/client"; // Import House and Location types
 
 export async function GET(request: NextRequest) {
   const houses = await prisma.house.findMany({
-    include: { location: true, services: true, owner: true }, // Include related Location data
+    include: { location: true, services: true, owner: true }, orderBy: { id: 'asc' } // Include related Location data
   });
   return NextResponse.json(houses);
 }
@@ -41,25 +41,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(newHouse);
 }
 
-export async function DELETE(request: NextRequest) {
-  const url = request.nextUrl;
-  const id = parseInt(url.searchParams.get('id') || '', 10); // Extract ID from URL
 
-  if (isNaN(id)) {
-    return NextResponse.json({ error: "Invalid house ID" }, { status: 400 });
-  }
-
-  const deletedHouse = await prisma.house.delete({
-    where: { id },
-    include: { location: true }, // Include related Location data upon deletion
-  });
-
-  if (!deletedHouse) {
-    return NextResponse.json({ error: "House not found" }, { status: 404 });
-  }
-
-  return NextResponse.json(deletedHouse);
-}
 
 export async function PUT(request: NextRequest) {
   const url = request.nextUrl;
