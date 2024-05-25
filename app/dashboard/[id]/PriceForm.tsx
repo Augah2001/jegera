@@ -2,7 +2,7 @@ import Form, { RenderInput } from "@/app/components/Form/FormTemplate";
 import apiClient from "@/app/configs/apiClient";
 import { HouseContext } from "@/app/contexts/SelectedHouseContext";
 import { ThemeContext } from "@/app/contexts/ThemeContext";
-import HouseCard from "@/app/HomeComponents/HouseCard";
+import { usePathname } from "next/navigation";
 import { Button, Input, useToast } from "@chakra-ui/react";
 import React, {
   Dispatch,
@@ -16,12 +16,15 @@ import { Location } from "@/app/hooks/useLocations";
 import axios from "axios";
 import { House } from "@/app/hooks/useHouses";
 import { mappings } from "@/app/configs/location mappings";
+import { UserContext } from "@/app/contexts/UserContext";
+import { useRouter } from "next/navigation";
 
 const PriceSchema = z.object({
   price: z.number({ invalid_type_error: "Price is required" }).positive(),
 });
 
 interface Props {
+  houseId?: string;
   HouseData: { [key: string]: any };
   setHouseData: Dispatch<
     SetStateAction<{
@@ -31,26 +34,19 @@ interface Props {
   prevStep: () => void;
 }
 
-const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
+const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
+  const path = usePathname();
   const [paragraph, setParagraph] = useState("");
   const [box, setBox] = useState("");
   const [currentCharParagraph, setCurrentCharParagraph] = useState(0);
-  const [predictedValue, setPredictedValue] = useState<number>()
+  const [predictedValue, setPredictedValue] = useState<number>();
   const paragraphText =
     "use our intelligent prediction engine to predict a competitive price";
 
+  const toast = useToast();
+  const router = useRouter()
 
-  const toast = useToast({
-    position: "top",
-    title: "signup successful",
-    containerStyle: {
-      width: "800px",
-      maxWidth: "500px",
-      color: "green",
-      backgroundColor: "pink.green",
-    },
-  });
-
+  console.log(houseId)
 
   const delayPrint = (
     currentChar: number,
@@ -75,12 +71,13 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
       setParagraph,
       paragraph
     );
-    handlePredict()
+    handlePredict();
   }, [currentCharParagraph]);
 
   const { isDark } = useContext(ThemeContext);
   const [predictData, setPredictData] = useState({});
   const [showPValue, setShowPValue] = useState(false);
+  const { user, setUser } = useContext(UserContext);
 
   const [data, setData] = useState<any>({
     price: NaN,
@@ -99,7 +96,6 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    
     e.preventDefault();
     setError("");
     const validateBody = PriceSchema.safeParse(data);
@@ -109,19 +105,37 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
       return;
     }
 
+    const newData: { [key: string]: any } = {
+      ...HouseData,
+      price: data["price"],
+      predictedPrice: predictedValue,
+    };
+    delete newData["location"];
+   
+    path === `/dashboard/${user?.id}/add` &&
+      apiClient
+        .post<House>("/houses", newData)
+        .then((res) => {
+          setHouseData(newData);
+          toast({ title: "house added", colorScheme: "green" });
+          router.push(`/dashboard/${user?.id}`)
+        })
+        .catch((err) => {
+          toast({ title: "an error occured", colorScheme: "red" });
+          console.log(err);
+        });
 
-    const newData: {[key:string]: any} = { ...HouseData, price: data["price"], predictedPrice: predictedValue };
-    delete newData['location']
-    console.log(newData)
-    apiClient
-          .post<House>("/houses", newData)
-          .then((res) => {
-            setHouseData(newData);
-            toast({ title: "house added", colorScheme: "green" });
-          })
-          .catch((err) => {
-            toast({ title: "an error occured", colorScheme: "red" });
-            console.log(err)});
+    path !== `/dashboard/${user?.id}/add` &&  apiClient
+        .put<House>(`/houses/${houseId}`, newData)
+        .then((res) => {
+          setHouseData(newData);
+          toast({ title: "house edited", colorScheme: "green" });
+          router.push(`/dashboard/${user?.id}`)
+        })
+        .catch((err) => {
+          toast({ title: "an error occured", colorScheme: "red" });
+          console.log(err);
+        });
   };
 
   const services = [
@@ -143,14 +157,12 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
     "meals",
   ];
 
-
-
   const handlePredict = () => {
     const serviceNames = new Set(
       HouseData.services.map((service: any) => service.name)
     );
 
-    let data: {[key: string]: string | number} = {}; // Initialize data as an empty object
+    let data: { [key: string]: string | number } = {}; // Initialize data as an empty object
 
     for (let s of services) {
       if (s !== "Shelves") {
@@ -160,24 +172,27 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
       }
     }
 
-    console.log(HouseData.location.name.toLowerCase())
-    const coefficient = HouseData.location?.name && mappings[HouseData.location?.name.toLowerCase()];
+    console.log(HouseData.location.name.toLowerCase());
+    const coefficient =
+      HouseData.location?.name &&
+      mappings[HouseData.location?.name.toLowerCase()];
     if (!coefficient) {
       setError("sorry, location not supported");
       return;
     }
 
-    console.log(Math.log(HouseData.minutes) * coefficient)
+    console.log(Math.log(HouseData.minutes) * coefficient);
     data["distance"] = Math.log(HouseData.minutes) * coefficient;
     data["per_room"] = HouseData.perRoom;
     data["gender"] = HouseData.gender;
-    data["Location"] =HouseData?.location?.name.toLowerCase();
-    setPredictData(data)
+    data["Location"] = HouseData?.location?.name.toLowerCase();
+    setPredictData(data);
 
-    axios.post("http://localhost:8000/predict/", data).then((res) => {
+    axios.post("https://accohouse-1.onrender.com/predict", data).then((res) => {
       setBox(res.data);
-      setPredictedValue(res.data)
+      setPredictedValue(res.data);
       showPValue && setData({ ...data, price: res.data });
+      
     });
   };
   return (
@@ -220,8 +235,9 @@ const PriceForm = ({ HouseData, setHouseData, prevStep }: Props) => {
           <div className="flex justify-center mt-8">
             <Button
               onClick={() => {
-                setShowPValue(true)
-                handlePredict()}}
+                setShowPValue(true);
+                handlePredict();
+              }}
               width={"50%"}
               minW={"280px"}
               height={"60px"}

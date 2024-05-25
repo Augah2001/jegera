@@ -187,9 +187,9 @@ const SearchComponent = () => {
           setIsHovered2(false);
         }}
       >
-        {!isSmallDevice && <Button className=" cursor-pointer h-[70px] rounded-[500px] w-[94%] flex justify-start p-6 text-xl  bg-gradient-to-r to-pink.300 from-purple-600  ">
-          <SearchIcon className="" /> {" Search"}
-        </Button>}
+        {!isSmallDevice && <button className=" justify-center items-center cursor-pointer bg-blue-700 font-medium text-white text-2xl h-[70px] rounded-[500px] w-[94%] flex     bg-gradient-to-r to-pink.300 from-purple-600  ">
+          {" Search"}
+        </button>}
       </div>}
     </div>
   );

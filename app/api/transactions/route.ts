@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import validate from "./validate"; // Assuming your validation function is in validate.js
+import validate, { schemaTransaction } from "../validate"; // Assuming your validation function is in validate.js
 import prisma from '../../../prisma/client'
-import { Transaction, User } from "@prisma/client"; // Import Transaction and User types
+import { House, Transaction } from "@prisma/client"; // Import Transaction and User types
 
 export async function GET(request: NextRequest) {
   const transactions = await prisma.transaction.findMany({
@@ -12,11 +12,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const validateBody = validate(body); // Perform validation
+  const validateBody = validate(schemaTransaction, body) // Perform validation
+
+  
 
   if (!validateBody.success) {
     return NextResponse.json({ error: validateBody.error.errors }, { status: 400 });
   }
+
+  
 
   // Check if sender and receiver users exist (optional, adjust as needed)
   const sender = await prisma.user.findUnique({
@@ -32,13 +36,32 @@ export async function POST(request: NextRequest) {
   if (!receiver) {
     return NextResponse.json({ error: "Receiver user not found" }, { status: 400 });
   }
-
-  const newTransaction = await prisma.transaction.create<Transaction>({
-    data: body,
-    include: { sender: true, receiver: true }, // Include related User data upon creation
+  const house = await prisma.house.findUnique<House>({
+    where: { id: body.houseId },
   });
+  if (!house) {
+    return NextResponse.json({ error: "House user not found" }, { status: 400 });
+  }
 
-  return NextResponse.json(newTransaction);
+  if (house.occupied >= house.capacity) return NextResponse.json({error: "house is full"}, {status: 500})
+  try {
+    const[transaction,updatedHouse] = await prisma.$transaction([
+      prisma.transaction.create<Transaction>({
+        data: body,
+        include: { sender: true, receiver: true, house: true }, // Include related User data upon creation
+      }),
+      prisma.house.update({
+        where: {id:house.id}, data: {occupied: house.occupied + 1}
+      })
+    ])
+   
+    return NextResponse.json({transaction, updatedHouse});
+  } catch (err) {
+    console.log(err)
+    return NextResponse.json({error: "failed to transact"});
+
+  }
+
 }
 
 export async function DELETE(request: NextRequest) {
@@ -61,5 +84,3 @@ export async function DELETE(request: NextRequest) {
   return NextResponse.json(deletedTransaction);
 }
 
-// PUT requests might not be suitable for transactions as they represent a point-in-time event.
-// Consider using a separate endpoint for updates if needed (e.g., refunds).

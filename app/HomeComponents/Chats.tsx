@@ -50,7 +50,7 @@ const Chats = () => {
       .then((res) => {
         setSearchChats(res.data);
         const newChats: Chat[] = [] as Chat[];
-        const users = res.data[0].users;
+        const users = res.data[0]?.users;
 
         if (!chatUser) {
           const newChatUser = users.find((u) => u.id !== user?.id);
@@ -92,7 +92,7 @@ const Chats = () => {
           newChats.sort(
             (a: any, b: any) =>
               new Date(b?.messages[b.messages.length - 1]?.time) -
-              new Date(a?.messages[a.messages.length - 1]?.time)
+              new Date(a?.messages[a.messages.length - 1]?.time) 
           );
 
         setChats(newChats);
@@ -162,10 +162,11 @@ const Chats = () => {
                  isDark ? " border-b-purple-700" : " border-b-base-300"
                }`}
                   >
-                    <li className=" ms-3 cursor-pointer
+                    <li
+                      className=" ms-3 cursor-pointer
                       my-auto hover:bg-base-300 text-base-content w-full flex items-center "
-                      onClick={()=> setChatUser(myUser)}
-                      >
+                      onClick={() => setChatUser(myUser)}
+                    >
                       <div className="flex w-[100%]">
                         <div className="h-[50px] w-[50px] flex me-3  rounded-[50px]">
                           <CldImage
@@ -256,7 +257,10 @@ const Chats = () => {
                         </div>
                         <div className="flex justify-between">
                           <small className="text-blue-500 font-medium">
-                            {chat.messages[chat.messages.length - 1]?.body}
+                            {chat.messages[chat.messages.length - 1]?.body
+                              .length < 24
+                              ? chat.messages[chat.messages.length - 1]?.body
+                              : chat.messages[chat.messages.length - 1]?.body.slice(0, 24) + '...' }
                           </small>
                           {
                             <small className="font-medium me-3">

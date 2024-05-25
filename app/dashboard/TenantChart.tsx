@@ -7,7 +7,7 @@ const TenantChart
  
     const series =  [{
         name: "tenant count",
-        data: [28, 29, 33, 36, 32, ]
+        data: [2, 3, 10, ]
       }
     ]
    const  options = {
@@ -49,9 +49,9 @@ const TenantChart
     },
     xaxis: {
         type: 'date',
-      categories: ['05/23/2024 GMT', '05/30/2024 GMT', '06/06/2024 GMT','06/13/2024 GMT', '06/21/2024 GMT'],
+      categories: ['05/23/2024 GMT', '05/30/2024 GMT', '06/06/2024 GMT'],
       title: {
-        text: ''
+        text: 'time'
       }
     },
     yaxis: {
@@ -59,7 +59,7 @@ const TenantChart
         text: 'number of tenants'
       },
       min: 0,
-      max: 100
+      max: 30
     },
     legend: {
       position: 'top',
@@ -119,7 +119,7 @@ const TenantChart
   return (
     <div>
       <div id="chart">
-        <ReactApexChart options={chartOptions} series={chartSeries} type="line" height={350} />
+        <ReactApexChart options={chartOptions} series={chartSeries} type="line" height={250} />
       </div>
       <div id="html-dist"></div>
     </div>

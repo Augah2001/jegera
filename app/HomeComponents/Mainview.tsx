@@ -17,6 +17,7 @@ import ChatInterace from "./ChatInterace";
 import { ShowMessageContext } from "../contexts/ShowMessageContext";
 import Chat from "./Chat";
 import { useResponsive } from "../hooks/useResponsive";
+import useHouses from "../hooks/useHouses";
 
 const Mainview = () => {
   const path = usePathname();
@@ -30,6 +31,8 @@ const Mainview = () => {
 
   const { data: locations, error, isLoading } = useLocations();
   const { showChats } = useContext(ShowChatsContext);
+
+  const { data: houses} = useHouses()
   return (
     <div className="">
       {showChats && (
@@ -43,12 +46,12 @@ const Mainview = () => {
         </div>
       )}
       <div className="flex justify-center">
-        <Button
-          className="beeping-button cursor-pointer fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] transform translate(-50%, -50%)"
+        <button
+          className="beeping-button cursor-pointer px-3 text-white font-medium fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] transform translate(-50%, -50%)"
           onClick={() => setShowMap(!showMap)}
         >
           {showMap ? "show list" : "show map"}
-        </Button>
+        </button>
       </div>
       <GradientDiv />
       {!hasScrolled && (
@@ -83,7 +86,7 @@ const Mainview = () => {
         {showMap ? (
           <MyMap setHasScrolled={setHasScrolled} />
         ) : (
-          <HouseCardGrid />
+          <HouseCardGrid houses={houses} />
         )}
       </div>
     </div>

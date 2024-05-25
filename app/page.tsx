@@ -6,8 +6,6 @@ import Link from "next/link";
 import SignUpForm from "./HomeComponents/SignUpForm";
 import Mainview from "./HomeComponents/Mainview";
 import { useContext, useState } from "react";
-import Chat from "./HomeComponents/ChatMessageInterface";
-import { useConst } from "@chakra-ui/react";
 import { ShowMessageContext } from "./contexts/ShowMessageContext";
 
 export default function Home({}) {

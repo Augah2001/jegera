@@ -10,7 +10,7 @@ import { Button } from "@radix-ui/themes";
 import { BiPlusCircle } from "react-icons/bi";
 import Modal from '../../components/Modal'
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { FormModalContext } from "@/app/contexts/FormModalContext";
 import SignUpForm from "@/app/HomeComponents/SignInForm";
@@ -28,6 +28,7 @@ const Dashboard = () => {
   const { onOpen, isOpen } = useContext(FormModalContext);
   const { user } = useContext(UserContext);
   console.log(isOpen)
+  const [showCharts, setShowCharts] = useState(true)
 
   const {houses} = useContext(HousesContext)
   const filteredHouses = houses?.filter(house => house.ownerId === user?.id)
@@ -36,7 +37,7 @@ const Dashboard = () => {
   return (
     <div className=" py-8">
 
-      {/* <ChartsInterface houses={filteredHouses}/> */}
+      {showCharts && <ChartsInterface houses={filteredHouses} setShowCharts = {setShowCharts}/> }
      
       {
       }

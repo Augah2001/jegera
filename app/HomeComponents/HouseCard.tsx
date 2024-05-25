@@ -17,6 +17,7 @@ import { HousesContext } from "../contexts/HouseContext";
 import { useToast } from "@chakra-ui/toast";
 import { AxiosError } from "axios";
 
+
 interface Props {
   house: House;
 }
@@ -43,6 +44,10 @@ const HouseCard = ({ house }: Props) => {
         setHouses(prevHouses)
         toast({ title: "not deleted", colorScheme: "red" });
      })
+  }
+
+  const handleEdit = (id: number) =>  {
+    router.push(`/dashboard/${user?.id}/edit/${id}`)
   }
 
 

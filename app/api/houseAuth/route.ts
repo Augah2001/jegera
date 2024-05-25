@@ -11,9 +11,9 @@ const authSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
-  const auths = await prisma.auth.findMany({
+  const houseAuths = await prisma.houseAuth.findMany({
   });
-  return NextResponse.json(auths);
+  return NextResponse.json(houseAuths);
 }
 
 export async function POST(request: NextRequest) {
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const auth = await prisma.auth.create({
+    const auth = await prisma.houseAuth.create({
       data: body
     })
 

@@ -61,8 +61,8 @@ export async function DELETE(request: NextRequest, {params: {id}}:{params: {id: 
   
     const updatedHouse = await prisma?.house.update({
       where: { id: parseInt(id) },
-      data: body,
-      include: { location: true },
+      data: {...body, services: { connect: body.services} },
+      include: { location: true, services: true }
     });
   
     if (!updatedHouse) {

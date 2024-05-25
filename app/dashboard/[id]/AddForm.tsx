@@ -21,7 +21,7 @@ import {
 
 import { number, z } from "zod";
 
-import { Button, useModalContext } from "@chakra-ui/react";
+import { Button, useModalContext, useToast } from "@chakra-ui/react";
 
 import useLocations from "@/app/hooks/useLocations";
 
@@ -76,6 +76,7 @@ interface Props {
 const AddForm = ({ nextStep, setHouseData }: Props) => {
   const { houseCoordinates } = useContext(HouseCoordinatesContext);
 
+  const toast = useToast()
   const { location, setLocation } = useSelectLocation();
   const { error, setError } = useContext(SelectErrorContext);
   const { error: errorInput, setError: setErrorInput } = useContext(
@@ -85,72 +86,85 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
   const { data: locations } = useLocations();
 
   const handleSubmit = (data: any) => {
-    if (
-      typeof location === "object" &&
-      Object.keys(location).length !== 0 &&
-      houseCoordinates.length > 0
-    ) {
-      const myLocation = locations.find(
-        (l) => l.name === location.name
-      ) as Location;
+    console.log(data?.authorizationKey)
+    apiClient.get(`/houseAuth/${data?.authorizationKey}`)
+    .then(res =>  {
 
-      console.log(myLocation);
-      console.log(location);
-      if (!myLocation) {
+      if (
+        typeof location === "object" &&
+        Object.keys(location).length !== 0 &&
+        houseCoordinates.length > 0
+      ) {
+        const myLocation = locations.find(
+          (l) => l.name === location.name
+        ) as Location;
+  
+        console.log(myLocation);
         console.log(location);
-
-        apiClient
-          .post<Location>("/locations", location)
-          .then((res) => {
-
-            
-            const newData = {
-              ...data,
-              coordinates: houseCoordinates,
-              ownerId: user?.id,
-              locationId: res.data.id,
-              location: res.data,
-            };
-
-            console.log(newData)
-
-            // console.log(newData);
-            // apiClient
-            //   .post<House>("/houses", newData)
-            //   .then((res) => setHouseData(res.data))
-            //   .catch((err) => console.log(err));
-            setHouseData(newData)
-            nextStep();
-          })
-          .catch((err) => console.log(err));
+        if (!myLocation) {
+          console.log(location);
+  
+          apiClient
+            .post<Location>("/locations", location)
+            .then((res) => {
+  
+              
+              const newData = {
+                ...data,
+                coordinates: houseCoordinates,
+                ownerId: user?.id,
+                locationId: res.data.id,
+                location: res.data,
+              };
+  
+              console.log(newData)
+  
+              // console.log(newData);
+              // apiClient
+              //   .post<House>("/houses", newData)
+              //   .then((res) => setHouseData(res.data))
+              //   .catch((err) => console.log(err));
+              setHouseData(newData)
+              nextStep();
+            })
+            .catch((err) => console.log(err));
+        } else {
+          const newData = {
+            ...data,
+            coordinates: houseCoordinates,
+            ownerId: user?.id,
+            locationId: myLocation.id,
+            location: myLocation
+          };
+  
+          
+  
+          setHouseData(newData)
+          nextStep()
+        }
       } else {
-        const newData = {
-          ...data,
-          coordinates: houseCoordinates,
-          ownerId: user?.id,
-          locationId: myLocation.id,
-          location: myLocation
-        };
-
-        
-
-        setHouseData(newData)
-        nextStep()
+        if (typeof location === "object" && Object.keys(location).length === 0) {
+          const newData = data;
+          delete newData["location"];
+          setHouseData(newData);
+          setError("specify location");
+        }
       }
-    } else {
-      if (typeof location === "object" && Object.keys(location).length === 0) {
+      if (houseCoordinates.length === 0) {
         const newData = data;
-        delete newData["location"];
+        delete newData["houseCoordinates"];
         setHouseData(newData);
-        setError("specify location");
+        setErrorInput("specify coordinates");
       }
-    }
-    if (houseCoordinates.length === 0) {
-      const newData = data;
-      delete newData["houseCoordinates"];
-      setHouseData(newData);
-      setErrorInput("specify coordinates");
-    }
+    }).catch(err=> {
+      console.log(err)
+      toast({title: 'invalid authorization Key', colorScheme:'red',position: 'top'})
+      
+    })
+
+
+
+    
   };
 
   return (

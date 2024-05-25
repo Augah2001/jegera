@@ -2,7 +2,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import io from "socket.io-client";
 
-const socket = io("https://jegera-chat-feature-1.onrender.com");
+const socket = io("http://localhost:8000");
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 
@@ -62,6 +62,8 @@ const Chat = () => {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
+
+    
   }, [chatUser, user, message]);
 
   socket.on("message", (message) => {
@@ -131,7 +133,7 @@ const Chat = () => {
               }`}
             >
               <div
-                className={`px-4 py-2 rounded-[100px] max-w-[70%]  text-white shadow-md ${
+                className={`px-4 py-2 rounded-[6px] max-w-[70%]  text-white shadow-md ${
                   message.senderId === user?.id ? "bg-blue-500" : "bg-gray-300"
                 }`}
               >

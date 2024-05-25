@@ -44,6 +44,11 @@ model Chat {
 
 model Auth {
   authorizationKey String @unique
+  fullName   String
+}
+model HouseAuth {
+  authorizationKey String @unique
+  fullName   String
 }
 
 model Location {
@@ -74,6 +79,8 @@ model Transaction {
   receiverId Int
   amount     Int
   time       DateTime @default(now())
+  house  House @relation(fields: [houseId], references: [id])
+  houseId Int
 }
 
 enum status {
@@ -84,6 +91,7 @@ enum status {
 enum type {
   tenant
   landlord
+  authorize
 }
 
 enum genderType {
@@ -119,6 +127,7 @@ model House {
   services        Service[]
   authorizationKey  String   @default("augah")
   predictedPrice Float? 
+  transactions Transaction[]
 }
 
 model Service {

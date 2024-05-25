@@ -8,7 +8,12 @@ import { steps } from "framer-motion";
 import { title } from "process";
 import PriceForm from "../PriceForm";
 
-const MultiStepForm = () => {
+
+interface Props {
+  houseId?: string
+}
+
+const MultiStepForm = ({houseId}: Props) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [houseData, setHouseData] = useState<{ [key: string]: string }>({});
 
@@ -66,7 +71,7 @@ const MultiStepForm = () => {
         />
       ),
     },
-    {title: "price", component: <PriceForm prevStep={prevStep} HouseData={houseData} setHouseData={setHouseData}/>}
+    {title: "price", component: <PriceForm houseId= {houseId} prevStep={prevStep} HouseData={houseData} setHouseData={setHouseData}/>}
   ];
 
   return (

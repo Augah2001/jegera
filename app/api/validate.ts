@@ -8,7 +8,7 @@ export const schemaUser = z.object({
   lastName: z.string().optional(), // Optional last name
   password: z.string().min(8).max(72), // Enforce password length
   authorizationKey: z.string().optional(), // Allow optional authorizationKey
-  accountType: z.enum(["tenant", "landlord"]), // Enforce valid user type
+  accountType: z.enum(["tenant", "landlord", 'authorizer']), // Enforce valid user type
   isOnline: z.boolean().optional(), // Allow optional isOnline
   backgroundImage: z.string().optional()
 });
@@ -35,6 +35,7 @@ export const schemaTransaction = z.object({
   receiverId: z.number().positive(), // Ensure positive receiver ID
   amount: z.number().nonnegative(), // Enforce non-negative amount
   time: z.date().optional(), // Allow optional time (may need adjustment based on usage)
+  houseId: z.number()
 });
 
 export const schemaPublicId = z.object({

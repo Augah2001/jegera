@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts"; // Assuming you have ReactApexChart installed
 import { House } from "../hooks/useHouses";
+import { title } from "process";
 
 const RentCharts
  = ({ houses }: {houses: House[]}) => {
@@ -34,6 +35,7 @@ const RentCharts
         },
       },
       xaxis: {
+        title: {text: 'time'},
         type: 'date',
         categories: ['05/23/2024 GMT', '05/30/2024 GMT', '06/06/2024 GMT'],
       },
@@ -42,7 +44,7 @@ const RentCharts
           text: 'amount'
         },
         min: 0,
-        max: 1000
+        max: 800
       }
     }
   
@@ -92,7 +94,7 @@ const RentCharts
   return (
     <div>
       <div id="chart">
-        <ReactApexChart options={chartOptions} series={chartSeries} type="line" height={350} />
+        <ReactApexChart options={chartOptions} series={chartSeries} type="line" height={320} />
       </div>
       <div id="html-dist"></div>
     </div>

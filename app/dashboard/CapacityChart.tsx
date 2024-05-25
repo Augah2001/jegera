@@ -54,6 +54,10 @@ const CapacityChart = ({ houses }: { houses: House[] }) => {
         },
       },
     },
+    title: {
+      text: 'occupant rate',
+      align: 'left'
+    },
     xaxis: {
       type: "number",
       categories: [1, 2, 3],
@@ -83,6 +87,9 @@ const CapacityChart = ({ houses }: { houses: House[] }) => {
     const newSeries: { name: string; data: number[] }[] = [];
     const newCategories: string[] = [];
 
+    const occupied: number[] = []
+    const remaining: number[] = []
+
     houses?.forEach((house: House) => {
       // Type checking for house
       const name = house.location.name + "  house No " + house.houseNumber;
@@ -96,24 +103,15 @@ const CapacityChart = ({ houses }: { houses: House[] }) => {
 
       setChartOptions(updatedOptions);
 
-      const price: { name: string; data: number[] } = {
-        // Type for serie
-        name: "occupied",
-        data: [house.occupied], // Type checking for price and predictedPrice
-      };
-      const predictedPrice = {
-        name: "remaining",
-        data: [house.capacity- house.occupied],
-      };
+      occupied.push(house.occupied)
+      remaining.push(house.capacity-house.occupied)
 
-      console.log(newSeries);
-      newSeries.push(price);
-      newSeries.push(predictedPrice);
+      
     });
 
-    setChartSeries(newSeries);
+    setChartSeries([{name: 'occupied', data: occupied}, {name: 'remaining', data: remaining}]);
 
-    setChartSeries(newSeries);
+    
   }, [houses]);
 
   return (

@@ -43,8 +43,7 @@ import apiClient from "./configs/apiClient";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { ResponsiveContext } from "./contexts/ResponseContext";
 import { Theme } from "@radix-ui/themes";
-
-
+import PaynowReactWrapper from "paynow-react";
 
 interface Props {
   childrenNode: ReactNode;
@@ -53,8 +52,7 @@ interface Props {
 const inter = Inter({ subsets: ["latin"] });
 
 const Main = ({ childrenNode }: Props) => {
-
-  const router = useRouter()
+  const router = useRouter();
   const { data } = useHouses();
   const [houseCoordinates, setHouseCoordinates] = useState<number[]>([]);
   const [isDark, setIsDark] = useState(false);
@@ -71,29 +69,37 @@ const Main = ({ childrenNode }: Props) => {
   const [initialHouses, setInitialHouses] = useState<House[]>();
   const [selectedHouse, setSelectedHouse] = useState<House>();
   const [showMap, setShowMap] = useState(false);
-  const path = usePathname()
+  const path = usePathname();
   const [showMessage, setShowMessage] = useState(false);
   const [showChats, setShowChats] = useState(false);
-  const [chatUser, setChatUser] = useState<User>()
+  const [chatUser, setChatUser] = useState<User>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<Message>({} as Message);
   const [chats, setChats] = useState<Chat[]>();
 
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
-const isMediumDevice = useMediaQuery(
-  "only screen and (min-width : 769px) and (max-width : 992px)"
-);
-const isLargeDevice = useMediaQuery(
-  "only screen and (min-width : 993px) and (max-width : 1200px)"
-);
-const isExtraLargeDevice = useMediaQuery(
-  "only screen and (min-width : 1201px)"
-);
-  
+  const isMediumDevice = useMediaQuery(
+    "only screen and (min-width : 769px) and (max-width : 992px)"
+  );
+  const isLargeDevice = useMediaQuery(
+    "only screen and (min-width : 993px) and (max-width : 1200px)"
+  );
+  const isExtraLargeDevice = useMediaQuery(
+    "only screen and (min-width : 1201px)"
+  );
+
+  const paynow_config = {
+    integration_id: "17029",
+    integration_key: "360cc42b-0bb8-4a8f-a99f-aabf196819f5",
+    result_url: "http://localhost:3000",
+    return_url: "http://localhost:3000",
+  };
 
   useEffect(() => {
-    apiClient.get<House[]>('/houses').
-    then(res=> setInitialHouses(res.data) ).catch(err=> console.log(err))
+    apiClient
+      .get<House[]>("/houses")
+      .then((res) => setInitialHouses(res.data))
+      .catch((err) => console.log(err));
     const onScroll = () => {
       const scrolled = window.scrollY > scrollThreshold;
       setHasScrolled(scrolled);
@@ -142,16 +148,18 @@ const isExtraLargeDevice = useMediaQuery(
           type="text/css"
         /> */}
         <ThemeContext.Provider value={{ isDark, setIsDark }}>
-        {path !== '/predict' && <div className="flex justify-end pe-5 fixed z-50 top-[150px] ms-5">
-          <Button
-            className="beeping-button text-white px-3 cursor-pointer font-medium text-2xl h-14 rounded-3xl bg-[#2a1d57]   transform translate(-50%, -50%)"
-            onClick={() => {
-              
-              router.push('/predict')}}
-          >
-            predict
-          </Button>
-        </div>}
+          {path !== "/predict" && (
+            <div className="flex justify-end pe-5 fixed z-50 top-[150px] ms-5">
+              <Button
+                className="beeping-button text-white px-3 cursor-pointer font-medium text-2xl h-14 rounded-3xl bg-[#2a1d57]   transform translate(-50%, -50%)"
+                onClick={() => {
+                  router.push("/predict");
+                }}
+              >
+                predict
+              </Button>
+            </div>
+          )}
           <SearchContext.Provider
             value={{ searchValue, setSearchValue, selectValue, setSelectValue }}
           >
@@ -189,15 +197,45 @@ const isExtraLargeDevice = useMediaQuery(
                                     <HousesContext.Provider
                                       value={{ houses, setHouses }}
                                     >
-                                      <ShowChatsContext.Provider value={{showChats, setShowChats}}>
-                                        <ChatContext.Provider value={{chatUser, setChatUser}}>
-                                          <MessagesContext.Provider value={{messages, setMessages}}>
-                                            <ChatsContext.Provider value={{chats, setChats}}>
-                                              <MessageContext.Provider value={{message, setMessage}}>
-                                                <InitialHousesContext.Provider value={{initialHouses, setInitialHouses}}>
-                                                  <ResponsiveContext.Provider value={{isSmallDevice,isExtraLargeDevice,isLargeDevice,isMediumDevice}}>
-                                                    <Navbar hasScrolled={hasScrolled} />
-                                                    {childrenNode}
+                                      <ShowChatsContext.Provider
+                                        value={{ showChats, setShowChats }}
+                                      >
+                                        <ChatContext.Provider
+                                          value={{ chatUser, setChatUser }}
+                                        >
+                                          <MessagesContext.Provider
+                                            value={{ messages, setMessages }}
+                                          >
+                                            <ChatsContext.Provider
+                                              value={{ chats, setChats }}
+                                            >
+                                              <MessageContext.Provider
+                                                value={{ message, setMessage }}
+                                              >
+                                                <InitialHousesContext.Provider
+                                                  value={{
+                                                    initialHouses,
+                                                    setInitialHouses,
+                                                  }}
+                                                >
+                                                  <ResponsiveContext.Provider
+                                                    value={{
+                                                      isSmallDevice,
+                                                      isExtraLargeDevice,
+                                                      isLargeDevice,
+                                                      isMediumDevice,
+                                                    }}
+                                                  >
+                                                    <PaynowReactWrapper
+                                                      {...paynow_config}
+                                                    >
+                                                      <Navbar
+                                                        hasScrolled={
+                                                          hasScrolled
+                                                        }
+                                                      />
+                                                      {childrenNode}
+                                                    </PaynowReactWrapper>
                                                   </ResponsiveContext.Provider>
                                                 </InitialHousesContext.Provider>
                                               </MessageContext.Provider>

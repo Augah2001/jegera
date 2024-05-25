@@ -95,13 +95,13 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
           )}
           <ColorModeSwitch />
           {!user && (
-            <Button
-              className="bg-gradient-to-r  to-pink.300 from-purple-600 h-[36px] me-5 cursor-pointer"
+            <button
+              className="bg-gradient-to-r hover:opacity-80 bg-blue-700 rounded-md text-white font-medium w-20  to-pink.300 from-purple-600 h-[36px] me-5 cursor-pointer"
               style={{ marginTop: "4px" }}
               onClick={onOpen}
             >
               sign up
-            </Button>
+            </button>
           )}
           {user && (
             <UserImage

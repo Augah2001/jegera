@@ -24,6 +24,10 @@ function PredictChart({ houses }: Props) {
     xaxis: {
       categories: categories,
     },
+    title: {
+      text: 'price compare',
+      align: 'left'
+    },
     yaxis: {
       title: {
         text: "Value",
@@ -46,7 +50,6 @@ function PredictChart({ houses }: Props) {
   const [options, setOptions] = useState(initialOptions); // Pre-populate options
  
 
-  const initialSeries: { name: string; data: number[] }[] = []; // Type for series data
 
  
 
@@ -55,8 +58,12 @@ function PredictChart({ houses }: Props) {
     const newCategories: string[] = [];
     
 
+    const actualPrices: number[] = []
+    const predictedPrices: number[] = []
     houses?.forEach((house: House) => { // Type checking for house
-      const name = house.location.name + "  house No " + house.houseNumber;
+      if (house?.predictedPrice) {
+
+        const name = house.location.name + "  house No " + house.houseNumber;
       newCategories.push(name)
       const updatedOptions = {
         ...options, // Spread existing options
@@ -66,30 +73,29 @@ function PredictChart({ houses }: Props) {
       };
       
       setOptions(updatedOptions) 
-
-      const price: { name: string; data: number[] } = { // Type for serie
-        name: 'Actual Price',
-        data: [Math.floor(house.price)], // Type checking for price and predictedPrice
-      };
-      const predictedPrice = {
-        name: 'Predicted price',
-        data: [Math.floor(house.predictedPrice)]
+      
+      actualPrices.push(house.price)
+      predictedPrices.push((Math.floor(house.predictedPrice)))
       }
-      newSeries.push(price);
-      newSeries.push(predictedPrice);
+      
+
+      
+
+      
+      
 
     });
     
-
-
-    setSeries(newSeries);
+ 
+  
+    setSeries([{name: 'actual price', data: actualPrices}, {name: 'predicted price', data: predictedPrices}]);
     
   }, [houses]);
 
   return (
     <div>
       <div id="chart">
-        <ReactApexChart options={options} series={series} type="bar" height={350} />
+        <ReactApexChart options={options} series={series} type="bar" height={320} />
       </div>
       <div id="html-dist"></div>
     </div>
