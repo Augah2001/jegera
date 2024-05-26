@@ -1,9 +1,49 @@
-import React from 'react'
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import prisma from "../../../prisma/client";
 
-const route = () => {
-  return (
-    <div>route</div>
-  )
+import validate from "../validate";
+
+const authSchema = z.object({
+  authorizationKey: z.string(),
+  fullName: z.string()
+
+});
+
+export async function GET(request: NextRequest) {
+  const auths = await prisma.auth.findMany({
+  });
+  return NextResponse.json(auths);
 }
 
-export default route
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    console.log(body)
+    const validateBody = validate(authSchema, body);
+
+    if (!validateBody.success) {
+      return NextResponse.json(
+        { error: validateBody.error.errors },
+        { status: 400 }
+      );
+    }
+
+    const auth = await prisma.auth.create({
+      data: body
+    })
+
+
+    
+ 
+
+
+    return NextResponse.json(auth); // Replace with desired response data
+  } catch (error) {
+    console.error("Error in POST /api/auth:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

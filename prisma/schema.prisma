@@ -19,7 +19,7 @@ model User {
   firstName            String
   lastName             String
   password             String
-  authoizationKey      String?       @unique
+  authorizationKey     String?       @unique
   accountType          type
   isOnline             Boolean       @default(false)
   sentTransactions     Transaction[] @relation("TransactionToSender")
@@ -30,18 +30,30 @@ model User {
   isAuthorizer         Boolean       @default(false)
   gender               genderType
   logins               Login[]
+  houses               House[]
+  backgroundImage      String        @default("images/profile_pictures/user_placeholder_xsx9ws") 
+  
 }
 
 model Chat {
-  ChatId   String    @id
+  id   String    @id
   users    User[]
   messages Message[]
+  updated               DateTime? @updatedAt()
+}
+
+model Auth {
+  authorizationKey String @unique
+  fullName   String
+}
+model HouseAuth {
+  authorizationKey String @unique
+  fullName   String
 }
 
 model Location {
   id          Int     @id @default(autoincrement())
   name        String  @unique
-  minutes     Int
   coordinates Float[] @unique
   houses      House[]
 }
@@ -56,7 +68,7 @@ model Message {
   body       String
   time       DateTime @default(now())
   sentByMe   Boolean
-  chat       Chat     @relation(fields: [chatId], references: [ChatId])
+  chat       Chat     @relation(fields: [chatId], references: [id])
 }
 
 model Transaction {
@@ -67,6 +79,8 @@ model Transaction {
   receiverId Int
   amount     Int
   time       DateTime @default(now())
+  house  House @relation(fields: [houseId], references: [id])
+  houseId Int
 }
 
 enum status {
@@ -77,6 +91,7 @@ enum status {
 enum type {
   tenant
   landlord
+  authorizer
 }
 
 enum genderType {
@@ -91,34 +106,39 @@ model Login {
 }
 
 model House {
-  id              Int      @id @default(autoincrement())
-  location        Location @relation(fields: [locationId], references: [id])
+  id              Int       @id @default(autoincrement())
+  location        Location  @relation(fields: [locationId], references: [id])
   locationId      Int
   houseNumber     Int
-  street          String
-  description     String
+  street          String?
+  description     String?
   price           Float
   minutes         Int
   capacity        Int
-  occupied        Boolean
+  occupied        Int       @default(0)
   perRoom         Int
   gender          Gender
   images          String[]
-  backGroundImage String
-  curfew          Int
-  ownerId         Int
+  backgroundImage String?
 
-  services Service[]
+  owner           User      @relation(fields: [ownerId], references: [id])
+  ownerId         Int
+  coordinates     Float[]
+  services        Service[]
+  authorizationKey  String   @default("augah")
+  predictedPrice Float? 
+  transactions Transaction[]
 }
 
 model Service {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
+
+  name   String  @unique @id
   houses House[]
+
 }
 
 enum Gender {
-  male
-  female
+  girls
+  boys
   both
 }

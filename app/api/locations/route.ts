@@ -4,7 +4,7 @@ import prisma from '../../../prisma/client'
 import { Location } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
-  const locations = await prisma.location.findMany();
+  const locations = await prisma.location.findMany({orderBy: { id: 'asc' }});
   return NextResponse.json(locations);
 }
 
@@ -20,6 +20,8 @@ export async function POST(request: NextRequest) {
   const existingLocation = await prisma.location.findUnique({
     where: { name: body.name },
   });
+
+  console.log(existingLocation)
 
   if (existingLocation) {
     return NextResponse.json({ error: "Location with this name already exists" }, { status: 400 });

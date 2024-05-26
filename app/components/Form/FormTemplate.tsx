@@ -1,47 +1,72 @@
-import React, { ReactNode } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import Button1 from "./Button";
 import Input1 from "./Input";
 import { SubmitHandler, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Select1 from "./Select";
+import Checkbox from "./Checkbox";
+import FileUpload from "./FileUpload";
 
-interface InputProps {
-  id: string;
-  register: UseFormRegister<{ [key: string]: string }>;
-  type: string;
-  label: string;
-}
 
-type RenderInput = (
+export type RenderInput = (
   id: string,
 
   type: string,
   label: string
 ) => ReactNode;
 
-type RenderButton = (label: string) => ReactNode;
+export type RenderCheckbox = (
+  id: string,
+
+
+  label: string
+) => ReactNode;
+
+export type RenderButton = (label: string) => ReactNode;
 
 interface FormProps<T> {
-  initialValues: T; // Specify the type of initial values for the form
   onSubmit: (data: SubmitHandler<any>) => void; // Enforce the expected data type for the submit function
   children: (
     renderInput: RenderInput,
     renderSelect: RenderSelect,
-    renderButton: RenderButton
+    renderCheckbox: RenderCheckbox,
+    renderUpload: RenderUpload,
+    renderButton: RenderButton,
+    handleInputChange?: (event: {
+      target: {
+        value: any;
+      };
+    }) => void
   ) => ReactNode;
   FormSchema: z.ZodObject<any>;
 }
 
-type RenderSelect = (
+export type RenderSelect = (
   id: string,
   label: string,
-  options: Array<{ value: string; label: string }>
+  options: Array<{ id: string | number; name: string }>,
+  handleInputChange?: (event: {
+    target: {
+      value: any;
+    };
+  }) => void
+) => ReactNode;
+
+export type RenderUpload = (
+  label: string,
+  publicId: string,
+  setPublicId: React.Dispatch<React.SetStateAction<string>>,
+  onUpload: (publicId: string)=> any,
+  key?: any,
+  imageSupplied?: boolean,
+  setImageSupplied?: React.Dispatch<React.SetStateAction<boolean>>,
+  
 ) => ReactNode;
 
 const Form = ({
   children,
-  initialValues,
+
   onSubmit,
   FormSchema,
 }: FormProps<any>) => {
@@ -50,11 +75,11 @@ const Form = ({
     handleSubmit,
     formState: { errors },
   } = useForm<any>({
-    defaultValues: initialValues,
     resolver: zodResolver(FormSchema),
   });
+
   const renderButton: RenderButton = (label) => {
-    return <Button1 label="sign in" />;
+    return <Button1 label={label} />;
   };
   const renderInput: RenderInput = (id, type, label) => {
     return (
@@ -68,15 +93,71 @@ const Form = ({
     );
   };
 
-  const renderSelect: RenderSelect = (id, label, options) => {
+  const renderSelect: RenderSelect = (
+    id,
+    label,
+    options,
+    handleInputChange
+  ) => {
     return (
-      <Select1 id={id} label={label} options={options} register={register} />
+      <Select1
+        id={id}
+        label={label}
+        options={options}
+        register={register}
+        handleInputChange={handleInputChange}
+        errors={errors}
+      />
+    );
+  };
+
+  const renderCheckbox: RenderCheckbox = (
+    id: string,
+    label: string
+  ) => {
+    return (
+      <Checkbox
+        id={id}
+        register={register}
+        errors={errors}
+        label={label}
+        
+      />
+    );
+  };
+
+  const renderUpload: RenderUpload = (
+    label,
+    publicId,
+    setPublicId,
+    onUpload,
+    key,
+    imageSupplied, setImageSupplied, 
+  ) => {
+    return (
+      <FileUpload
+        label={label}
+        publicId={publicId}
+        setPublicId={setPublicId}
+        onUpload={onUpload}
+        key={key}
+        imageSupplied={imageSupplied}
+        setImageSupplied={setImageSupplied}
+
+        
+      />
     );
   };
 
   return (
     <form className="rounded-xl" onSubmit={handleSubmit(onSubmit)}>
-      {children(renderInput, renderSelect, renderButton)}
+      {children(
+        renderInput,
+        renderSelect,
+        renderCheckbox,
+        renderUpload,
+        renderButton
+      )}
     </form>
   );
 };

@@ -37,30 +37,30 @@ export async function POST(request: NextRequest) {
 // DELETE requests might not be suitable for a one-to-many relationship between Service and House.
 // Consider implementing a DELETE endpoint for houses associated with a service if needed.
 
-export async function PUT(request: NextRequest) {
-  const url = request.nextUrl;
-  const id = parseInt(url.searchParams.get('id') || '', 10); // Extract ID from URL
-  const body = await request.json();
+// export async function PUT(request: NextRequest) {
+//   const url = request.nextUrl;
+//   const id = parseInt(url.searchParams.get('id') || '', 10); // Extract ID from URL
+//   const body = await request.json();
 
-  if (isNaN(id)) {
-    return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
-  }
+//   if (isNaN(id)) {
+//     return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
+//   }
 
-  const validateBody = validate(schemaService,body); // Perform validation (optional, adjust as needed)
+//   const validateBody = validate(schemaService,body); // Perform validation (optional, adjust as needed)
 
-  if (!validateBody.success) {
-    return NextResponse.json({ error: validateBody.error.errors }, { status: 400 });
-  }
+//   if (!validateBody.success) {
+//     return NextResponse.json({ error: validateBody.error.errors }, { status: 400 });
+//   }
 
-  const updatedService = await prisma.service.update({
-    where: { id },
-    data: body,
-     // Connect and disconnect houses
-  });
+//   const updatedService = await prisma.service.update({
+//     where: {name },
+//     data: body,
+//      // Connect and disconnect houses
+//   });
 
-  if (!updatedService) {
-    return NextResponse.json({ error: "Service not found" }, { status: 404 });
-  }
+//   if (!updatedService) {
+//     return NextResponse.json({ error: "Service not found" }, { status: 404 });
+//   }
 
-  return NextResponse.json(updatedService);
-}
+//   return NextResponse.json(updatedService);
+// }

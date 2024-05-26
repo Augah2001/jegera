@@ -4,6 +4,9 @@ import { Button } from "@radix-ui/themes";
 import React, { useContext, useState } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { SearchContext } from "../contexts/SearchContext";
+import { InitialHousesContext } from "../contexts/InitialDataContext";
+import { HousesContext } from "../contexts/HouseContext";
+import { initialPriceRange, priceOptions } from "../configs/services";
 
 const SearchComponent = () => {
   const {isDark} = useContext(ThemeContext)
@@ -14,7 +17,53 @@ const SearchComponent = () => {
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
 
-  const  {searchValue, setSearchValue} = useContext(SearchContext)
+  const  {searchValue, setSearchValue, selectValue, setSelectValue} = useContext(SearchContext)
+  const  { initialHouses} = useContext(InitialHousesContext)
+  const  { setHouses} = useContext(HousesContext)
+  const [selectedPriceRange, setSelectedPriceRange] =
+    useState<string>(initialPriceRange);
+
+  const handlePriceChange = (value: string) => {
+    setSelectValue(value)
+    const selectedValue = value
+    setSelectedPriceRange(selectedValue);
+
+    if (selectedValue === "any") {
+      setHouses(initialHouses);
+    } else {
+      const [minValue, maxValue] = selectedValue.split("-").map(Number);
+
+      const newHouses = initialHouses?.filter(
+        (house) =>
+          house.price >= minValue && house.price <= maxValue
+      );
+      setHouses(newHouses);
+    }
+  }; 
+
+  const handleSearchInput = (query: string) => {
+    
+    setSearchValue(query)
+    if (!query) return
+
+    const data = initialHouses?.filter(house=> {
+      const regex = new RegExp((Number.isInteger(query)?parseInt(query): query) as string, "i");
+      for (let key in house) {
+        if (house[key] instanceof Object) {
+          for (let key2 in house[key] ) {
+            if (regex.test(house[key][key2])) { return true}
+          }
+        }
+        if (regex.test(house[key])) {
+          return true;
+        }
+      }
+
+      return false;
+    })
+
+    query?.length == 0? setHouses(initialHouses): setHouses(data)
+  }
 
   
 
@@ -50,7 +99,7 @@ const SearchComponent = () => {
         <input
           placeholder="search keyword"
           value={searchValue}
-          onChange={ (e)=> {setSearchValue(e.currentTarget.value)}}
+          onChange={ (e)=> handleSearchInput(e.currentTarget.value)}
           type="text"
           className={`w-[100%] text-base-content ps-10 me-2 bg-transparent  ${
             isHovered && !isClicked1 && "bg-base-300"
@@ -94,6 +143,8 @@ const SearchComponent = () => {
         onBlur={() => console.log("augah")}
       >
         <select
+          value={selectValue}
+          onChange={(e) => handlePriceChange(e.currentTarget.value)}
           name=""
           id=""
           className={`w-[100%] text-base-content px-9 bg-transparent min-h-[100%] ${
@@ -115,9 +166,14 @@ const SearchComponent = () => {
             setIsHovered1(false);
           }}
         >
-          <option disabled defaultValue={'Price'} value="">
-            Price
+         
+          {priceOptions.map((o , index)=>
+            <option key={index}  value= {o.value}>
+            {o.label}
           </option>
+           )}
+
+        
         </select>
       </div>
       <div className="w-[1.5px] h-[40%] bg-purple-700  "></div>

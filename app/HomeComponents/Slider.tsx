@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 // Here we have used react-icons package for the icons
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 // And react-slick as our Carousel Lib
@@ -10,40 +10,49 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ThemeContext } from "../contexts/ThemeContext";
 import GradientDiv from "../components/GradientDiv";
+import useLocations from "../hooks/useLocations";
+import { useResponsive } from "../hooks/useResponsive";
+// import { Location } from "@prisma/client";
 
 // Settings for the slider
-const settings = {
-  dots: false,
-  infinite: false,
-  speed: 500,
-  slidesToScroll: 6,
-  slidesToShow: 6,
-};
 
-export default function CaptionCarousel() {
+
+interface Location {
+  id: number;
+  name: string;
+  coordinates: number[]
+  minutes: number
+}
+
+
+
+
+export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
+
+  const {isSmallDevice,isMediumDevice,isLargeDevice} = useResponsive()
+
+  const settings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToScroll: isSmallDevice? hasScrolled? 2:2: hasScrolled? 3: 6 ,
+    slidesToShow: isSmallDevice? hasScrolled? 3:3: hasScrolled? 3: 6 ,
+  };
   const { isDark } = useContext(ThemeContext);
 
   const [isClicked, setIsClicked] = useState(0);
   const [isHovered, setIsHovered] = useState(0);
   const [slider, setSlider] = React.useState<Slider | null>(null);
 
-  const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const {data: locations, error, isLoading} = useLocations()
+  
 
-  const locations = [
-    "mount",
-    "tynywald",
-    "epping",
-    "heights",
-    "willovale",
-    "norton",
-    "masasa",
-    "chitown",
-    "hatfield",
-  ];
+  
 
   return (
     <div className="shadow-2xl">
-      <Box
+     
+      {<Box
         position={"relative"}
         height={"120x"}
         width={"full"}
@@ -52,6 +61,7 @@ export default function CaptionCarousel() {
         {/* CSS files for react-slick */}
 
         {/* Left Icon */}
+        {isLoading && <div className="flex justify-center items-center"> <Spinner className="my-auto "/></div>}
         <div
           className="
           text-slate-400 hover:text-slate-600
@@ -75,30 +85,30 @@ export default function CaptionCarousel() {
         </div>
         {/* Slider */}
         <Slider
-          className={`  flex items-center px-3`}
+          className={`  flex items-center`}
           {...settings}
           ref={(slider) => setSlider(slider)}
         >
-          {locations.map((card, index) => (
+          {locations.map((location) => (
             <div
               className={` ${
-                (isClicked !== index || isClicked === index) && "bg-base-100"
+                (isClicked !== location.id || isClicked === location.id) && "bg-base-100"
               } h-[80px] flex items-center  relative bg-center bg-repeat bg-cover  `}
-              key={index}
-              onClick={() => setIsClicked(index)}
-              onMouseEnter={() => setIsHovered(index)}
+              key={location.id}
+              onClick={() => setIsClicked(location.id)}
+              onMouseEnter={() => setIsHovered(location.id)}
               onMouseLeave={() => setIsHovered(100000000000000)}
             >
               {/* This is the block you need to change, to customize the caption */}
               <div
                 className={`h-[65px] px-3 mt-[8px] flex items-center container ${
-                  isClicked == index && " rounded-[500px] shadow-md"
+                  isClicked == location.id && " rounded-[500px] shadow-md"
                 }
-                  ${isDark && isClicked == index && "bg-[#2a1d57]"}
-                  ${!isDark && isClicked == index && "bg-[#3c3193]"}
+                  ${isDark && isClicked == location.id && "bg-[#2a1d57]"}
+                  ${!isDark && isClicked == location.id && "bg-[#3c3193]"}
                  ${
-                   isHovered == index &&
-                   isClicked !== index &&
+                   isHovered == location.id &&
+                   isClicked !== location.id &&
                    "bg-base-200 rounded-[500px]"
                  } cursor-pointer
                 `}
@@ -109,17 +119,17 @@ export default function CaptionCarousel() {
                       className={` *
                             transition duration-900 ease-in-out                            
                             ${
-                              isClicked == index
+                              isClicked == location.id
                                 ? "bg-[#00a96e]"
                                 : " bg-purple-700"
                             } h-2 w-2 rounded-[40px]
                             ${
-                              isHovered == index && isClicked === index
+                              isHovered == location.id && isClicked === location.id
                                 ? " w-5"
                                 : "  bg-[#00a96e]"
                             }
                              ${
-                               isClicked !== index && isHovered === index
+                               isClicked !== location.id && isHovered === location.id
                                  ? "w-5"
                                  : ""
                              } 
@@ -131,11 +141,11 @@ export default function CaptionCarousel() {
                     {" "}
                     <h1
                       className={` ${isDark && "text-gray-100"}
-                      ${isClicked !== index && !isDark && "text-gray-700"}
-                      ${isClicked === index && !isDark && "text-gray-100"}
-                      ${isClicked === index && "text-xl "} `}
+                      ${isClicked !== location.id && !isDark && "text-gray-700"}
+                      ${isClicked === location.id && !isDark && "text-gray-100"}
+                      ${isClicked === location.id && "text-xl "} `}
                     >
-                      {card}
+                      {location.name}
                     </h1>
                   </div>
                 </div>
@@ -143,7 +153,7 @@ export default function CaptionCarousel() {
             </div>
           ))}
         </Slider>
-      </Box>
+      </Box>}
       {isDark ? (
         <div className="shadow-xl ">
           <GradientDiv />
