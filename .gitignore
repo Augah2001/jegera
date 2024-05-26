@@ -9,7 +9,7 @@
 # testing
 /coverage
 
-/app/mapbox-gl-directions
+
 /app/mapbox-gl-directions-4.3.1
 
 # next.js
