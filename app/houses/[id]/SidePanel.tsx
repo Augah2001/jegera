@@ -31,30 +31,18 @@ const SidePanel = ({ house }: Props) => {
           {house?.services?.map((amenity, index) => (
             <Main key={index} text={amenity.name} />
           ))}
-          <Main text= {house?.gender as string}/>
-          <Main text= {`${house?.perRoom} per room` as string}/>
-          <Main text= {`capacity: ${house?.capacity} ` as string}/>
-          <Main text= {`occupied: ${house?.occupied}` as string}/>
-          <Main text= {`${house?.minutes} minutes` as string}/>
-          <Main text= {`${house?.location.name}` as string}/>
-          <Main text= {`${house?.street}` as string}/>
+          {house?.gender &&<Main text= {house?.gender as string}/>}
+          {house?.perRoom &&<Main text= {`${house?.perRoom} per room` as string}/>}
+          {house?.capacity && <Main text= {`capacity: ${house?.capacity} ` as string}/>}
+          {house?.occupied &&<Main text= {`occupied: ${house?.occupied}` as string}/>}
+          {house?.minutes && <Main text= {`${house?.minutes} minutes` as string}/>}
+          {house?.location.name && <Main text= {`${house?.location.name}` as string}/>}
+          {house?.street && <Main text= {`${house?.street}` as string}/>}
         </div>
         <div className="flex">
           <div className="me-3">
-            <Button
-              className="text-base-content  bg-purple-700 text-2xl"
-              color={"white"}
-              bg={"purple.700"}
-              minH={12}
-              minW={"100px"}
-              size={'xl'}
-              _hover={{opacity: 0.7}}
-              _active={{opacity: 1}}
-              onClick={onOpen}
-             
-            >
-              claim
-            </Button>
+            
+            
             <h1 className="mt-14 text-2xl mb-3  text-pink-700">more details</h1>
 
             <div className="flex">

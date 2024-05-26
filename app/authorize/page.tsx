@@ -10,6 +10,9 @@ import AuthTable from "./AuthTable";
 import useAuth from "../hooks/useAuth";
 import AuthOwnerPage from "./AuthOwnerPage";
 import data from "../mapbox-gl-directions/src/reducers";
+import { useRouter } from "next/navigation";
+import { UserContext } from "../contexts/UserContext";
+import P from "../fobbiden/page";
 
 export interface Auth {
   fullName: string;
@@ -23,11 +26,18 @@ const fullNameSchema = z.object({
 
 
 const Page = () => {
-
   const [route, setRoute] = useState('/auth')
   const [deleteFlag, setDeleteFlag] = useState(0)
+
+  const router = useRouter()
+  const {user} = useContext(UserContext)
+
+  if (!user || user?.accountType !== 'authorizer') {
+    
+    return <P/>
+  }
+  
  
-  const {onSubmit, handleSubmit, errors, register, token, data} = useAuth<Auth>(fullNameSchema, route,deleteFlag )
   
 
   return (

@@ -19,7 +19,8 @@ const ChatInterace = () => {
     
   // }, [messages])
 
-  console.log('wadii')
+
+  
 
   
   return (

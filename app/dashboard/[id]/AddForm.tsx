@@ -34,6 +34,7 @@ import { HouseErrorInputContext } from "@/app/contexts/HouseInputErrorContext";
 import { UserContext } from "@/app/contexts/UserContext";
 import { House } from "@/app/hooks/useHouses";
 import { HouseContext } from "@/app/contexts/SelectedHouseContext";
+import { useResponsive } from "@/app/hooks/useResponsive";
 
 export const houseSchema = z.object({
   houseNumber: z
@@ -73,9 +74,12 @@ interface Props {
   setHouseData: any;
 }
 
+
+
 const AddForm = ({ nextStep, setHouseData }: Props) => {
   const { houseCoordinates } = useContext(HouseCoordinatesContext);
 
+  const {isSmallDevice} = useResponsive()
   const toast = useToast()
   const { location, setLocation } = useSelectLocation();
   const { error, setError } = useContext(SelectErrorContext);
@@ -188,7 +192,7 @@ const AddForm = ({ nextStep, setHouseData }: Props) => {
               }
             </div>
 
-            <div className=" mx-auto  grid grid-cols-3 gap-4 ">
+            <div className={`   grid ${isSmallDevice? 'grid-cols-1': "mx-auto grid-cols-3" } gap-4 `}>
               <LocationSelect
                 location={location}
                 id="location"

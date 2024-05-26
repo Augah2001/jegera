@@ -34,7 +34,7 @@ const useFetch =<T>(url:string,deps?:string[]) => {
   
 
 
-  return {data, error, isLoading}
+  return {data, error, isLoading, setData}
     
 }
 

@@ -1,6 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import validate, { schemaHouse } from "../../validate";
+import prisma from "../../../../prisma/client";
 
 
 export async function GET(request: NextRequest, {params: {id}}:{params: {id: string}}) {

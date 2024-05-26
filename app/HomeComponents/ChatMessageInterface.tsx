@@ -25,7 +25,7 @@ type Message = {
   sender: number | undefined;
   receiver: number | undefined;
   body: string;
-
+  senderId?: number,
   sentByMe: boolean;
 };
 

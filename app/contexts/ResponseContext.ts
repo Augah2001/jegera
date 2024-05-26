@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@uidotdev/usehooks";
+'use client'
 import { createContext } from "react";
 
 interface ResponsiveContext {

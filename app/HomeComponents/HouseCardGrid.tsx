@@ -8,7 +8,7 @@ import { useResponsive } from "../hooks/useResponsive";
 
 const HouseCardGrid = ({houses}: {houses: House[] | undefined}) => {
   
-  console.log(houses)
+ 
 
   const {isSmallDevice} =useResponsive()
   return (

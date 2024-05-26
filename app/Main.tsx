@@ -33,17 +33,18 @@ import useHouses, { House } from "./hooks/useHouses";
 import { HouseContext } from "./contexts/SelectedHouseContext";
 import { ShowChatsContext } from "./contexts/ShowChatsContext";
 import { ChatContext } from "./contexts/SelectedChatContext";
-import { Chat } from "./HomeComponents/Chats";
-import { Message } from "./HomeComponents/Chat";
+import { Chat as Ch } from "./HomeComponents/Chats";
+import Chat, { Message } from "./HomeComponents/Chat";
 import { MessagesContext } from "./contexts/MessagesContext";
 import { ChatsContext } from "./contexts/ChatsContext";
 import { MessageContext } from "./contexts/MessageContext";
 import { InitialHousesContext } from "./contexts/InitialDataContext";
 import apiClient from "./configs/apiClient";
-import { useMediaQuery } from "@uidotdev/usehooks";
+import { useMediaQuery } from 'react-responsive'
 import { ResponsiveContext } from "./contexts/ResponseContext";
 import { Theme } from "@radix-ui/themes";
 import PaynowReactWrapper from "paynow-react";
+import ChatInterace from "./HomeComponents/ChatInterace";
 
 interface Props {
   childrenNode: ReactNode;
@@ -53,7 +54,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const Main = ({ childrenNode }: Props) => {
   const router = useRouter();
-  const { data } = useHouses();
+  const { data, setData } = useHouses();
   const [houseCoordinates, setHouseCoordinates] = useState<number[]>([]);
   const [isDark, setIsDark] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -75,17 +76,19 @@ const Main = ({ childrenNode }: Props) => {
   const [chatUser, setChatUser] = useState<User>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<Message>({} as Message);
-  const [chats, setChats] = useState<Chat[]>();
+  const [chats, setChats] = useState<Ch[]>();
 
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
+  { query: '(min-width: 1824px)' }
+
+  const isSmallDevice = useMediaQuery({query: "only screen and (max-width : 768px)"});
   const isMediumDevice = useMediaQuery(
-    "only screen and (min-width : 769px) and (max-width : 992px)"
+    {query:"only screen and (min-width : 769px) and (max-width : 992px)"}
   );
   const isLargeDevice = useMediaQuery(
-    "only screen and (min-width : 993px) and (max-width : 1200px)"
+    {query: "only screen and (min-width : 993px) and (max-width : 1200px)"}
   );
   const isExtraLargeDevice = useMediaQuery(
-    "only screen and (min-width : 1201px)"
+    {query: "only screen and (min-width : 1201px)"}
   );
 
   const paynow_config = {
@@ -234,6 +237,17 @@ const Main = ({ childrenNode }: Props) => {
                                                           hasScrolled
                                                         }
                                                       />
+
+                                                      {showChats && (
+                                                        <div className="ms-[50%]">
+                                                          <ChatInterace />
+                                                        </div>
+                                                      )}
+                                                      {showMessage && (
+                                                        <div className="ms-[70%] flex mt-10 fixed z-50 bg-base-300 rounded-2xl shadow-lg">
+                                                          <Chat />
+                                                        </div>
+                                                      )}
                                                       {childrenNode}
                                                     </PaynowReactWrapper>
                                                   </ResponsiveContext.Provider>

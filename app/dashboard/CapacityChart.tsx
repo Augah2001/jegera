@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts"; // Assuming you have ReactApexChart installed
 import { House } from "../hooks/useHouses";
 
-const CapacityChart = ({ houses }: { houses: House[] }) => {
+const CapacityChart = ({ houses }: { houses: House[] |undefined; }) => {
   const series = [
     {
       name: "PRODUCT A",
@@ -71,7 +71,7 @@ const CapacityChart = ({ houses }: { houses: House[] }) => {
     },
   };
 
-  const [chartOptions, setChartOptions] = useState(options);
+  const [chartOptions, setChartOptions] = useState<any>(options);
   const [chartSeries, setChartSeries] = useState([
     {
       name: "PRODUCT A",

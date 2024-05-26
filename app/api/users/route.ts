@@ -47,6 +47,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const authKey = await prisma.user.findUnique({
+    where: {authorizationKey: body.authorizationKey}
+  })
+
+  if (authKey) return NextResponse.json({error: 'authorization key already taken'}, {status: 400})
+
   const existingUser = await prisma.user.findUnique<User>({
     where: { email: body.email },
   });

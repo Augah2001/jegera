@@ -3,14 +3,14 @@ import ReactApexChart from "react-apexcharts"; // Assuming you have ReactApexCha
 import { House } from "../hooks/useHouses";
 
 const TenantChart
- = ({ houses }: {houses: House[]}) => {
+ = ({ houses }: {houses: House[] |undefined;}) => {
  
     const series =  [{
         name: "tenant count",
         data: [2, 3, 10, ]
       }
     ]
-   const  options = {
+   const  options: any = {
     chart: {
       height: 350,
       type: 'line',

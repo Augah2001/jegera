@@ -21,8 +21,12 @@ import { userAgent } from "next/server";
 import { UserContext } from "@/app/contexts/UserContext";
 import ChartsInterface from "@/app/HomeComponents/chartsInterface";
 import CapacityChart from "../CapacityChart";
+import { useResponsive } from "@/app/hooks/useResponsive";
+import { useRouter } from "next/navigation";
+import P from "@/app/fobbiden/page";
 
 const Dashboard = () => {
+  
   const { showMap, setShowMap } = useContext(ShowMapContext);
   const { setHasScrolled, hasScrolled } = useMainView();
   const { onOpen, isOpen } = useContext(FormModalContext);
@@ -34,10 +38,18 @@ const Dashboard = () => {
   const filteredHouses = houses?.filter(house => house.ownerId === user?.id)
   console.log(filteredHouses)
 
+  const {isSmallDevice} = useResponsive()
+
+  const router = useRouter()
+  if (!user || user.accountType !== 'landlord') {
+    router.push('/fobbiden')
+    return <P/>
+  }
+
   return (
     <div className=" py-8">
 
-      {showCharts && <ChartsInterface houses={filteredHouses} setShowCharts = {setShowCharts}/> }
+      {!isSmallDevice && showCharts && <ChartsInterface houses={filteredHouses} setShowCharts = {setShowCharts}/> }
      
       {
       }
@@ -51,15 +63,22 @@ const Dashboard = () => {
         <p className="font-medium mb-10  mx-6 text-slate-400 text-4xl">
           Dashboard
         </p>
-        <Link href= "/dashboard/1/add">
-          <BiPlusCircle
-           className="font-normal
-           active:opacity-30
-           hover:text-purple-600 text-4xl me-6
-           text-slate-400"
-           
-           />
-        </Link>
+        <div className="flex">
+          <h1 className="text-blue-500 text-2xl font-medium me-3 underline 
+          hover:text-blue-700 active:opacity-65
+          cursor-pointer"
+          onClick={()=> setShowCharts(!showCharts)}
+          >Analytics</h1>
+          <Link href= {`/dashboard/${user?.id}/add`}>
+            <BiPlusCircle
+             className="font-normal
+             active:opacity-30
+             hover:text-purple-600 text-4xl me-6
+             text-slate-400"
+          
+             />
+          </Link>
+        </div>
       </div>
 
       <div

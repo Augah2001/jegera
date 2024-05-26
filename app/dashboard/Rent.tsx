@@ -4,7 +4,7 @@ import { House } from "../hooks/useHouses";
 import { title } from "process";
 
 const RentCharts
- = ({ houses }: {houses: House[]}) => {
+ = ({ houses }: {houses: House[] |undefined}) => {
  
     const series =  [{
         name: "Income",
@@ -51,7 +51,7 @@ const RentCharts
   
   
 
-  const [chartOptions, setChartOptions] = useState(options);
+  const [chartOptions, setChartOptions] = useState<any>(options);
   const [chartSeries, setChartSeries] = useState(series);
 
 //   useEffect(() => {

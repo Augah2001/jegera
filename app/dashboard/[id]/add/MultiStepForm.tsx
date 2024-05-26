@@ -7,6 +7,7 @@ import { Button } from "@chakra-ui/react";
 import { steps } from "framer-motion";
 import { title } from "process";
 import PriceForm from "../PriceForm";
+import { useResponsive } from "@/app/hooks/useResponsive";
 
 
 interface Props {
@@ -73,11 +74,12 @@ const MultiStepForm = ({houseId}: Props) => {
     },
     {title: "price", component: <PriceForm houseId= {houseId} prevStep={prevStep} HouseData={houseData} setHouseData={setHouseData}/>}
   ];
-
+  const {isSmallDevice} = useResponsive()
+  const {isExtraLargeDevice, isLargeDevice} = useResponsive()
   return (
     <div className="w-screen flex  my-6 mb-7">
-      <div className="w-[60%] shadow-xl mx-auto min-h-[100vh] ">
-        <StepperComponent steps={steps} currentStep={currentStep} />
+      <div className={`${!isSmallDevice&& 'w-[60%]' } shadow-xl mx-auto min-h-[100vh] `}>
+        {(isExtraLargeDevice || isLargeDevice) && <StepperComponent steps={steps} currentStep={currentStep} />}
 
         {renderStepContent()}
         {/* <ImagesForm

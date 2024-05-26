@@ -16,13 +16,16 @@ import { GetCoordinatesContext } from "@/app/contexts/GetCoordinatesContext";
 import { HouseCoordinatesContext } from "@/app/contexts/HouseCoordinatesContext";
 import PriceForm from "../PriceForm";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { UserContext } from "@/app/contexts/UserContext";
+import P from "@/app/fobbiden/page";
 
 
 
 const Page = () => {
   const [_, setHasScrolled] = useState(false);
   const {onClose} = useContext(FormModalContext)
-
+  
   const { mapLocation, setMapLocation } = useContext(mapLocationContext);
   const {getCoordinates } = useContext(GetCoordinatesContext);
 
@@ -41,6 +44,12 @@ const Page = () => {
   }
 
   const [error, setError] = useState('')
+  const {user} = useContext(UserContext)
+  const router = useRouter()
+  if (!user || user.accountType !== 'landlord') {
+    router.push('/fobbiden')
+    return <P/>
+  }
   
 
   return (

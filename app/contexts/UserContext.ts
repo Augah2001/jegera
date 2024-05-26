@@ -6,7 +6,7 @@ export type  User = {
   email: string;
   lastName: string;
   firstName: string;
-  accountType: "tenant" | "landlord";
+  accountType: "tenant" | "landlord" | "authorizer";
   gender: string;
   isOnline : boolean          
   sentTransactions: any[]

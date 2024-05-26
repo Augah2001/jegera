@@ -35,16 +35,7 @@ const Mainview = () => {
   const { data: houses} = useHouses()
   return (
     <div className="">
-      {showChats && (
-        <div className="ms-[50%]">
-          <ChatInterace />
-        </div>
-      )}
-      {showMessage && (
-        <div className="ms-[70%] flex mt-10 fixed z-50 bg-base-300 rounded-2xl shadow-lg">
-          <Chat />
-        </div>
-      )}
+      
       <div className="flex justify-center">
         <button
           className="beeping-button cursor-pointer px-3 text-white font-medium fixed h-14 rounded-3xl z-10 bg-[#2a1d57] text-2xl top-[700px] transform translate(-50%, -50%)"

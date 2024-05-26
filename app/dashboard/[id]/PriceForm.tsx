@@ -14,7 +14,7 @@ import React, {
 import { z } from "zod";
 import { Location } from "@/app/hooks/useLocations";
 import axios from "axios";
-import { House } from "@/app/hooks/useHouses";
+import useHouses, { House } from "@/app/hooks/useHouses";
 import { mappings } from "@/app/configs/location mappings";
 import { UserContext } from "@/app/contexts/UserContext";
 import { useRouter } from "next/navigation";
@@ -45,6 +45,8 @@ const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
 
   const toast = useToast();
   const router = useRouter()
+
+  const {data: houses, setData: setHouses} = useHouses()
 
   console.log(houseId)
 
@@ -111,6 +113,11 @@ const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
       predictedPrice: predictedValue,
     };
     delete newData["location"];
+
+    console.log(`/dashboard/${user?.id}/add`)
+    console.log(path)
+
+ 
    
     path === `/dashboard/${user?.id}/add` &&
       apiClient
@@ -118,7 +125,9 @@ const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
         .then((res) => {
           setHouseData(newData);
           toast({ title: "house added", colorScheme: "green" });
+          
           router.push(`/dashboard/${user?.id}`)
+          setHouses([...houses, res.data])
         })
         .catch((err) => {
           toast({ title: "an error occured", colorScheme: "red" });
@@ -130,6 +139,7 @@ const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
         .then((res) => {
           setHouseData(newData);
           toast({ title: "house edited", colorScheme: "green" });
+          setHouses([...houses, res.data])
           router.push(`/dashboard/${user?.id}`)
         })
         .catch((err) => {

@@ -60,7 +60,7 @@ const SignUpForm = () => {
   const { setUser } = useContext(UserContext);
   const [publicId, setPublicId] = useState("");
   const [imageSupplied, setImageSupplied] = useState(true);
-
+  console.log('augah')
   const [isTenant, setIsTenant] = useState(false);
   const { onClose } = useContext(FormModalContext);
   const handleSignup = async (data: z.infer<typeof FormSchema>) => {
@@ -84,15 +84,10 @@ const SignUpForm = () => {
         const userLogged: User = jwtDecode(response.headers["x-auth-token"]);
         setUser(userLogged);
       } else {
-        console.log(data);
-        const authResponse = await apiClient.post("/auth", {
-          authorizationKey: data.authorizationKey,
-        });
+        const res = await apiClient.get(`/auth/${data?.authorizationKey}`)
 
-        console.log(authResponse);
-        if (!authResponse.data) {
-          throw new Error("Invalid authorization key");
-        }
+        
+        console.log(res.data)
 
         const response = await apiClient.post("/users", data);
         console.log(response.data);

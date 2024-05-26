@@ -91,7 +91,7 @@ enum status {
 enum type {
   tenant
   landlord
-  authorize
+  authorizer
 }
 
 enum genderType {

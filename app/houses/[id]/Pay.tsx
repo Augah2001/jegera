@@ -31,7 +31,7 @@ import { Message } from "@/app/HomeComponents/Chat";
 import { Lexend_Tera } from "next/font/google";
 
 interface Props {
-  house: House;
+  house: House | undefined;
 }
 const socket = io("http://localhost:8000");
 
@@ -74,21 +74,21 @@ const PaynowModal = ({ house }: Props) => {
         }
 
         console.log(token);
-        socket.emit("joinChat", [house.owner, notiAccount ]);
+        socket.emit("joinChat", [house?.owner, notiAccount ]);
         socket.emit("joinChat", [ user,notiAccount]);
         const newMessageToTenant: Message = {
           sender: notiAccount.id,
           receiver: user?.id,
-          body: `you have successfully  secured  a place at ${house.location.name} 
-            house number ${house.houseNumber}.Present your token ${token} to the owner. `,
+          body: `you have successfully  secured  a place at ${house?.location?.name} 
+            house number ${house?.houseNumber}.Present your token ${token} to the owner. `,
           sentByMe: false,
           time: Date.now().toString(),
         };
         const newMessageToOwner: Message = {
           sender: notiAccount.id,
-          receiver: house.owner.id,
+          receiver: house?.owner.id,
           body: `${user?.firstName}' '${user?.lastName} has successfully secured place at your residence ${house.location.name} 
-            house number ${house.houseNumber}. Verify with this token ${token}.`,
+            house number ${house?.houseNumber}. Verify with this token ${token}.`,
           sentByMe: false,
           time: Date.now().toString(),
         };
@@ -151,7 +151,7 @@ const PaynowModal = ({ house }: Props) => {
                         {Intl.NumberFormat("en-us", {
                           style: "currency",
                           currency: "USD",
-                        }).format(item.amount)}
+                        }).format(item?.amount)}
                       </Heading>
                     </Flex>
                   </Box>

@@ -5,8 +5,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 import { use } from 'react';
+import prisma from "../../../prisma/client";
 
-const prisma = new PrismaClient();
+
 
 const loginSchema = z.object({
   email: z.string().email(),

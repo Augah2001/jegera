@@ -3,7 +3,7 @@ import ReactApexChart from "react-apexcharts"; // Assuming you have ReactApexCha
 import { House } from "../hooks/useHouses"; // Assuming House is defined here
 
 interface Props {
-  houses: House[];
+  houses: House[] |undefined;
 }
 
 function PredictChart({ houses }: Props) {
@@ -38,7 +38,7 @@ function PredictChart({ houses }: Props) {
     },
     tooltip: {
       y: {
-        formatter: function (val) {
+        formatter: function (val: any) {
           return val; // Simple value display in tooltip
         },
       },
@@ -47,7 +47,7 @@ function PredictChart({ houses }: Props) {
 
   
   const [series, setSeries] = useState<any[]>([]); // Temporary type for series
-  const [options, setOptions] = useState(initialOptions); // Pre-populate options
+  const [options, setOptions] = useState<any>(initialOptions); // Pre-populate options
  
 
 
