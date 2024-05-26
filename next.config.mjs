@@ -13,6 +13,14 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://jegera.onrender.com/:path*',
+      },
+    ]
+  },
 };
 
 export default nextConfig;
