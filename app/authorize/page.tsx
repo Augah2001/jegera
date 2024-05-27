@@ -28,6 +28,8 @@ const fullNameSchema = z.object({
 const Page = () => {
   const [route, setRoute] = useState('/auth')
   const [deleteFlag, setDeleteFlag] = useState(0)
+  const {onSubmit, handleSubmit, errors, register, token, data} = useAuth<Auth>(fullNameSchema, route,deleteFlag )
+  
 
   const router = useRouter()
   const {user} = useContext(UserContext)
