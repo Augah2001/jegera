@@ -45,6 +45,7 @@ import { ResponsiveContext } from "./contexts/ResponseContext";
 import { Theme } from "@radix-ui/themes";
 import PaynowReactWrapper from "paynow-react";
 import ChatInterace from "./HomeComponents/ChatInterace";
+import { ReloadCont } from "./contexts/ReloadContext";
 
 interface Props {
   childrenNode: ReactNode;
@@ -77,6 +78,7 @@ const Main = ({ childrenNode }: Props) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<Message>({} as Message);
   const [chats, setChats] = useState<Ch[]>();
+  const [reload, setReload] = useState(0)
 
   { query: '(min-width: 1824px)' }
 
@@ -232,23 +234,24 @@ const Main = ({ childrenNode }: Props) => {
                                                     <PaynowReactWrapper
                                                       {...paynow_config}
                                                     >
-                                                      <Navbar
-                                                        hasScrolled={
-                                                          hasScrolled
-                                                        }
-                                                      />
-
-                                                      {showChats && (
-                                                        <div className="ms-[50%]">
-                                                          <ChatInterace />
-                                                        </div>
-                                                      )}
-                                                      {showMessage && (
-                                                        <div className="ms-[70%] flex mt-10 fixed z-50 bg-base-300 rounded-2xl shadow-lg">
-                                                          <Chat />
-                                                        </div>
-                                                      )}
-                                                      {childrenNode}
+                                                      <ReloadCont.Provider value={{reload, setReload}}>
+                                                        <Navbar
+                                                          hasScrolled={
+                                                            hasScrolled
+                                                          }
+                                                        />
+                                                        {showChats && (
+                                                          <div className="ms-[50%]">
+                                                            <ChatInterace />
+                                                          </div>
+                                                        )}
+                                                        {showMessage && (
+                                                          <div className="ms-[70%] flex mt-10 fixed z-50 bg-base-300 rounded-2xl shadow-lg">
+                                                            <Chat />
+                                                          </div>
+                                                        )}
+                                                        {childrenNode}
+                                                      </ReloadCont.Provider>
                                                     </PaynowReactWrapper>
                                                   </ResponsiveContext.Provider>
                                                 </InitialHousesContext.Provider>

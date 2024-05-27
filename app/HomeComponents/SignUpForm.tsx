@@ -28,7 +28,7 @@ const FormSchema: any = z
     lastName: z.string().min(1, "Last Name is required"),
     firstName: z.string().min(1, "First Name is required"),
     confirmPassword: z.string().min(1, "Please confirm password"),
-    accountType: z.enum(["tenant", "landlord", "authorizer"]),
+    accountType: z.enum(["tenant", "landlord"]),
     gender: z.string(),
     authorizationKey: z.string().optional(),
   })
@@ -154,7 +154,6 @@ const SignUpForm = () => {
               [
                 { id: "tenant", name: "tenant" },
                 { id: "landlord", name: "landlord" },
-                { id: "authorizer", name: "authorizer" },
               ],
               handleInputChange
             )}

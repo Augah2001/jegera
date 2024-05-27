@@ -12,6 +12,7 @@ import { ThemeContext } from "../contexts/ThemeContext";
 import GradientDiv from "../components/GradientDiv";
 import useLocations from "../hooks/useLocations";
 import { useResponsive } from "../hooks/useResponsive";
+import useHouses from "../hooks/useHouses";
 // import { Location } from "@prisma/client";
 
 // Settings for the slider
@@ -46,7 +47,11 @@ export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
 
   const {data: locations, error, isLoading} = useLocations()
   
+  const {data: houses, setData: setHouses} = useHouses()
 
+  const handleClick = (e: Location) => {
+
+  } 
   
 
   return (
@@ -91,11 +96,15 @@ export default function CaptionCarousel({hasScrolled}: {hasScrolled: boolean}) {
         >
           {locations.map((location) => (
             <div
+
+           
               className={` ${
                 (isClicked !== location.id || isClicked === location.id) && "bg-base-100"
               } h-[80px] flex items-center  relative bg-center bg-repeat bg-cover  `}
               key={location.id}
-              onClick={() => setIsClicked(location.id)}
+              onClick={() => {
+                handleClick(location)
+                setIsClicked(location?.id)}}
               onMouseEnter={() => setIsHovered(location.id)}
               onMouseLeave={() => setIsHovered(100000000000000)}
             >

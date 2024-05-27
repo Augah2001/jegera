@@ -48,8 +48,8 @@ const Page = () => {
         <Select onChange={(e)=> {
           setRoute(e.currentTarget.value)
           }}>
-          <option value="/auth">House Tokens</option>
-          <option value="houseAuth">User Tokens</option>
+          <option value="/auth">User Tokens</option>
+          <option value="/houseAuth">House Tokens</option>
         </Select>
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>

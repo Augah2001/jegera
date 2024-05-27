@@ -18,6 +18,7 @@ import useHouses, { House } from "@/app/hooks/useHouses";
 import { mappings } from "@/app/configs/location mappings";
 import { UserContext } from "@/app/contexts/UserContext";
 import { useRouter } from "next/navigation";
+import { ReloadCont } from "@/app/contexts/ReloadContext";
 
 const PriceSchema = z.object({
   price: z.number({ invalid_type_error: "Price is required" }).positive(),
@@ -42,7 +43,7 @@ const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
   const [predictedValue, setPredictedValue] = useState<number>();
   const paragraphText =
     "use our intelligent prediction engine to predict a competitive price";
-
+    const {reload, setReload} = useContext(ReloadCont)
   const toast = useToast();
   const router = useRouter()
 
@@ -128,6 +129,7 @@ const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
           
           router.push(`/dashboard/${user?.id}`)
           setHouses([...houses, res.data])
+          setReload(reload +1)
         })
         .catch((err) => {
           toast({ title: "an error occured", colorScheme: "red" });
@@ -141,6 +143,7 @@ const PriceForm = ({ HouseData, houseId, setHouseData, prevStep }: Props) => {
           toast({ title: "house edited", colorScheme: "green" });
           setHouses([...houses, res.data])
           router.push(`/dashboard/${user?.id}`)
+          setReload(reload +1)
         })
         .catch((err) => {
           toast({ title: "an error occured", colorScheme: "red" });

@@ -10,7 +10,7 @@ import { Button } from "@radix-ui/themes";
 import { BiPlusCircle } from "react-icons/bi";
 import Modal from '../../components/Modal'
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { FormModalContext } from "@/app/contexts/FormModalContext";
 import SignUpForm from "@/app/HomeComponents/SignInForm";
@@ -24,8 +24,15 @@ import CapacityChart from "../CapacityChart";
 import { useResponsive } from "@/app/hooks/useResponsive";
 import { useRouter } from "next/navigation";
 import P from "@/app/fobbiden/page";
+import { ReloadCont } from "@/app/contexts/ReloadContext";
 
 const Dashboard = () => {
+
+  const {reload} = useContext(ReloadCont)
+  useEffect(()=> {
+    
+  }, [reload])
+  
   
   const { showMap, setShowMap } = useContext(ShowMapContext);
   const { setHasScrolled, hasScrolled } = useMainView();

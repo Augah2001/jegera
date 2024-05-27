@@ -33,7 +33,7 @@ import { Lexend_Tera } from "next/font/google";
 interface Props {
   house: House | undefined;
 }
-const socket = io("http://localhost:8000");
+const socket = io("http://localhost:11000");
 
 const PaynowModal = ({ house }: Props) => {
   const [notiAccount, setNotiAccount] = useState<User>();
@@ -197,7 +197,7 @@ const PaynowModal = ({ house }: Props) => {
                         type="submit"
                         isLoading={loading}
                       >
-                        Pay RTGS$ {house?.price}
+                        US$ {house?.price}
                       </Button>
                     </FormControl>
                     <FormControl>
@@ -211,17 +211,20 @@ const PaynowModal = ({ house }: Props) => {
             ) : (
               <Box>
                 {error && <Text color="red.500">{error}</Text>}
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  isLoading={loading}
-                  onClick={submitWebPayment}
-                >
-                  Checkout
-                </Button>
-                <Button onClick={onClose} variant="outline">
-                  Cancel
-                </Button>
+                <div className=" flex ">
+                  <Button
+                  marginY={2}p
+                    colorScheme="blue"
+                    mr={3}
+                    isLoading={loading}
+                    onClick={submitWebPayment}
+                  >
+                    Checkout
+                  </Button>
+                  <Button onClick={onClose} variant="outline">
+                    Cancel
+                  </Button>
+                </div>
               </Box>
             )}
           </Box>

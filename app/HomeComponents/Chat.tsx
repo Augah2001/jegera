@@ -2,7 +2,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import io from "socket.io-client";
 
-const socket = io("https://jegera-chat-feature-1.onrender.com");
+const socket = io("http://localhost:11000");
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 

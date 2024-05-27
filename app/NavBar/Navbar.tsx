@@ -51,6 +51,13 @@ const Navbar = ({ hasScrolled }: { hasScrolled: boolean }) => {
     ];
   }
 
+  if (user?.accountType === 'authorizer') {
+    imageMenuItems = [
+      { label: "keys", value: `/authorize` },
+      ...imageMenuItems,
+    ]; 
+  }
+
   return (
     <div className="bg-transparent z-20 ">
       <div className="bg-base-100 min-h-20 flex justify-between navbar fixed top-0 left-0 w-screen z-20">

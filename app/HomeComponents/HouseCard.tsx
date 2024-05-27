@@ -4,7 +4,7 @@ import { Badge } from "@radix-ui/themes";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
 import { House } from "../hooks/useHouses";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
 import { UserContext } from "../contexts/UserContext";
 import { FormModalContext } from "../contexts/FormModalContext";
@@ -30,6 +30,7 @@ const HouseCard = ({ house }: Props) => {
   const { setSelectedHouse } = useContext(HouseContext);
   const { setHouses, houses } = useContext(HousesContext);
 
+  const path =usePathname()
   const toast = useToast()
   const router = useRouter();
   const { isDark } = useContext(ThemeContext);
@@ -108,7 +109,7 @@ const HouseCard = ({ house }: Props) => {
               }}
             />
           </div>
-          <div className="flex justify-end space-x-2">
+          {path !== '/' && <div className="flex justify-end space-x-2">
             <BiEdit className="hover:text-slate-500
              text-slate-300 
              text-2xl cursor-pointer"
@@ -118,7 +119,7 @@ const HouseCard = ({ house }: Props) => {
              text-slate-300 text-2xl cursor-pointer"
              onClick={()=> handleDelete(house.id)}
              />
-          </div>
+          </div>}
         </div>
       </figure>
     </div>
