@@ -19,7 +19,7 @@ model User {
   firstName            String
   lastName             String
   password             String
-  authorizationKey     String?       @unique
+  authorizationKey     String?      @unique
   accountType          type
   isOnline             Boolean       @default(false)
   sentTransactions     Transaction[] @relation("TransactionToSender")

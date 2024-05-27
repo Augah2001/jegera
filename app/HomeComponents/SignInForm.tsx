@@ -16,6 +16,7 @@ import { jwtDecode } from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
 import { UserContext } from "../contexts/UserContext";
 import { FormModalContext } from "../contexts/FormModalContext";
+import apiClient from "../configs/apiClient";
 
 const SignUpForm = () => {
   const toast = useToast({
@@ -39,8 +40,8 @@ const SignUpForm = () => {
   const onSubmit = (data: SubmitHandler<any>) => {
 
     console.log(data)
-    axios
-      .post<z.infer<typeof FormSchema>>("http://localhost:3000/api/login", data)
+    apiClient
+      .post<z.infer<typeof FormSchema>>("/login", data)
       .then((res) => {
         const jwt = res.headers["x-auth-token"];
         localStorage.setItem("token", jwt);
