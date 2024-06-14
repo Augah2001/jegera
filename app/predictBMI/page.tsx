@@ -9,7 +9,6 @@ import { Button } from "@chakra-ui/react";
 import { boolean, z } from "zod";
 import { distance } from "framer-motion";
 import { LocationContext } from "../contexts/locationContext";
-import Slide from "./Slide";
 import axios from "axios";
 import { Location } from "../hooks/useLocations";
 import { mappings } from "../configs/location mappings";
@@ -55,20 +54,9 @@ const Predict = () => {
   
   }, [currentCharParagraph]);
 
-  const functions = ['residential', 'rural health clinic ', 'church steel structure',
-  'warehouse', 'chain of shops', 'mall', 'shop mall',
-  'steel warehouse', 'school admin block', 'hall', 'hostel',
-  'abbatoir', 'blair toilet', 'township shop', 'industrial shop',
-  'residential clusterhouse', 'cardiology  hospital building',
-  'oncology hospital building ', 'university hostel',
-  'rural health clinic']
 
-  const options: {id: string, name: string}[] = []
 
-  functions.forEach(func => {
-    const dict = {id: func, name: func}
-    options.push(dict)
-  })
+ 
   const [sliderValue, setSliderValue] = useState<number>(0);
 
   const [box, setBox] = useState<number>()
@@ -99,7 +87,7 @@ const Predict = () => {
    
 
     axios
-      .post("https://construction-house-price-prediction-1.onrender.com/predict", myData)
+      .post("https://construction-house-price-prediction-1.onrender.com/predictBMI", myData)
       .then((res) => {
         setBox(res.data)
         console.log(res.data)
@@ -112,16 +100,7 @@ const Predict = () => {
 
 
 
-  const  dict = ["number_of_units",
-    "building_height",
-   "builtup_area",
-   "number_of_stories" ,
-   "number_of_columns",
-   "number_of_rooms",
-   "building_function"
-   
-
-]
+  const  dict = ['inflationrate', 'imports', 'exports', 'moneysupplym1']
 
  
   return (
@@ -158,7 +137,7 @@ const Predict = () => {
             className="bg-base-300 shadow-xl border-solid border-blue-500 flex ms-3   w-[50%] h-[60px]"
             style={{ borderWidth: "2px" }}
           >
-            {box && <h1 className="m-auto font-semibold text-base-content ">{ Math.round(box)}</h1>}
+            {box && <h1 className="m-auto font-semibold text-base-content ">{ box}</h1>}
           </div>
           </div>
           
@@ -171,10 +150,9 @@ const Predict = () => {
                 <div className={`mt-[20px] mx-2  grid ${isSmallDevice? 'grid-cols-1': 'grid-cols-2' }  gap-3 pt-4 `}>
               
               
-                {dict.map(key => key != "building_function" && <>
+                {dict.map(key =>  <>
                   {renderInput(key, 'number', key)}
                 </>)}
-                {renderSelect("building_function", 'building function', options)}
               
                 </div>
               </div>

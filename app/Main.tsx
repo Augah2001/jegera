@@ -1,6 +1,6 @@
 "use client";
 
-import { Inter } from "next/font/google";
+
 
 import { ThemeContext } from "./contexts/ThemeContext";
 import "./HomeComponents/beepingButton.css";
@@ -12,7 +12,7 @@ import {
   useState,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import Navbar from "./NavBar/Navbar";
+
 import { Button, ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import { SearchContext } from "./contexts/SearchContext";
 import { ShowMapContext } from "./contexts/ShowMapContext";
@@ -25,11 +25,9 @@ import { mapLocationContext } from "./contexts/mapLocationContext";
 import { GetCoordinatesContext } from "./contexts/GetCoordinatesContext";
 import { HouseCoordinatesContext } from "./contexts/HouseCoordinatesContext";
 import { HouseErrorInputContext } from "./contexts/HouseInputErrorContext";
-import { Location } from "./hooks/useLocations";
 import { LocationContext } from "./contexts/locationContext";
 import { ShowMessageContext } from "./contexts/ShowMessageContext";
 import { HousesContext } from "./contexts/HouseContext";
-import useHouses, { House } from "./hooks/useHouses";
 import { HouseContext } from "./contexts/SelectedHouseContext";
 import { ShowChatsContext } from "./contexts/ShowChatsContext";
 import { ChatContext } from "./contexts/SelectedChatContext";
@@ -46,12 +44,13 @@ import { Theme } from "@radix-ui/themes";
 import PaynowReactWrapper from "paynow-react";
 import ChatInterace from "./HomeComponents/ChatInterace";
 import { ReloadCont } from "./contexts/ReloadContext";
+import useHouses, { House } from "./hooks/useHouses";
 
 interface Props {
   childrenNode: ReactNode;
 }
 
-const inter = Inter({ subsets: ["latin"] });
+
 
 const Main = ({ childrenNode }: Props) => {
   const router = useRouter();
@@ -100,35 +99,13 @@ const Main = ({ childrenNode }: Props) => {
     return_url: "http://localhost:3000",
   };
 
-  useEffect(() => {
-    apiClient
-      .get<House[]>("/houses")
-      .then((res) => setInitialHouses(res.data))
-      .catch((err) => console.log(err));
-    const onScroll = () => {
-      const scrolled = window.scrollY > scrollThreshold;
-      setHasScrolled(scrolled);
-    };
-
-    setHouses(data);
-
-    window.addEventListener("scroll", onScroll);
-    try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const loggedUser: User = jwtDecode(token);
-        setUser(loggedUser);
-      }
-    } catch (ex) {}
-
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [scrollThreshold, data]);
+ 
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <html lang="en" data-theme="pastel" onScroll={() => console.log("augah")}>
-      <body className={` ${inter.className} min-h-full bg-base-100`}>
+      <body className={` min-h-full bg-base-100`}>
         {/* <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></Script> */}
 
         <link
@@ -235,11 +212,7 @@ const Main = ({ childrenNode }: Props) => {
                                                       {...paynow_config}
                                                     >
                                                       <ReloadCont.Provider value={{reload, setReload}}>
-                                                        <Navbar
-                                                          hasScrolled={
-                                                            hasScrolled
-                                                          }
-                                                        />
+                                                       
                                                         {showChats && (
                                                           <div className="ms-[50%]">
                                                             <ChatInterace />

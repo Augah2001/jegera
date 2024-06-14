@@ -7,26 +7,6 @@ export const schemaUser = z.object({
   firstName: z.string(), // Allow non-empty strings
   lastName: z.string().optional(), // Optional last name
   password: z.string().min(8).max(72), // Enforce password length
-  authorizationKey: z.string().optional(), // Allow optional authorizationKey
-  accountType: z.enum(["tenant", "landlord", 'authorizer']), // Enforce valid user type
-  isOnline: z.boolean().optional(), // Allow optional isOnline
-  backgroundImage: z.string().optional()
-});
-
-// **Location Model Validation**
-export const schemaLocation = z.object({
-  name: z.string(), // Ensure non-empty and required name
-  minutes: z.number().optional(), // Allow optional minutes (may need adjustment based on usage)
-  coordinates: z.tuple([z.number(), z.number()]), // Unique pair of numbers for coordinates
-});
-
-// **Message Model Validation**
-export const schemaMessage = z.object({
-  sender: z.string(), // Enforce non-empty sender
-  receiver: z.string(), // Enforce non-empty receiver
-  body: z.string(), // Enforce non-empty message body
-  time: z.date().optional(), // Allow optional time (may need adjustment based on usage)
-  status: z.enum(["read", "sent"]).optional(), // Allow optional status
 });
 
 // **Transaction Model Validation**

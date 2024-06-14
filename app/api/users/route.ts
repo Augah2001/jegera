@@ -27,9 +27,6 @@ export async function GET(request: NextRequest) {
       email: true,
       firstName: true,
       lastName: true,
-      // authorizationKey: true,
-      accountType: true,
-      isOnline: true,
     },
   });
   const usersWithoutPassword = users.map(omitCrucial);
@@ -45,14 +42,6 @@ export async function POST(request: NextRequest) {
       { error: validateBody.error.errors },
       { status: 400 }
     );
-  }
-
-  if (body.accountType === 'landlord') {
-    const authKey = await prisma.user.findUnique({
-      where: {authorizationKey: body.authorizationKey}
-    })
-  
-    if (authKey) return NextResponse.json({error: 'authorization key already taken'}, {status: 400})
   }
 
   
@@ -100,9 +89,6 @@ export async function DELETE(request: NextRequest) {
       email: true,
       firstName: true,
       lastName: true,
-      authorizationKey: true,
-      type: true,
-      isOnline: true,
     },
   });
 
