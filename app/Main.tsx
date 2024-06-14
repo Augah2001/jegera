@@ -132,14 +132,7 @@ const Main = ({ childrenNode }: Props) => {
         <ThemeContext.Provider value={{ isDark, setIsDark }}>
           {path !== "/predict" && (
             <div className="flex justify-end pe-5 fixed z-50 top-[150px] ms-5">
-              <Button
-                className="beeping-button text-white px-3 cursor-pointer font-medium text-2xl h-14 rounded-3xl bg-[#2a1d57]   transform translate(-50%, -50%)"
-                onClick={() => {
-                  router.push("/predict");
-                }}
-              >
-                predict
-              </Button>
+              
             </div>
           )}
           <SearchContext.Provider
